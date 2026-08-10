@@ -46,6 +46,10 @@ const currentYear = new Date().getFullYear();
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
     <meta name="generator" content={Astro.generator} />
     <title>{title} · Aman Beniwal</title>
+
+    <!-- Cloudflare Web Analytics (cookieless) -->
+    <script is:inline type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "3296a7e452284101b098884cc647b298"}'></script>
+    <!-- End Cloudflare Web Analytics -->
   </head>
   <body>
     <DotGrid />
