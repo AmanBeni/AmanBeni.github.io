@@ -1,0 +1,497 @@
+---
+/**
+ * Hero.astro — the approved hero, ported from
+ * "design by aman/final hero visuals/anim/hero-preview.html".
+ *
+ * Source frame is a fixed 1821x864 pixel-art scene. Two coordinate systems
+ * are used deliberately:
+ *
+ * 1. `.hero-frame` (the art: base image, clouds, turbines, avatar) —
+ *    maintains the exact 1821:864 aspect ratio and is scaled/centered to
+ *    *cover* the `.hero` container (same visual result as object-fit:cover),
+ *    via a pure-CSS max()/calc() trick using vw/vh — no JS, no resize
+ *    listener needed. On aspect ratios far from 1821:864 (e.g. tall narrow
+ *    phones) this crops the art's left/right edges — expected and fine,
+ *    same as it would be for a plain img with object-fit: cover.
+ * 2. `.hero-copy` (chip/h1/sub) — positioned relative to `.hero` itself,
+ *    NOT `.hero-frame`. This is intentional: if the copy were anchored to
+ *    the art frame's coordinate space, heavy horizontal cropping on narrow
+ *    mobile viewports could push left-anchored text off-screen. Anchoring
+ *    copy to the (uncropped) outer container keeps it always visible and
+ *    lets font sizes shrink independently per breakpoint. On typical
+ *    desktop viewports the two coordinate systems nearly coincide (crop is
+ *    only a few px), so this still matches hero-preview.html visually.
+ *
+ * The three animations replicated: cloud drift (225s), 6 spinning turbine
+ * blades (per-turbine durations + staggered negative delays), and the
+ * 3-frame avatar wave cycle (JS interval swapping .on class, 230ms tick).
+ * No cursor parallax (explicitly excluded per spec).
+ */
+const base = import.meta.env.BASE_URL;
+const baseSlash = base.endsWith('/') ? base : base + '/';
+const heroBase = baseSlash + 'hero/';
+
+const FRAME_W = 1821;
+const FRAME_H = 864;
+
+// Pole positions + per-turbine spin duration, taken verbatim from the
+// approved hero-preview.html script block (poles array + dur array).
+const turbines = [
+  { x: 756, y: 314, dur: 7.5 },
+  { x: 873, y: 308, dur: 6.45 },
+  { x: 992, y: 308, dur: 8.4 },
+  { x: 1109, y: 311, dur: 7.05 },
+  { x: 1229, y: 314, dur: 7.8 },
+  { x: 1339, y: 320, dur: 6.0 },
+].map((t, i) => ({
+  ...t,
+  left: (t.x / FRAME_W) * 100,
+  top: (t.y / FRAME_H) * 100,
+  delay: -i * 0.9, // negative delay = staggered starting phase, matches source
+}));
+
+// ---- Birds ---------------------------------------------------------------
+// A loose flock drifting in from the left toward the windmills. Each bird
+// rides its OWN gently-curving path (a decaying sine wobble on top of a
+// straight glide — deliberately not a straight line) and shrinks to nothing
+// as it recedes into the distance near the turbines. Paths are generated
+// deterministically here (fixed-seed RNG → stable across builds) and emitted
+// as one @keyframes block per bird (injected via the <style set:html> at the
+// bottom of this component). Coordinates are % of the hero art frame, same
+// space the turbines use. The 2-frame wing flap is a separate CSS animation
+// (bird-flap) sliding across birds_sheet.png.
+const BIRD_COUNT = 6;
+// mulberry32 — tiny deterministic PRNG so the flock is identical every build.
+function makeRng(seed: number) {
+  return () => {
+    seed |= 0;
+    seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+const birdRand = makeRng(20250806);
+const BIRD_STOPS = 9;
+const birds = Array.from({ length: BIRD_COUNT }, (_, i) => {
+  const startX = -10 - birdRand() * 4; // off the left edge (%)
+  const startY = 15 + birdRand() * 30; // spread across the upper sky band
+  const targetX = 45 + birdRand() * 9; // converge loosely on the windmills
+  const targetY = 31 + birdRand() * 4; // vanish near the turbine tops
+  const amp = 2.5 + birdRand() * 3.5; // vertical wobble amplitude (%)
+  const waves = 1.4 + birdRand() * 1.2; // sine cycles over the whole path
+  const phase = birdRand() * Math.PI * 2;
+  const baseScale = 0.75 + birdRand() * 0.5; // near-size variety
+  const dur = (16 + birdRand() * 9).toFixed(2);
+  const delay = (-birdRand() * 25).toFixed(2); // negative → flock pre-spread along the path
+  const flap = (0.34 + birdRand() * 0.16).toFixed(2);
+  const width = (1.25 + birdRand() * 0.6).toFixed(2); // % of hero art width
+
+  let frames = '';
+  for (let s = 0; s <= BIRD_STOPS; s++) {
+    const t = s / BIRD_STOPS;
+    const x = startX + (targetX - startX) * t;
+    const baseY = startY + (targetY - startY) * t;
+    // wobble decays toward 0 as the bird converges → path tightens with distance
+    const y = baseY + amp * (1 - t) * Math.sin(waves * Math.PI * 2 * t + phase);
+    const scale = baseScale * Math.pow(1 - t, 1.15); // → 0 at the far end
+    const op = t < 0.04 ? t / 0.04 : t > 0.92 ? 1 - (t - 0.92) / 0.08 : 1;
+    frames +=
+      `${(t * 100).toFixed(2)}%{left:${x.toFixed(2)}%;top:${y.toFixed(2)}%;` +
+      `transform:translate(-50%,-50%) scale(${scale.toFixed(3)});opacity:${op.toFixed(2)};}`;
+  }
+  const name = `bird-path-${i}`;
+  return { name, keyframes: `@keyframes ${name}{${frames}}`, dur, delay, flap, width };
+});
+const birdKeyframes = birds.map((b) => b.keyframes).join('');
+---
+
+<section class="hero" aria-label="Introduction">
+  <div class="hero-frame">
+    <!-- Decorative pixel-art scene: base landscape, drifting clouds, spinning
+         turbines, waving avatar. Not meaningful content — hidden from AT. -->
+    <div class="hero-art" aria-hidden="true">
+      <img class="art-base" src={`${heroBase}base.png`} alt="" data-pixel-art loading="eager" fetchpriority="high" />
+      <img class="art-clouds cloud-1" src={`${heroBase}clouds.png`} alt="" data-pixel-art loading="eager" />
+      <img class="art-clouds cloud-2" src={`${heroBase}clouds.png`} alt="" data-pixel-art loading="eager" />
+
+      <!-- Birds: loose flock flying in from the left toward the windmills,
+           each shrinking to nothing as it recedes. Behind the turbines/avatar
+           in DOM order so it passes behind the poles + blades. -->
+      <div class="birds">
+        {
+          birds.map((b) => (
+            <span
+              class="bird"
+              style={`background-image:url(${heroBase}birds_sheet.png); width:${b.width}%; animation-name:${b.name}, bird-flap; animation-duration:${b.dur}s, ${b.flap}s; animation-delay:${b.delay}s, 0s;`}
+            />
+          ))
+        }
+      </div>
+
+      {
+        turbines.map((t) => (
+          <div class="turbine" style={`left:${t.left}%; top:${t.top}%;`}>
+            <img
+              class="turbine-blade"
+              src={`${heroBase}blade.png`}
+              alt=""
+              data-pixel-art
+              style={`animation-duration:${t.dur}s; animation-delay:${t.delay}s;`}
+            />
+          </div>
+        ))
+      }
+
+      <div class="avatar" id="hero-avatar">
+        <img src={`${heroBase}me_0.png`} class="avatar-frame on" alt="" data-pixel-art />
+        <img src={`${heroBase}me_1.png`} class="avatar-frame" alt="" data-pixel-art />
+        <img src={`${heroBase}me_2.png`} class="avatar-frame" alt="" data-pixel-art />
+      </div>
+    </div>
+  </div>
+
+  <!-- Deliberately a sibling of `.hero-frame`, not nested inside it — see
+       the component comment above: copy is anchored to `.hero` so it can
+       never be cropped off-screen by the frame's cover-fit math. -->
+  <div class="hero-copy">
+    <p class="chip">
+      <span class="chip-dot" aria-hidden="true"></span>
+      SYSTEM_ONLINE &middot; JAIPUR, IN
+    </p>
+    <h1>Hi, I am Aman.</h1>
+    <p class="sub">Strategy generalist and AI builder.<br />Figuring out the rest.</p>
+  </div>
+</section>
+
+<!-- Per-bird flight paths (generated in the frontmatter). Injected raw because
+     Astro's scoped <style> can't hold expressions; the .bird class that
+     references these names lives in the scoped block above. -->
+<style is:inline set:html={birdKeyframes}></style>
+
+<style>
+  .hero {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background: #0b0e12; /* matches the source preview's stage backdrop while art loads */
+    --hero-h: 86vh;
+    height: var(--hero-h);
+  }
+
+  @media (max-width: 899px) {
+    .hero {
+      --hero-h: 62vh;
+    }
+  }
+
+  @media (max-width: 599px) {
+    .hero {
+      --hero-h: 50vh;
+    }
+  }
+
+  /* Cover-fit the fixed 1821:864 art frame into `.hero` with pure CSS.
+     Both formulas use the same two vw/vh-derived candidates, so whichever
+     branch wins is consistent across width AND height — exact aspect ratio
+     is preserved, same visual result as object-fit:cover. */
+  .hero-frame {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: max(100vw, calc(var(--hero-h) * 1821 / 864));
+    height: max(calc(100vw * 864 / 1821), var(--hero-h));
+  }
+
+  .hero-art {
+    position: absolute;
+    inset: 0;
+  }
+
+  .art-base {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .art-clouds {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    will-change: transform;
+  }
+
+  .cloud-1 {
+    animation: hero-drift 225s linear infinite;
+  }
+
+  .cloud-2 {
+    animation: hero-drift 225s linear infinite;
+    animation-delay: -112.5s;
+  }
+
+  @keyframes hero-drift {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(100%);
+    }
+  }
+
+  .turbine {
+    position: absolute;
+    width: 2.1%;
+    transform: translate(-50.3%, -66%);
+    pointer-events: none;
+  }
+
+  .turbine-blade {
+    width: 100%;
+    display: block;
+    transform-origin: 50.3% 66%;
+    will-change: transform;
+    animation-name: hero-spin;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+
+  @keyframes hero-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* ---------- Birds ---------- */
+  .birds {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .bird {
+    position: absolute;
+    aspect-ratio: 19 / 10;
+    background-size: 200% 100%; /* two frames side by side in birds_sheet.png */
+    background-repeat: no-repeat;
+    background-position: 0% 50%;
+    image-rendering: pixelated;
+    transform: translate(-50%, -50%); /* left/top address the bird's centre */
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-fill-mode: both;
+    will-change: left, top, transform;
+  }
+
+  /* 2-frame wing flap: hold each frame, flip near the mid/end so it reads as
+     a crisp toggle rather than a slide. */
+  @keyframes bird-flap {
+    0%,
+    49% {
+      background-position: 0% 50%;
+    }
+    50%,
+    100% {
+      background-position: 100% 50%;
+    }
+  }
+
+  .avatar {
+    position: absolute;
+    left: 53%;
+    top: 52.64%;
+    height: 60.72%;
+    /* Width is set explicitly by JS (native ratio 320:639 × the rendered
+       height) — see the component script below. Letting an absolutely
+       positioned box resolve its own width from `width: auto` off a
+       replaced descendant's intrinsic ratio proved unreliable across
+       engines in testing (observed collapsing to width:0), so this avoids
+       that resolution path entirely: the container gets an explicit px
+       width, and each frame image just fills it at 100%/100%. */
+    width: 0;
+    pointer-events: none;
+  }
+
+  .avatar-frame {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: left bottom;
+    display: none;
+  }
+
+  .avatar-frame.on {
+    display: block;
+  }
+
+  /* ---------- Copy layer — anchored to `.hero`, not `.hero-frame` (see
+     component comment above for why) ---------- */
+
+  /* top uses max() against --header-h (kept in sync with the glass
+     header's real rendered height by BaseLayout's script — see there for
+     why): the header floats transparently on top of the hero, so the
+     copy needs a hard pixel floor to clear it, not just the original
+     percentage-of-hero-height value (which alone isn't enough once the
+     header wraps to two rows on narrow viewports). */
+  .hero-copy {
+    position: absolute;
+    left: 1.68%;
+    top: max(24%, calc(var(--header-h) + 16px));
+    max-width: min(340px, 78vw);
+  }
+
+  .chip {
+    display: inline-flex;
+    gap: 4.4px;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 8.8px;
+    letter-spacing: 0.06em;
+    color: var(--primary);
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    padding: 3.3px 6.6px;
+    border-radius: 3px;
+    margin: 0;
+  }
+
+  .chip-dot {
+    width: 4.4px;
+    height: 4.4px;
+    border-radius: 9999px;
+    background: var(--primary);
+    display: inline-block;
+    animation: hero-chip-blink 1.6s steps(2) infinite;
+  }
+
+  @keyframes hero-chip-blink {
+    50% {
+      opacity: 0.2;
+    }
+  }
+
+  .hero-copy h1 {
+    margin: 14px 0 0;
+    font-family: var(--font-display);
+    font-size: 46px;
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.04em;
+    color: #0f2036;
+    text-shadow: 0 2px 18px rgba(255, 255, 255, 0.65);
+  }
+
+  .hero-copy .sub {
+    margin: 4px 0 0;
+    max-width: 340px;
+    font-size: 15px;
+    line-height: 1.5;
+    color: #1b2c40;
+    text-shadow: 0 1px 10px rgba(255, 255, 255, 0.75);
+  }
+
+  @media (max-width: 899px) {
+    .hero-copy h1 {
+      font-size: 32px;
+    }
+
+    .hero-copy .sub {
+      font-size: 13.5px;
+      max-width: 280px;
+    }
+  }
+
+  @media (max-width: 599px) {
+    .hero-copy {
+      left: 6%;
+      top: max(16%, calc(var(--header-h) + 12px));
+    }
+
+    .hero-copy h1 {
+      font-size: 26px;
+    }
+
+    .hero-copy .sub {
+      font-size: 12.5px;
+      max-width: 220px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cloud-1,
+    .cloud-2,
+    .turbine-blade,
+    .chip-dot {
+      animation: none;
+    }
+
+    /* Birds are pure decorative motion — hide entirely rather than freeze a
+       flock mid-air at random scales. */
+    .birds {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  // Avatar wave cycle — 3 frames, same sequence/timing as hero-preview.html.
+  // Respects prefers-reduced-motion (holds on the idle frame) and pauses
+  // while the tab is hidden.
+  const root = document.getElementById('hero-avatar');
+  if (root) {
+    const frames = Array.from(root.querySelectorAll<HTMLImageElement>('.avatar-frame'));
+    const seq = [0, 1, 2, 1, 2, 1, 0, 0, 0, 0, 0, 0];
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Explicit width for the `.avatar` container (native ratio 320:639 ×
+    // its own rendered height, which is set by CSS and independent of
+    // width). All 3 frames then just fill it at 100%/100% with
+    // object-fit: contain — see the component style block for why this
+    // container-level approach was chosen over sizing each <img>.
+    const NATIVE_RATIO = 320 / 639;
+    const sizeAvatar = () => {
+      const h = root.getBoundingClientRect().height;
+      if (h > 0) root.style.width = `${h * NATIVE_RATIO}px`;
+    };
+    sizeAvatar();
+    window.addEventListener('resize', sizeAvatar);
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(sizeAvatar).observe(root);
+    }
+
+    if (frames.length && !prefersReducedMotion) {
+      let k = 0;
+      let timer: number | undefined;
+
+      const tick = () => {
+        frames.forEach((f) => f.classList.remove('on'));
+        k = (k + 1) % seq.length;
+        frames[seq[k]]?.classList.add('on');
+      };
+
+      const start = () => {
+        if (timer === undefined) timer = window.setInterval(tick, 230);
+      };
+      const stop = () => {
+        if (timer !== undefined) {
+          window.clearInterval(timer);
+          timer = undefined;
+        }
+      };
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) stop();
+        else start();
+      });
+
+      start();
+    }
+  }
+</script>

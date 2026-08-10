@@ -1,0 +1,38 @@
+# build output
+dist/
+# generated types
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+
+# environment variables
+.env
+.env.production
+
+# macOS-specific files
+.DS_Store
+
+# jetbrains setting folder
+.idea/
+
+# ---- Private working material — NEVER publish (raw photos, notes, drafts) ----
+design by aman/
+website data/
+google stitch data*
+My Design Guidelines/
+design-tests/
+.claude/
+Codex Image v8
+public/hero/_backup_avatar/
+public/header-variants.html
+BUILD-SPEC.md
+CONTENT-INVENTORY.md
+README.md

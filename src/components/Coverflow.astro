@@ -1,0 +1,441 @@
+---
+interface Slide {
+  src: string;
+  alt?: string;
+  title?: string;
+  subtitle?: string;
+}
+
+interface Props {
+  slides: Slide[];
+  rotate?: number;
+  depth?: number;
+  perspective?: number;
+  falloff?: number;
+  fade?: number;
+  cardWidth?: string;
+  gap?: number;
+  loop?: boolean;
+  autoplayMs?: number;
+  label?: string;
+}
+
+const {
+  slides,
+  rotate = 44,
+  depth = 0.6,
+  perspective = 3,
+  falloff = 0.56,
+  fade = 0.1,
+  cardWidth = "clamp(140px, 20vw, 240px)",
+  gap = 0.05,
+  loop = true,
+  autoplayMs = 2800,
+  label = "Album covers",
+} = Astro.props;
+
+const uid = Math.random().toString(36).slice(2, 9);
+---
+
+<div
+  class="coverflow"
+  id={`coverflow-${uid}`}
+  role="region"
+  aria-roledescription="carousel"
+  aria-label={label}
+  data-rotate={rotate}
+  data-depth={depth}
+  data-perspective={perspective}
+  data-falloff={falloff}
+  data-fade={fade}
+  data-gap={gap}
+  data-loop={loop ? "1" : "0"}
+  data-autoplay-ms={autoplayMs}
+  style={`--cf-card-width:${cardWidth};`}
+>
+  <div class="coverflow-frame" tabindex="0">
+    <div class="coverflow-stage">
+      {
+        slides.map((slide, i) => (
+          <div
+            class="coverflow-card"
+            data-i={i}
+            data-title={slide.title ?? ""}
+            data-subtitle={slide.subtitle ?? ""}
+            role="group"
+            aria-roledescription="slide"
+            aria-label={slide.title ? `${slide.title} — ${slide.subtitle ?? ""}` : `${i + 1} of ${slides.length}`}
+          >
+            <img src={slide.src} alt={slide.alt ?? slide.title ?? ""} draggable="false" />
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  {
+    slides.some((s) => s.title) && (
+      <div class="coverflow-caption" aria-live="polite">
+        <p class="coverflow-title" />
+        <p class="coverflow-subtitle" />
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .coverflow {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .coverflow-frame {
+    position: relative;
+    width: 100%;
+    height: calc(var(--cf-card-width) * 1.35);
+    overflow: hidden;
+    touch-action: pan-y;
+    outline: none;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .coverflow-frame:active {
+    cursor: grabbing;
+  }
+
+  .coverflow-frame:focus-visible {
+    outline: 2px solid rgba(18, 34, 58, 0.4);
+    outline-offset: 4px;
+  }
+
+  .coverflow-stage {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+  }
+
+  .coverflow-card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: var(--cf-card-width);
+    aspect-ratio: 1 / 1;
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--surface-alt, #f2f2ee);
+    box-shadow: 0 10px 30px rgba(18, 34, 58, 0.18), 0 2px 8px rgba(18, 34, 58, 0.12);
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .coverflow-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+  }
+
+  .coverflow-caption {
+    margin-top: 20px;
+    text-align: center;
+    min-height: 42px;
+    padding: 0 16px;
+  }
+
+  .coverflow-title {
+    font-family: var(--font-display, ui-sans-serif, sans-serif);
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: -0.01em;
+    color: var(--ink, #1a1a1a);
+    margin: 0;
+  }
+
+  .coverflow-subtitle {
+    font-size: 13px;
+    color: var(--text-muted, rgba(26, 26, 26, 0.6));
+    margin: 3px 0 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .coverflow-stage {
+      transition: none !important;
+    }
+  }
+</style>
+
+<script>
+  type CardState = {
+    el: HTMLElement;
+  };
+
+  function initCoverflow(root: HTMLElement) {
+    const frame = root.querySelector<HTMLElement>(".coverflow-frame");
+    const stage = root.querySelector<HTMLElement>(".coverflow-stage");
+    if (!frame || !stage) return;
+
+    const cardEls = Array.from(root.querySelectorAll<HTMLElement>(".coverflow-card")).sort(
+      (a, b) => Number(a.dataset.i) - Number(b.dataset.i)
+    );
+    const count = cardEls.length;
+    if (count === 0) return;
+
+    // Caption reflects the centre card's song / artist, updated as it moves.
+    const titleEl = root.querySelector<HTMLElement>(".coverflow-title");
+    const subEl = root.querySelector<HTMLElement>(".coverflow-subtitle");
+    let lastCenter = -1;
+    function updateCaption() {
+      if (!titleEl) return;
+      const c = indexAt(pos);
+      if (c === lastCenter) return;
+      lastCenter = c;
+      const card = cardEls.find((el) => Number(el.dataset.i) === c);
+      if (card) {
+        titleEl.textContent = card.dataset.title || "";
+        if (subEl) subEl.textContent = card.dataset.subtitle || "";
+      }
+    }
+
+    const rotate = Number(root.dataset.rotate ?? 44);
+    const depthFrac = Number(root.dataset.depth ?? 0.6);
+    const perspectiveMult = Number(root.dataset.perspective ?? 3);
+    const falloff = Number(root.dataset.falloff ?? 0.56);
+    const fade = Number(root.dataset.fade ?? 0.1);
+    const gapFrac = Number(root.dataset.gap ?? 0.05);
+    const loop = root.dataset.loop === "1";
+    const autoplayMs = Number(root.dataset.autoplayMs ?? 2800);
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    let cardWidth = cardEls[0].offsetWidth || 200;
+    let pitch = cardWidth * (1 + gapFrac);
+
+    let pos = 0;
+    let target = 0;
+    let rafId: number | null = null;
+
+    let dragging = false;
+    let startX = 0;
+    let startPos = 0;
+    let lastX = 0;
+    let lastT = 0;
+    let velocity = 0;
+
+    let autoplayTimer: ReturnType<typeof setInterval> | null = null;
+    let hovered = false;
+
+    function clampPos(p: number): number {
+      if (loop) return p;
+      return Math.max(0, Math.min(count - 1, p));
+    }
+
+    function paint() {
+      frame!.style.perspective = `${cardWidth * perspectiveMult}px`;
+      for (const cardEl of cardEls) {
+        const index = Number(cardEl.dataset.i);
+        let offset = index - pos;
+
+        if (loop) {
+          // fold to the shorter way round the ring
+          offset = offset - Math.round(offset / count) * count;
+        }
+
+        const distance = Math.abs(offset);
+        const ramp = Math.pow(distance, falloff);
+        const tilt = Math.min(rotate * ramp, 82) * Math.sign(offset);
+
+        const translateX = offset * pitch;
+        const translateZ = -depthFrac * cardWidth * ramp;
+
+        cardEl.style.transform = `translate(-50%, -50%) translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${-tilt}deg)`;
+
+        const edge = loop ? Math.max(0, Math.min(1, count / 2 - distance)) : 1;
+        const opacity = Math.max(0, 1 - fade * distance) * edge;
+        cardEl.style.opacity = String(opacity);
+        cardEl.style.zIndex = String(100 - Math.round(distance));
+        cardEl.style.pointerEvents = opacity > 0.05 ? "auto" : "none";
+      }
+      updateCaption();
+    }
+
+    function step() {
+      const remaining = target - pos;
+      if (Math.abs(remaining) < 0.0004) {
+        pos = target;
+        paint();
+        rafId = null;
+        return;
+      }
+      pos += remaining * 0.16;
+      paint();
+      rafId = requestAnimationFrame(step);
+    }
+
+    function settle(newTarget: number) {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+      target = clampPos(newTarget);
+      rafId = requestAnimationFrame(step);
+    }
+
+    function indexAt(p: number): number {
+      return ((Math.round(p) % count) + count) % count;
+    }
+
+    function goTo(index: number) {
+      let dest = index;
+      if (loop) {
+        dest = index + Math.round((target - index) / count) * count;
+      }
+      settle(dest);
+    }
+
+    function nudge(by: number) {
+      settle(clampPos(Math.round(target) + by));
+    }
+
+    function resetAutoplay() {
+      if (!autoplayTimer) return;
+      stopAutoplay();
+      startAutoplay();
+    }
+
+    function startAutoplay() {
+      if (reducedMotion || !autoplayMs || autoplayMs <= 0) return;
+      if (autoplayTimer) return;
+      autoplayTimer = setInterval(() => {
+        if (dragging || hovered) return;
+        nudge(1);
+      }, autoplayMs);
+    }
+
+    function stopAutoplay() {
+      if (autoplayTimer) {
+        clearInterval(autoplayTimer);
+        autoplayTimer = null;
+      }
+    }
+
+    // Pointer drag
+    function onPointerDown(e: PointerEvent) {
+      dragging = true;
+      startX = e.clientX;
+      startPos = pos;
+      lastX = e.clientX;
+      lastT = performance.now();
+      velocity = 0;
+      frame!.setPointerCapture(e.pointerId);
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+      stopAutoplay();
+    }
+
+    function onPointerMove(e: PointerEvent) {
+      if (!dragging) return;
+      const dx = e.clientX - startX;
+      pos = clampPos(startPos - dx / pitch);
+
+      const now = performance.now();
+      const dt = now - lastT;
+      if (dt > 0) {
+        const dxInstant = e.clientX - lastX;
+        velocity = -(dxInstant / pitch) / (dt / 1000);
+      }
+      lastX = e.clientX;
+      lastT = now;
+
+      paint();
+    }
+
+    function onPointerUp(e: PointerEvent) {
+      if (!dragging) return;
+      dragging = false;
+      try {
+        frame!.releasePointerCapture(e.pointerId);
+      } catch {
+        /* noop */
+      }
+      const carried = Math.max(-2, Math.min(2, velocity * 0.18));
+      settle(Math.round(pos + carried));
+      startAutoplay();
+    }
+
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        nudge(1);
+        resetAutoplay();
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        nudge(-1);
+        resetAutoplay();
+      }
+    }
+
+    function onMouseEnter() {
+      hovered = true;
+    }
+
+    function onMouseLeave() {
+      hovered = false;
+      if (dragging) {
+        dragging = false;
+        const carried = Math.max(-2, Math.min(2, velocity * 0.18));
+        settle(Math.round(pos + carried));
+      }
+      startAutoplay();
+    }
+
+    frame.addEventListener("pointerdown", onPointerDown);
+    frame.addEventListener("pointermove", onPointerMove);
+    frame.addEventListener("pointerup", onPointerUp);
+    frame.addEventListener("pointercancel", onPointerUp);
+    frame.addEventListener("keydown", onKeyDown);
+    frame.addEventListener("mouseenter", onMouseEnter);
+    frame.addEventListener("mouseleave", onMouseLeave);
+
+    const ro = new ResizeObserver(() => {
+      const w = cardEls[0].offsetWidth;
+      if (w && w !== cardWidth) {
+        cardWidth = w;
+        pitch = cardWidth * (1 + gapFrac);
+        paint();
+      }
+    });
+    ro.observe(cardEls[0]);
+
+    // initial paint
+    paint();
+    startAutoplay();
+
+    void indexAt;
+    void goTo;
+  }
+
+  function initAll() {
+    document.querySelectorAll<HTMLElement>(".coverflow").forEach((root) => {
+      if ((root as any)._coverflowInit) return;
+      (root as any)._coverflowInit = true;
+      initCoverflow(root);
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initAll);
+  } else {
+    initAll();
+  }
+  document.addEventListener("astro:page-load", initAll);
+</script>

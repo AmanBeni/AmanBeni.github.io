@@ -1,0 +1,177 @@
+---
+/**
+ * CVItem — one org row in the Career & Education section (LinkedIn-style).
+ * Logo tile shows the company logo if the file exists, else falls back to an
+ * initials monogram on a tone-coloured tile. Drop a real logo into
+ * public/logos/<logo> and it takes over automatically (img onerror removes a
+ * broken/missing image, revealing the monogram beneath — no code change).
+ * Each role can carry `notes` (sub-bullets, e.g. committees / positions held).
+ */
+interface Role {
+  title: string;
+  period: string;
+  notes?: string[];
+}
+interface Props {
+  org: string;
+  logo?: string | null;
+  mono?: string;
+  tone?: string;
+  /** Per-logo zoom inside the tile (1 = fill the box; >1 enlarges/crops). */
+  scale?: number;
+  roles: Role[];
+  logoBase: string;
+}
+const { org, logo = null, mono = '', tone = '', scale = 1, roles, logoBase } = Astro.props;
+---
+
+<div class="cv-item">
+  <span class={`cv-logo${tone ? ' tone-' + tone : ''}`} style={`--logo-scale:${scale};`} aria-hidden="true">
+    {mono && <span class="cv-mono">{mono}</span>}
+    {logo && <img src={`${logoBase}${logo}`} alt="" loading="lazy" onerror="this.remove()" />}
+  </span>
+  <div class="cv-body">
+    <p class="cv-org">{org}</p>
+    {
+      roles.map((r) => (
+        <div class="cv-roleblock">
+          <div class="cv-role">
+            <span class="cv-title">{r.title}</span>
+            <span class="cv-period mono-data">{r.period}</span>
+          </div>
+          {r.notes && (
+            <ul class="cv-notes">
+              {r.notes.map((n) => (
+                <li>{n}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .cv-item {
+    display: flex;
+    gap: 14px;
+  }
+
+  .cv-logo {
+    position: relative;
+    flex: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--container);
+    /* no border — logo fills the tile */
+  }
+
+  /* Real logo (if present) sits on white and covers the monogram. No padding so
+     it fills the box; per-logo `--logo-scale` zooms it to taste (overflow is
+     clipped by the tile). */
+  .cv-logo img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #fff;
+    transform: scale(var(--logo-scale, 1));
+  }
+
+  /* Monogram fallback — shows through when no logo image is present. */
+  .cv-mono {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 15px;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  .cv-logo.tone-purple {
+    background: var(--secondary);
+  }
+  .cv-logo.tone-green {
+    background: var(--climate);
+  }
+  .cv-logo.tone-blue {
+    background: var(--primary);
+  }
+  .cv-logo.tone-yellow {
+    background: var(--accent-yellow);
+  }
+  .cv-logo.tone-yellow .cv-mono {
+    color: #5a4302;
+  }
+
+  .cv-body {
+    min-width: 0;
+    padding-top: 1px;
+  }
+
+  .cv-org {
+    font-weight: 600;
+    font-size: 15px;
+    margin: 0 0 3px;
+    line-height: 1.25;
+  }
+
+  .cv-roleblock + .cv-roleblock {
+    margin-top: 11px;
+  }
+
+  .cv-role {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 2px 10px;
+  }
+
+  .cv-title {
+    font-size: 14px;
+    color: var(--ink);
+  }
+
+  .cv-period {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* Sub-bullets under a role (committees, positions held) — indented right so
+     they read as sub-items of the degree/role above them. */
+  .cv-notes {
+    list-style: none;
+    margin: 5px 0 0;
+    padding: 0;
+    margin-left: 18px;
+  }
+
+  .cv-notes li {
+    position: relative;
+    padding-left: 14px;
+    font-size: 12.5px;
+    color: var(--text-muted);
+    line-height: 1.45;
+  }
+
+  .cv-notes li::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 0.55em;
+    width: 4px;
+    height: 4px;
+    border-radius: 9999px;
+    background: var(--border-high);
+    opacity: 0.5;
+  }
+</style>

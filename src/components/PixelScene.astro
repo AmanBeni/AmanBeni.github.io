@@ -1,0 +1,161 @@
+---
+/**
+ * PixelScene.astro — structural scaffold only.
+ *
+ * Phase 1 (this component, Sonnet): empty, clearly-labelled layer containers
+ * and prop slots, placeholder colored <div>s, NO real pixel art, NO motion.
+ *
+ * Phase 3 (Opus): will drop layered pixel-art PNGs into src/assets/pixel/,
+ * replace the placeholder divs below with <Image>/<img data-pixel-art> tags,
+ * and wire up parallax on `[data-layer]` (via `data-depth` as the parallax
+ * factor), plus wind/leaf motion, cursor interaction, and avatar sprite
+ * animation/cycling. None of that belongs in this file yet.
+ *
+ * Conventions for Phase 3 to rely on:
+ * - `data-layer`  — which parallax layer this element belongs to
+ *                   (sky | far | mid | near | foreground)
+ * - `data-depth`  — suggested parallax depth factor, 0 (static) to 1 (fastest)
+ * - `data-prop`   — named individual sprite prop (avatar | tree | clouds | turbine)
+ * - `.no-motion`  — global hook (see src/styles/global.css) that Phase 3's JS
+ *                   should respect for prefers-reduced-motion, in addition to
+ *                   the CSS media query already scaffolded there.
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<div class={`pixel-scene ${className}`} data-component="pixel-scene" aria-hidden="true">
+  <!-- TODO(Phase 3): sky layer — gradient/time-of-day pixel-art backdrop -->
+  <div class="pixel-layer pixel-sky" data-layer="sky" data-depth="0"></div>
+
+  <!-- TODO(Phase 3): far layer — distant hills/skyline, slowest parallax -->
+  <div class="pixel-layer pixel-far" data-layer="far" data-depth="0.1">
+    <!-- TODO(Phase 3): clouds prop — small pixel cloud sprites, drift animation -->
+    <div class="pixel-prop pixel-clouds" data-prop="clouds"></div>
+  </div>
+
+  <!-- TODO(Phase 3): mid layer — rolling ground/fields, medium parallax -->
+  <div class="pixel-layer pixel-mid" data-layer="mid" data-depth="0.3">
+    <!-- TODO(Phase 3): wind turbine prop — climate-pivot motif, slow rotation -->
+    <div class="pixel-prop pixel-turbine" data-prop="turbine"></div>
+  </div>
+
+  <!-- TODO(Phase 3): near layer — foreground foliage/path, fast parallax -->
+  <div class="pixel-layer pixel-near" data-layer="near" data-depth="0.6">
+    <!-- TODO(Phase 3): tree prop — 16-bit tree, wind-sway animation, leaf particles -->
+    <div class="pixel-prop pixel-tree" data-prop="tree"></div>
+  </div>
+
+  <!-- TODO(Phase 3): foreground layer — closest elements, fastest parallax / cursor-reactive -->
+  <div class="pixel-layer pixel-foreground" data-layer="foreground" data-depth="1">
+    <!-- TODO(Phase 3): avatar prop — waving pixel avatar, idle/wave sprite cycle -->
+    <div class="pixel-prop pixel-avatar" data-prop="avatar"></div>
+  </div>
+</div>
+
+<style>
+  .pixel-scene {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: 480px;
+    overflow: hidden;
+    border: 1px solid var(--border-low);
+    border-radius: var(--radius-card);
+    background: var(--surface-alt);
+  }
+
+  .pixel-layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Placeholder tints only — Phase 3 replaces these with real pixel-art PNGs */
+  .pixel-sky {
+    background: color-mix(in srgb, var(--primary-container) 12%, var(--surface));
+  }
+
+  .pixel-far {
+    background: color-mix(in srgb, var(--primary-container) 20%, transparent);
+    clip-path: polygon(0 60%, 100% 40%, 100% 100%, 0 100%);
+  }
+
+  .pixel-mid {
+    background: color-mix(in srgb, var(--climate) 25%, transparent);
+    clip-path: polygon(0 75%, 100% 65%, 100% 100%, 0 100%);
+  }
+
+  .pixel-near {
+    background: color-mix(in srgb, var(--climate) 40%, transparent);
+    clip-path: polygon(0 90%, 100% 85%, 100% 100%, 0 100%);
+  }
+
+  .pixel-foreground {
+    pointer-events: none;
+  }
+
+  /* Placeholder prop markers — small labelled blocks standing in for sprites */
+  .pixel-prop {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed var(--border-high);
+    background: color-mix(in srgb, var(--accent-yellow) 30%, white);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .pixel-clouds {
+    top: 12%;
+    left: 8%;
+    width: 72px;
+    height: 28px;
+  }
+
+  .pixel-clouds::after {
+    content: 'clouds';
+  }
+
+  .pixel-turbine {
+    top: 20%;
+    right: 12%;
+    width: 40px;
+    height: 96px;
+  }
+
+  .pixel-turbine::after {
+    content: 'turbine';
+  }
+
+  .pixel-tree {
+    bottom: 8%;
+    left: 6%;
+    width: 64px;
+    height: 96px;
+  }
+
+  .pixel-tree::after {
+    content: 'tree';
+  }
+
+  .pixel-avatar {
+    bottom: 6%;
+    left: 45%;
+    width: 48px;
+    height: 64px;
+    background: color-mix(in srgb, var(--secondary) 25%, white);
+  }
+
+  .pixel-avatar::after {
+    content: 'avatar';
+  }
+</style>

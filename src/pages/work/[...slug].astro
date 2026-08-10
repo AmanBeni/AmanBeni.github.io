@@ -1,0 +1,190 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+
+const base = import.meta.env.BASE_URL;
+const home = base.endsWith('/') ? base : `${base}/`;
+
+const statusLabel: Record<string, string> = {
+  live: 'Live',
+  ongoing: 'Ongoing',
+  archived: 'Archived',
+  'case-study': 'Case study',
+};
+
+const statusClass: Record<string, string> = {
+  live: 'pill-live',
+  ongoing: 'pill-ongoing',
+  archived: 'pill-archived',
+  'case-study': 'pill-case-study',
+};
+---
+
+<BaseLayout title={project.data.title} description={project.data.summary}>
+  <article class="section project-article">
+    <div class="site-container project-article-inner">
+      <a href={`${home}#work`} class="back-link mono-label">&larr; Back to AI Projects</a>
+
+      <header class="project-article-header">
+        <span class="project-article-emoji" role="img" aria-label={`${project.data.title} icon`}>
+          {project.data.emoji}
+        </span>
+        <h1 class="project-article-title">{project.data.title}</h1>
+
+        <div class="project-article-meta">
+          <span class={`pill ${statusClass[project.data.status]}`}>{statusLabel[project.data.status]}</span>
+          <ul class="project-article-tags mono-label">
+            {project.data.tags.map((tag) => <li class="pill">{tag}</li>)}
+          </ul>
+        </div>
+      </header>
+
+      <div class="project-article-body">
+        <Content />
+      </div>
+
+      {
+        project.data.images && project.data.images.length > 0 && (
+          <div class="project-article-shots">
+            {project.data.images.map((src) => (
+              <img class="project-shot" src={`${home}${src}`} alt={`${project.data.title} screenshot`} loading="lazy" />
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </article>
+
+  <style>
+    .back-link {
+      display: inline-block;
+      color: var(--primary);
+      text-decoration: none;
+      margin-bottom: 32px;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .project-article-inner {
+      max-width: 940px;
+    }
+
+    .project-article-header {
+      margin-bottom: 48px;
+      border-bottom: 1px solid var(--border-low);
+      padding-bottom: 32px;
+    }
+
+    .project-article-emoji {
+      font-size: 40px;
+      display: block;
+      margin-bottom: 12px;
+    }
+
+    .project-article-title {
+      font-size: 32px;
+      margin: 0 0 16px;
+    }
+
+    .project-article-meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .project-article-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Solid card behind the write-up so the text stays legible over the
+       dot-grid background. */
+    .project-article-body {
+      font-size: 17px;
+      line-height: 1.7;
+      background: var(--container);
+      border: 1px solid var(--border-low);
+      border-radius: var(--radius-card);
+      padding: 32px 36px;
+      box-shadow: 0 6px 26px rgba(18, 34, 58, 0.06);
+    }
+
+    @media (max-width: 640px) {
+      .project-article-body {
+        padding: 22px 20px;
+      }
+    }
+
+    .project-article-body :global(h2) {
+      font-size: 22px;
+      margin-top: 40px;
+      margin-bottom: 12px;
+    }
+
+    .project-article-body :global(h3) {
+      font-size: 18px;
+      margin-top: 28px;
+      margin-bottom: 8px;
+    }
+
+    .project-article-body :global(p) {
+      margin: 0 0 16px;
+      color: var(--ink);
+    }
+
+    /* Tailwind's preflight strips list bullets globally — restore them here. */
+    .project-article-body :global(ul) {
+      margin: 0 0 16px;
+      padding-left: 24px;
+      list-style: disc;
+    }
+
+    .project-article-body :global(li) {
+      margin-bottom: 6px;
+      display: list-item;
+    }
+
+    .project-article-body :global(li)::marker {
+      color: var(--primary);
+    }
+
+    .project-article-body :global(a) {
+      color: var(--primary);
+    }
+
+    /* Project screenshots, after the write-up */
+    .project-article-shots {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .project-shot {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 8px;
+      border: 1px solid var(--border-low);
+      box-shadow: 0 8px 28px rgba(18, 34, 58, 0.1);
+    }
+  </style>
+</BaseLayout>

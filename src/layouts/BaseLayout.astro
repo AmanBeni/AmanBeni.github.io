@@ -1,0 +1,288 @@
+---
+import '../styles/global.css';
+import DotGrid from '../components/DotGrid.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** True on pages that open with <Hero /> (currently just the homepage) —
+   * lets the transparent glass header float over the hero art with no
+   * offset. Pages without a hero (project detail pages) get the header's
+   * height reserved as top padding instead, so content never starts
+   * hidden underneath it. See `--header-h` in global.css. */
+  hasHero?: boolean;
+}
+
+const {
+  title,
+  description = 'Aman Beniwal — strategy generalist turned AI builder, pivoting toward deep-tech and climate.',
+  hasHero = false,
+} = Astro.props;
+
+// import.meta.env.BASE_URL respects the `base` set in astro.config.mjs (GitHub
+// Pages project sites are served from a subpath). Always build internal links
+// off this instead of hardcoding "/".
+const base = import.meta.env.BASE_URL;
+const home = base.endsWith('/') ? base : `${base}/`;
+
+// Grouped in one glass pill in the header — see .nav-pill below.
+// "Contact" isn't repeated here: the "Get in touch" CTA button already
+// points at #contact.
+const navLinks = [
+  { href: `${home}#about`, label: 'About' },
+  { href: `${home}#work`, label: 'Projects' },
+  { href: `${home}#beyond`, label: 'Beyond Work' },
+];
+
+const currentYear = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title} · Aman Beniwal</title>
+  </head>
+  <body>
+    <DotGrid />
+
+    <a href="#main" class="skip-link">Skip to content</a>
+
+    <header class="site-header" id="site-header">
+      <div class="site-container site-header-inner">
+        <!-- Nav group + CTA, right-aligned (no brand/logo — removed per Aman). -->
+        <div class="nav-actions">
+          <nav class="main-nav" aria-label="Primary">
+            <ul class="nav-pill glass-pill pixel-corners">
+              {
+                navLinks.map((link) => (
+                  <li>
+                    <a href={link.href}>{link.label}</a>
+                  </li>
+                ))
+              }
+            </ul>
+          </nav>
+
+          <a href={`${home}#contact`} class="nav-cta pixel-corners">Get in touch</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" class:list={[{ 'has-hero': hasHero }]}>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-container footer-inner">
+        <p class="mono-label footer-line">built with 16-bit heart in Jaipur, India · © {currentYear} Aman Beniwal</p>
+      </div>
+    </footer>
+
+    <style>
+      .skip-link {
+        position: absolute;
+        left: -9999px;
+        top: 0;
+        z-index: 100;
+        background: var(--ink);
+        color: #fff;
+        padding: 8px 16px;
+        font-family: var(--font-mono);
+        font-size: 13px;
+      }
+
+      .skip-link:focus {
+        left: 16px;
+        top: 16px;
+      }
+
+      /* ---------- Header ----------
+         No banner/blur bar (removed per Aman) — the header is just the
+         floating nav buttons, which carry their own glass (.glass-pill /
+         .nav-cta below). */
+      .site-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 50;
+        background: transparent;
+      }
+
+      .site-header-inner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding-block: 18px;
+      }
+
+      /* Right-aligned group: nav pill + CTA together (no brand/logo). */
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        margin-left: auto; /* keep nav pinned right now the brand is gone */
+      }
+
+      /* Glass pill — translucent frosted group used by the nav links.
+         rgba white fill + blur + a hairline border reads as "glass" over
+         both the bright hero art and the plain white surface below.
+         Rectangular with stepped pixel-corners (see .pixel-corners in
+         global.css) instead of a smooth pill — deliberately NOT circular. */
+      .glass-pill {
+        /* --pc-step intentionally NOT set here — inherits the shared
+           chunkier value from .pixel-corners in global.css. Padding bumped
+           slightly so the bigger stepped corners don't crowd the pill's
+           inner nav links. */
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        list-style: none;
+        margin: 0;
+        padding: 3px;
+        height: 40px; /* shared with .nav-cta so both boxes are the same height */
+        /* Matte frosted translucency: heavy blur + NEUTRAL saturation (glass
+           over-saturates → wet look; matte stays muted) + an even semi-opaque
+           fill and NO glossy inset highlight. Soft dark hairline keeps the
+           edge readable over the plain white body too. */
+        background: rgba(255, 255, 255, 0.72);
+        backdrop-filter: blur(30px) saturate(1.02);
+        -webkit-backdrop-filter: blur(30px) saturate(1.02);
+        border: 1px solid rgba(18, 34, 58, 0.14);
+        box-shadow: 0 8px 28px rgba(18, 34, 58, 0.12);
+      }
+
+      .main-nav a {
+        display: inline-block;
+        color: var(--header-ink);
+        text-decoration: none;
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: 14px;
+        padding: 6px 20px; /* reduced vertical padding — slimmer glass pill */
+        border-radius: 10px;
+        transition: background-color 0.15s ease;
+      }
+
+      .main-nav a:hover,
+      .main-nav a:focus-visible {
+        background: rgba(255, 255, 255, 0.6);
+      }
+
+      /* Glass CTA — frosted, translucent, matching the nav pill's glass so
+         the two read as one system (ref: cofounder.co). Was solid white,
+         which washed out against the plain white body once scrolled; the
+         soft dark hairline + drop shadow + inset highlight now keep it
+         defined over both the bright hero and the white body. */
+      .nav-cta {
+        display: inline-flex;
+        align-items: center;
+        white-space: nowrap;
+        /* Matte frosted — same material as the nav pill, a touch more opaque
+           so it reads as the primary action. No gloss, muted saturation. */
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(30px) saturate(1.02);
+        -webkit-backdrop-filter: blur(30px) saturate(1.02);
+        color: var(--header-ink);
+        text-decoration: none;
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: 14px;
+        height: 40px; /* matches .nav-pill exactly */
+        padding: 0 26px;
+        border: 1px solid rgba(18, 34, 58, 0.16);
+        box-shadow: 0 8px 28px rgba(18, 34, 58, 0.14);
+        transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+      }
+
+      .nav-cta:hover {
+        transform: translateY(-1px);
+        background: rgba(255, 255, 255, 0.98);
+        box-shadow: 0 10px 32px rgba(18, 34, 58, 0.2);
+      }
+
+      #main {
+        padding-top: var(--header-h);
+      }
+
+      #main.has-hero {
+        padding-top: 0;
+      }
+
+      @media (max-width: 900px) {
+        .nav-actions {
+          order: 3;
+          flex-basis: 100%;
+          justify-content: center;
+        }
+
+        .nav-pill {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+      }
+
+      /* Translucent like the nav buttons — text reads, but the sunset behind
+         it still shows through a little. */
+      .site-footer {
+        position: relative;
+        z-index: 5;
+        background: rgba(255, 255, 255, 0.72);
+        backdrop-filter: blur(18px) saturate(1.1);
+        -webkit-backdrop-filter: blur(18px) saturate(1.1);
+        border-top: 1px solid rgba(18, 34, 58, 0.1);
+        padding-block: 13px;
+      }
+
+      /* On the homepage the footer sits over the sunset's lower band (the
+         sunset bleeds up through the translucent footer). Overlap ≈ footer
+         height so it's flush at the very bottom, no sunset sliver beneath. */
+      main:has(.finale) + .site-footer {
+        margin-top: -46px;
+      }
+
+      .footer-inner {
+        text-align: center;
+      }
+
+      .footer-line {
+        margin: 0;
+        color: var(--ink);
+      }
+    </style>
+
+    <script>
+      // Header has no glass banner anymore (removed) — this only keeps
+      // --header-h in sync with the header's real rendered height, which
+      // #main's top padding (hero-less pages) and Hero.astro's copy-clearance
+      // both read.
+      const header = document.getElementById('site-header');
+      if (header) {
+        // Keep --header-h in sync with the header's REAL rendered height
+        // (single row on desktop, wrapped two rows once the nav pill drops
+        // below ~900px — see .main-nav media query above). Both #main's
+        // top padding (hero-less pages) and Hero.astro's copy-clearance
+        // read this same var, so neither can drift out of sync with an
+        // actual height that changes with viewport width and font-load.
+        const syncHeaderHeight = () => {
+          document.documentElement.style.setProperty('--header-h', `${header.offsetHeight}px`);
+        };
+        syncHeaderHeight();
+        if ('ResizeObserver' in window) {
+          new ResizeObserver(syncHeaderHeight).observe(header);
+        } else {
+          window.addEventListener('resize', syncHeaderHeight);
+        }
+      }
+    </script>
+  </body>
+</html>

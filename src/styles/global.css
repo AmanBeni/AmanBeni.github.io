@@ -1,0 +1,373 @@
+/*
+  Global stylesheet — design tokens + base component classes.
+  Source of truth for tokens: BUILD-SPEC.md §2 /
+  "google stitch data/modern_pixel_portfolio/DESIGN.md".
+
+  Two places carry the token *values* on purpose (spec §2 asks for both):
+  1. This :root block — plain CSS custom properties, usable anywhere in
+     hand-written CSS (var(--border-high) etc.) independent of Tailwind.
+  2. tailwind.config.mjs theme.extend — loaded below via @config — which is
+     what makes Tailwind utility classes like `bg-surface`, `text-primary`,
+     `font-mono`, `rounded-card`, `text-display-lg` etc. available.
+  If you change a token, update both files.
+*/
+
+@import 'tailwindcss';
+@config '../../tailwind.config.mjs';
+
+/* Self-hosted fonts (do not rely on a Google Fonts CDN link) */
+@import '@fontsource/plus-jakarta-sans/400.css';
+@import '@fontsource/plus-jakarta-sans/600.css';
+@import '@fontsource/plus-jakarta-sans/700.css';
+@import '@fontsource/plus-jakarta-sans/800.css';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/500.css';
+/* Pixel-vector display font — available for pixel-styled UI accents. No
+   longer used on the header logo (see --font-logo / Gridtile below), but
+   kept imported/available for any other pixel use. */
+@import '@fontsource/pixelify-sans/500.css';
+@import '@fontsource/pixelify-sans/700.css';
+
+/* Header/brand logo font — self-hosted, local file (not on Fontsource).
+   Used ONLY for the header logo text (see .brand in BaseLayout.astro).
+   `/fonts/...` is a public/ asset path; Vite/Astro rewrites it with the
+   configured `base` during build, same as any other public asset ref. */
+@font-face {
+  font-family: 'Gridtile';
+  src: url('/fonts/gridtile.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Merchant Copy (Double Size) — current header logo/brand face. Local file,
+   not on Fontsource. Used ONLY for the header brand text (see .brand). */
+@font-face {
+  font-family: 'Merchant Copy';
+  src: url('/fonts/merchant-copy-doublesize.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Color */
+  --surface: #fbfbf8;
+  --surface-alt: #f2f2ee;
+  --container: #ffffff;
+  --ink: #1a1a1a;
+  --text-muted: rgba(26, 26, 26, 0.6);
+  --primary: #0056ab;
+  --primary-container: #1a6fd1;
+  --secondary: #712ae2; /* "Agent Purple" — AI/automation tags */
+  --accent-yellow: #f2b705; /* status / highlights, sparingly */
+  --climate: #0e7c5a; /* "Impact Green" — climate/impact tags + 1-2 CTAs, sparing */
+  --border-low: rgba(26, 26, 26, 0.1);
+  --border-high: #1a1a1a;
+
+  /* Type */
+  --font-display: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  --font-pixel: 'Pixelify Sans', var(--font-mono);
+  --font-logo: 'Merchant Copy', 'Gridtile', var(--font-pixel);
+
+  /* Header — shared by BaseLayout (glass header) and Hero (offset cancel) */
+  --header-h: 96px;
+  --header-ink: #12223a;
+
+  /* Shape */
+  --radius-card: 4px;
+  --radius-button: 8px;
+
+  /* Layout */
+  --container-max: 1200px;
+  --gutter: 24px;
+  --section-gap: 62px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+
+/* Visible focus states everywhere (accessibility, spec §7) */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ---------- Layout helpers ---------- */
+
+.site-container {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  padding-block: var(--section-gap);
+}
+
+/* ---------- Mono / "system chrome" ---------- */
+
+.mono-label {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.mono-data {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.section-header .chapter-number {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--primary);
+  white-space: nowrap;
+}
+
+.section-header .chapter-title {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+@media (max-width: 767px) {
+  .section-header .chapter-title {
+    font-size: 28px;
+  }
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: var(--radius-button);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  /* subtle "pressed" 3D edge, per DESIGN.md Components > Buttons */
+  border: 1px solid transparent;
+  border-bottom: 1px solid var(--border-high);
+  border-right: 1px solid var(--border-high);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+  border-bottom-color: var(--border-high);
+  border-right-color: var(--border-high);
+}
+
+.btn-primary:hover {
+  background: var(--primary-container);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--border-high);
+}
+
+.btn-secondary:hover {
+  background: var(--surface-alt);
+}
+
+/* ---------- Cards / tiles ---------- */
+
+.card {
+  background: var(--container);
+  border: 1px solid var(--border-low);
+  border-radius: var(--radius-card);
+}
+
+/*
+  Signature "drop-border" hover — spec §2:
+  offset translate(-3px,-3px) + hard 4px 4px 0 0 shadow (no blur).
+  Used on project tiles. This is a static CSS hover state, not motion/JS —
+  allowed in Phase 1 per spec §6 (parallax/sprite/cursor FX are Phase 3 only).
+*/
+.tile-hover {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.tile-hover:hover,
+.tile-hover:focus-visible {
+  transform: translate(-3px, -3px);
+  box-shadow: 4px 4px 0 0 var(--border-high);
+}
+
+/* ---------- Status pills / tags ---------- */
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 1px solid var(--border-low);
+  background: var(--surface-alt);
+  color: var(--ink);
+}
+
+.pill-live {
+  background: color-mix(in srgb, var(--climate) 12%, white);
+  color: var(--climate);
+  border-color: color-mix(in srgb, var(--climate) 30%, white);
+}
+
+.pill-ongoing {
+  background: color-mix(in srgb, var(--accent-yellow) 18%, white);
+  color: #7a5a03;
+  border-color: color-mix(in srgb, var(--accent-yellow) 40%, white);
+}
+
+.pill-archived {
+  background: var(--surface-alt);
+  color: var(--text-muted);
+}
+
+.pill-case-study {
+  background: color-mix(in srgb, var(--primary) 10%, white);
+  color: var(--primary);
+  border-color: color-mix(in srgb, var(--primary) 30%, white);
+}
+
+.pill-ai {
+  background: color-mix(in srgb, var(--secondary) 10%, white);
+  color: var(--secondary);
+  border-color: color-mix(in srgb, var(--secondary) 30%, white);
+}
+
+.pill-climate {
+  background: color-mix(in srgb, var(--climate) 10%, white);
+  color: var(--climate);
+  border-color: color-mix(in srgb, var(--climate) 30%, white);
+}
+
+/* ---------- Status dot (hero status chip) ---------- */
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: var(--climate);
+  display: inline-block;
+  animation: blink 2s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* ---------- Pixel corners (reusable stepped-corner shape) ----------
+   Retro alternative to border-radius: notches each corner in a 5-step
+   staircase that approximates a quarter-circle (chunky pixel-art rounded
+   corner) instead of a smooth curve or a small sharp notch. `--pc-step`
+   is the EFFECTIVE corner radius (total cut along each edge); it's
+   internally divided into 5 equal sub-steps of --pc-step/5 each to build
+   the staircase. Override per element for a chunkier or finer corner.
+   Works on any box — the clip-path uses calc() against the element's own
+   0%/100% edges, so it's size-agnostic.
+   Note: `border`/`box-shadow` are clipped along with the box, so a border
+   shows on the flat edges but not across the stepped notches themselves —
+   expected with this technique, and reads as part of the chunky/retro look
+   rather than a bug. */
+/* Rounded (circular-arc) corners on the nav buttons. Replaced the stepped
+   pixel-staircase clip-path, which read as straight-line steps rather than a
+   round corner. */
+.pixel-corners {
+  border-radius: 13px;
+}
+
+/* ---------- Pixel art crispness ---------- */
+
+img[data-pixel-art],
+canvas[data-pixel-art] {
+  image-rendering: pixelated;
+}
+
+/* ---------- Reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/*
+  .no-motion — explicit opt-out hook for Phase 3 (PixelScene parallax/wind/
+  cursor motion). Applied via JS when prefers-reduced-motion matches, or
+  manually. Kept inert here on purpose: Phase 1 has no motion to disable yet.
+*/
+.no-motion * {
+  animation: none !important;
+  transition: none !important;
+}
