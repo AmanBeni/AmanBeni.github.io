@@ -364,10 +364,16 @@ const finaleBirdKeyframes = finaleBirds.map((b) => b.keyframes).join('');
       }
     </div>
 
-    <!-- Single caption line (old photo). Wraps naturally when it runs out of
-         room; no location tag/box. -->
+    <!-- Location tag + caption (old photo → no live blinker). On mobile the tag
+         is hidden and the caption collapses to a single wrapping line (see the
+         max-width:700px block). -->
     <div class="finale-loc-wrap" aria-hidden="true">
-      <p class="finale-loc-note">A photo from 2024, when I had gone to trek at Marunji Hills, Pune. (now edited)</p>
+      <p class="finale-loc"><span class="finale-pin">📍</span>MARUNJI HILLS, PUNE</p>
+      <p class="finale-loc-note">
+        A photo from 2024, when I had<br />
+        gone to trek at Marunji Hills, Pune.<br />
+        (now edited)
+      </p>
     </div>
 
     <div class="finale-contact">
@@ -418,14 +424,10 @@ const finaleBirdKeyframes = finaleBirds.map((b) => b.keyframes).join('');
       bottom: 22px;
     }
 
-    /* Tree tucks BEHIND the about-box's right edge (the box is left-aligned and
-       opaque, z-index above the tree) so only its right side peeks out — a
-       small layered background accent rather than a standalone corner object.
-       Anchored to 50%+offset so it keeps overlapping the box across widths. */
+    /* Small tree in the bottom-right corner (smaller than the original 352px). */
     .decor-tree {
       width: 230px;
-      right: auto;
-      left: calc(50% + 110px);
+      right: 1%;
     }
 
     /* extra breathing room at the bottom of Skills & tools (and room for the
@@ -718,33 +720,32 @@ const finaleBirdKeyframes = finaleBirds.map((b) => b.keyframes).join('');
 
     /* Fixed, sitting up in the top band around the heading (not behind the
        books belt), fairly solid so they don't look washed out. */
-    /* Clouds clustered UP and to the RIGHT so the left-aligned "Beyond Work"
-       heading + sub-text stay readable. A little overlap on the far right is
-       fine; the heading/copy column on the left is kept clear. */
+    /* Desktop cloud arrangement (original). */
     .cloud-a {
-      top: -8px;
-      left: 46%;
-      width: 235px;
-      opacity: 0.9;
+      top: 8px;
+      left: 1%;
+      width: 280px;
+      opacity: 0.95;
     }
 
     .cloud-b {
-      top: 18px;
-      right: -4%;
-      width: 320px;
-      opacity: 0.85;
+      top: 44px;
+      right: 3%;
+      width: 360px;
+      opacity: 0.9;
     }
 
     .cloud-c {
-      top: 96px;
-      right: 15%;
-      width: 195px;
-      opacity: 0.78;
+      top: 104px;
+      left: 46%;
+      width: 240px;
+      opacity: 0.82;
     }
 
     @media (max-width: 820px) {
-      /* Narrow screens: lift the clouds into a small top-right band above the
-         heading and shrink them so they never land on the text. */
+      /* Narrow screens ONLY: lift the clouds into a small top-right band above
+         the heading and shrink them so they never land on the text. Desktop
+         keeps the original arrangement above. */
       .cloud-a {
         top: -12px;
         left: auto;
@@ -891,9 +892,29 @@ const finaleBirdKeyframes = finaleBirds.map((b) => b.keyframes).join('');
       z-index: 3;
     }
 
-    .finale-loc-note {
+    .finale-loc {
       margin: 0;
-      max-width: 340px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: var(--header-ink);
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(0, 0, 0, 0.14);
+      padding: 6px 12px;
+      border-radius: 3px;
+    }
+
+    .finale-pin {
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    .finale-loc-note {
+      margin: 9px 0 0;
+      max-width: 320px;
       font-size: 12px;
       line-height: 1.5;
       color: #fff;
@@ -942,6 +963,14 @@ const finaleBirdKeyframes = finaleBirds.map((b) => b.keyframes).join('');
         left: auto;
         top: auto;
         margin: 0 max(16px, 5vw) 14px;
+      }
+      /* Mobile only: drop the location tag, and collapse the caption's forced
+         line breaks so it flows as one wrapping line. */
+      .finale-loc {
+        display: none;
+      }
+      .finale-loc-note br {
+        display: none;
       }
       .finale-loc-note {
         color: var(--ink);

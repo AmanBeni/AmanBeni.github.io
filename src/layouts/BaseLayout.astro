@@ -311,11 +311,10 @@ const currentYear = new Date().getFullYear();
         padding-block: 3px;
       }
 
-      /* On the homepage the footer sits over the sunset's lower band (the
-         sunset bleeds up through the translucent footer). Overlap ≈ footer
-         height so it's flush at the very bottom, no sunset sliver beneath. */
+      /* Footer sits at the very bottom, directly below the sunset (no overlap
+         pulling it up onto the photo). */
       main:has(.finale) + .site-footer {
-        margin-top: -46px;
+        margin-top: 0;
       }
 
       .footer-inner {
