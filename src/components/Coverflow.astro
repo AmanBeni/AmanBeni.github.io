@@ -220,7 +220,19 @@ const uid = Math.random().toString(36).slice(2, 9);
 
     let pos = 0;
     let target = 0;
+    let vel = 0; // spring velocity, in card-units/sec (carried across re-targets)
     let rafId: number | null = null;
+    let lastFrameT = 0;
+
+    // Critically damped spring (Apple skill §4): no overshoot, velocity-aware,
+    // interruptible. `response` is settle-time-ish in seconds (lower = snappier),
+    // zeta = 1.0 is critical damping. omega is the natural frequency.
+    // Taste knob: lower = snappier settle, higher = more languid. 0.36 lands a
+    // flick in ~0.45s. Bump SPRING_ZETA below 1.0 (e.g. 0.85) if you want a
+    // little momentum bounce on release; 1.0 = precise, no overshoot.
+    const SPRING_RESPONSE = 0.36;
+    const SPRING_ZETA = 1.0;
+    const springOmega = (2 * Math.PI) / SPRING_RESPONSE;
 
     let dragging = false;
     let startX = 0;
@@ -266,30 +278,88 @@ const uid = Math.random().toString(36).slice(2, 9);
       updateCaption();
     }
 
-    function step() {
-      const remaining = target - pos;
-      if (Math.abs(remaining) < 0.0004) {
-        pos = target;
+    // Time-normalized spring integrator (semi-implicit Euler). Frame-rate
+    // independent — the old fixed `pos += remaining * 0.16` ran faster on 120Hz
+    // displays and started every glide at zero velocity (the "brick wall" seam
+    // the Apple skill §5 warns about). This carries `vel` instead, so a flick's
+    // release velocity flows straight into the settle with no discontinuity.
+    function step(now: number) {
+      if (lastFrameT === 0) lastFrameT = now;
+      let dt = (now - lastFrameT) / 1000;
+      lastFrameT = now;
+      // Clamp long frames (tab was backgrounded, GC pause) so the spring can't
+      // explode from one giant dt.
+      if (dt > 1 / 30) dt = 1 / 30;
+
+      const x = pos - target;
+      const accel = -springOmega * springOmega * x - 2 * SPRING_ZETA * springOmega * vel;
+      vel += accel * dt;
+      pos += vel * dt;
+
+      // Rest test: within ~0.5px and near-zero velocity → snap and stop, so the
+      // spring's asymptotic sub-pixel tail doesn't keep painting frames.
+      if (Math.abs(pos - target) < 0.002 && Math.abs(vel) < 0.004) {
+        // Re-base to the wrapped equivalent so `pos`/`target` can't drift to
+        // large floats over many loops (paint() folds by modulo anyway).
+        if (loop) {
+          const wrapped = ((target % count) + count) % count;
+          pos = wrapped;
+          target = wrapped;
+        } else {
+          pos = target;
+        }
+        vel = 0;
         paint();
         rafId = null;
+        lastFrameT = 0;
         return;
       }
-      pos += remaining * 0.16;
+
       paint();
       rafId = requestAnimationFrame(step);
     }
 
-    function settle(newTarget: number) {
-      if (rafId !== null) {
-        cancelAnimationFrame(rafId);
-        rafId = null;
-      }
+    // Re-target the spring. Optionally seed the velocity (velocity handoff on a
+    // flick, §5). Never cancels mid-flight — it just moves the target and lets
+    // the spring blend, which is what makes an in-progress glide grabbable and
+    // redirectable (§3 interruptibility).
+    function settle(newTarget: number, seedVel?: number) {
       target = clampPos(newTarget);
-      rafId = requestAnimationFrame(step);
+      if (typeof seedVel === "number") vel = seedVel;
+
+      // Reduced motion: no vestibular auto-travel — snap to the target. Direct
+      // 1:1 dragging while the finger is down is untouched (that's not motion
+      // the user didn't cause).
+      if (reducedMotion) {
+        if (rafId !== null) {
+          cancelAnimationFrame(rafId);
+          rafId = null;
+        }
+        pos = target;
+        vel = 0;
+        paint();
+        return;
+      }
+
+      if (rafId === null) {
+        lastFrameT = 0;
+        rafId = requestAnimationFrame(step);
+      }
     }
 
     function indexAt(p: number): number {
       return ((Math.round(p) % count) + count) % count;
+    }
+
+    // End of a drag: project where the flick was going (Apple skill §6 —
+    // exponential decay, not a linear cap), snap to the nearest card there, then
+    // hand the release velocity to the spring (§5) so drag→animate has no seam.
+    function releaseDrag() {
+      const decel = 0.998; // scroll-deceleration feel; 0.99 = snappier
+      const projected = ((velocity * decel) / (1 - decel)) / 1000; // card-units
+      // Cap the throw so a violent flick can't spin the whole ring dizzyingly.
+      const capped = Math.max(-4, Math.min(4, projected));
+      settle(Math.round(pos + capped), velocity);
     }
 
     function goTo(index: number) {
@@ -367,8 +437,7 @@ const uid = Math.random().toString(36).slice(2, 9);
       } catch {
         /* noop */
       }
-      const carried = Math.max(-2, Math.min(2, velocity * 0.18));
-      settle(Math.round(pos + carried));
+      releaseDrag();
       startAutoplay();
     }
 
@@ -392,8 +461,7 @@ const uid = Math.random().toString(36).slice(2, 9);
       hovered = false;
       if (dragging) {
         dragging = false;
-        const carried = Math.max(-2, Math.min(2, velocity * 0.18));
-        settle(Math.round(pos + carried));
+        releaseDrag();
       }
       startAutoplay();
     }

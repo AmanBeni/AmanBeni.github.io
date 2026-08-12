@@ -109,6 +109,10 @@ h4 {
   font-family: var(--font-display);
   letter-spacing: -0.02em;
   font-weight: 700;
+  /* Tight leading for headings (Apple skill §15 — leading tracks size
+     inversely; the body's 1.6 is far too loose for display type). Large heroes
+     override this even tighter locally. */
+  line-height: 1.12;
 }
 
 /* Visible focus states everywhere (accessibility, spec §7) */
@@ -222,6 +226,13 @@ textarea:focus-visible,
   background: var(--surface-alt);
 }
 
+/* Instant press feedback (Apple skill §1 — respond on pointer-down, not on
+   release). The quick scale reads as the button physically taking the press. */
+.btn:active {
+  transform: scale(0.97);
+  transition-duration: 0.06s;
+}
+
 /* ---------- Cards / tiles ---------- */
 
 .card {
@@ -244,6 +255,14 @@ textarea:focus-visible,
 .tile-hover:focus-visible {
   transform: translate(-3px, -3px);
   box-shadow: 4px 4px 0 0 var(--border-high);
+}
+
+/* Press pushes the tile back toward the surface — instant tactile feedback on
+   pointer-down (Apple skill §1), the inverse of the raised hover state. */
+.tile-hover:active {
+  transform: translate(-1px, -1px);
+  box-shadow: 2px 2px 0 0 var(--border-high);
+  transition-duration: 0.06s;
 }
 
 /* ---------- Status pills / tags ---------- */

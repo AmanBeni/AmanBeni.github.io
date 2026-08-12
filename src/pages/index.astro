@@ -364,14 +364,10 @@ const finaleBirdKeyframes = finaleBirds.map((b) => b.keyframes).join('');
       }
     </div>
 
-    <!-- Static location tag + caption, top-left (old photo → no live blinker). -->
+    <!-- Single caption line (old photo). Wraps naturally when it runs out of
+         room; no location tag/box. -->
     <div class="finale-loc-wrap" aria-hidden="true">
-      <p class="finale-loc"><span class="finale-pin">📍</span>MARUNJI HILLS, PUNE</p>
-      <p class="finale-loc-note">
-        A photo from 2024, when I had<br />
-        gone to trek at Marunji Hills, Pune.<br />
-        (now edited)
-      </p>
+      <p class="finale-loc-note">A photo from 2024, when I had gone to trek at Marunji Hills, Pune. (now edited)</p>
     </div>
 
     <div class="finale-contact">
@@ -422,9 +418,14 @@ const finaleBirdKeyframes = finaleBirds.map((b) => b.keyframes).join('');
       bottom: 22px;
     }
 
+    /* Tree tucks BEHIND the about-box's right edge (the box is left-aligned and
+       opaque, z-index above the tree) so only its right side peeks out — a
+       small layered background accent rather than a standalone corner object.
+       Anchored to 50%+offset so it keeps overlapping the box across widths. */
     .decor-tree {
-      width: 352px;
-      right: 0;
+      width: 230px;
+      right: auto;
+      left: calc(50% + 110px);
     }
 
     /* extra breathing room at the bottom of Skills & tools (and room for the
@@ -434,8 +435,17 @@ const finaleBirdKeyframes = finaleBirds.map((b) => b.keyframes).join('');
     }
 
     @media (max-width: 820px) {
-      .section-decor {
+      /* The tree is too wide for phones — hide it. The computer is small enough
+         to keep as a corner accent (Aman's call), just scaled down and tucked
+         into the bottom-right. */
+      .decor-tree {
         display: none;
+      }
+      .decor-computer {
+        width: 118px;
+        right: 12px;
+        bottom: 14px;
+        opacity: 0.92;
       }
     }
 
@@ -708,28 +718,46 @@ const finaleBirdKeyframes = finaleBirds.map((b) => b.keyframes).join('');
 
     /* Fixed, sitting up in the top band around the heading (not behind the
        books belt), fairly solid so they don't look washed out. */
+    /* Clouds clustered UP and to the RIGHT so the left-aligned "Beyond Work"
+       heading + sub-text stay readable. A little overlap on the far right is
+       fine; the heading/copy column on the left is kept clear. */
     .cloud-a {
-      top: 8px;
-      left: 1%;
-      width: 280px;
-      opacity: 0.95;
-    }
-
-    .cloud-b {
-      top: 44px;
-      right: 3%;
-      width: 360px;
+      top: -8px;
+      left: 46%;
+      width: 235px;
       opacity: 0.9;
     }
 
-    .cloud-c {
-      top: 104px;
-      left: 46%;
-      width: 240px;
-      opacity: 0.82;
+    .cloud-b {
+      top: 18px;
+      right: -4%;
+      width: 320px;
+      opacity: 0.85;
     }
 
-    @media (max-width: 700px) {
+    .cloud-c {
+      top: 96px;
+      right: 15%;
+      width: 195px;
+      opacity: 0.78;
+    }
+
+    @media (max-width: 820px) {
+      /* Narrow screens: lift the clouds into a small top-right band above the
+         heading and shrink them so they never land on the text. */
+      .cloud-a {
+        top: -12px;
+        left: auto;
+        right: 28%;
+        width: 145px;
+        opacity: 0.78;
+      }
+      .cloud-b {
+        top: 6px;
+        right: -8%;
+        width: 180px;
+        opacity: 0.72;
+      }
       .cloud-c {
         display: none;
       }
@@ -863,39 +891,97 @@ const finaleBirdKeyframes = finaleBirds.map((b) => b.keyframes).join('');
       z-index: 3;
     }
 
-    .finale-loc {
-      margin: 0;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      color: var(--header-ink);
-      background: rgba(255, 255, 255, 0.88);
-      border: 1px solid rgba(0, 0, 0, 0.14);
-      padding: 6px 12px;
-      border-radius: 3px;
-    }
-
-    .finale-pin {
-      font-size: 12px;
-      line-height: 1;
-    }
-
     .finale-loc-note {
-      margin: 9px 0 0;
-      max-width: 320px;
+      margin: 0;
+      max-width: 340px;
       font-size: 12px;
       line-height: 1.5;
       color: #fff;
       text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
     }
 
+    /* ---- Finale on phones ----
+       The desktop version overlaps the contact box ON the sunset photo. On a
+       narrow screen the photo is short, so that left a big empty band above and
+       crammed the text onto the image. Instead, stack vertically: contact card
+       in the open space, the location note right above the photo it describes,
+       and the sunset as a full-width band pinned to the bottom. */
     @media (max-width: 700px) {
+      .finale {
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        padding-top: 36px;
+      }
+
+      /* No dimming scrim (nothing sits on the photo now) and no birds flying
+         over the cream area above it. */
+      .finale::after {
+        display: none;
+      }
+      .finale-birds {
+        display: none;
+      }
+
+      /* Contact card first, in the previously-empty space. */
       .finale-contact {
-        bottom: clamp(120px, 30vw, 200px);
-        padding: 16px 18px;
+        position: static;
+        order: 1;
+        left: auto;
+        bottom: auto;
+        margin: 0 max(16px, 5vw) 26px;
+        background: rgba(8, 14, 26, 0.94);
+        padding: 18px 20px;
+      }
+
+      /* Location tag + caption sit just above the photo. On cream now, so the
+         caption flips to dark ink with no white glow. */
+      .finale-loc-wrap {
+        position: static;
+        order: 2;
+        left: auto;
+        top: auto;
+        margin: 0 max(16px, 5vw) 14px;
+      }
+      .finale-loc-note {
+        color: var(--ink);
+        text-shadow: none;
+        max-width: none;
+      }
+
+      /* Sunset as a full-width band at the very bottom, zoomed ~20% (wider than
+         the viewport, centred, sides clipped by the section's overflow:hidden)
+         so it reads bigger and covers more of the page. Scaling by width keeps
+         the baked pixel-dissolve at the top intact instead of cropping it off. */
+      .finale-sunset {
+        position: static;
+        order: 3;
+        width: 120%;
+        max-width: none;
+        margin-left: -10%;
+      }
+    }
+
+    /* Glass fallbacks for the contact/location cards (Apple skill §14): make the
+       translucent material solid when the user asks for reduced transparency or
+       more contrast, so text never rides on a see-through surface. */
+    @media (prefers-reduced-transparency: reduce) {
+      .finale-contact {
+        background: rgba(8, 14, 26, 0.94);
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+      }
+      .finale-loc {
+        background: #ffffff;
+      }
+    }
+
+    @media (prefers-contrast: more) {
+      .finale-contact {
+        background: #0b1220;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        border-color: rgba(255, 255, 255, 0.6);
       }
     }
   </style>

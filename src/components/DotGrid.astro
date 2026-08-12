@@ -124,10 +124,19 @@
       return `rgba(${r}, ${g}, ${b}, ${a})`;
     }
 
-    function resize() {
+    function resize(force?: boolean) {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      // Mobile browsers fire `resize` every time the URL bar hides/shows on
+      // scroll (height changes, width doesn't). Rebuilding the grid on those
+      // events is what made the dots visibly jitter while scrolling. Ignore
+      // height-only changes: only rebuild on a real width change (orientation)
+      // or when we need MORE height than we've already covered. Height is
+      // grow-only so the newly revealed strip (URL bar gone) never shows a gap.
+      if (!force && w === width && h <= height) return;
       dpr = Math.max(1, window.devicePixelRatio || 1);
-      width = window.innerWidth;
-      height = window.innerHeight;
+      width = w;
+      height = Math.max(height, h);
       canvas!.width = Math.round(width * dpr);
       canvas!.height = Math.round(height * dpr);
       canvas!.style.width = `${width}px`;
@@ -254,12 +263,12 @@
 
     if (reduceMotion) {
       // Static dots only — no cursor interaction, no rAF loop.
-      resize();
-      window.addEventListener('resize', resize);
+      resize(true);
+      window.addEventListener('resize', () => resize());
       return;
     }
 
-    window.addEventListener('resize', resize);
+    window.addEventListener('resize', () => resize());
     // element-anchored colour sources (tree, clouds) settle after images load
     window.addEventListener('load', computeSources);
 
@@ -289,6 +298,6 @@
       }
     });
 
-    resize();
+    resize(true);
   })();
 </script>
