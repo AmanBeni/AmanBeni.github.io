@@ -25,17 +25,6 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
 >
   <div class="hero-inner">
     <div class="hero-copy">
-      <p
-        class="hero-chip"
-        data-lab-id="hero.chip"
-        data-lab-kind="flow"
-        data-lab-label="Status chip"
-        data-lab-group="Hero"
-        data-lab-props="fontSize,letterSpacing,color,marginBottom"
-      >
-        <span class="hero-chip-dot" aria-hidden="true"></span>
-        SYSTEM_ONLINE &middot; JAIPUR, IN
-      </p>
 
       <h1
         class="hero-title"
@@ -88,50 +77,23 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
       </div>
     </div>
 
-    <div class="hero-side">
-      <img
-        class="hero-renewables"
-        data-lab-id="hero.renewables"
-        data-lab-kind="flow"
-        data-lab-label="Renewables diorama"
-        data-lab-group="Hero"
-        data-lab-props="maxWidth,marginTop,marginBottom"
-        data-lab-asset="objects"
-        src={`${baseSlash}paper/objects/renewables-diorama-cut.webp`}
-        alt="Papercraft diorama of wind turbines and solar panels on a green landform"
-        loading="lazy"
-      />
-    </div>
   </div>
 
-
-  <!-- Free-floating collage layer: the cut-paper cloud landscape sits here,
-       draggable/rescalable independent of the flow copy above it. -->
-  <div class="hero-canvas" data-lab-canvas aria-hidden="false">
-    <div
-      class="hero-cloudscape"
-      data-lab-id="hero.cloudscape"
-      data-lab-kind="free"
-      data-lab-label="Cloud landscape"
+  <div class="hero-side">
+    <img
+      class="hero-renewables"
+      data-lab-id="hero.renewables"
+      data-lab-kind="flow"
+      data-lab-label="Renewables diorama"
       data-lab-group="Hero"
-      data-lab-props="x,y,rotate,scale,z,opacity,shadow"
-    >
-      <svg viewBox="0 0 600 340" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Cut-paper cloud landscape">
-        <rect width="600" height="340" fill="#bfe0ea" />
-        <g fill="#f4efe4" opacity="0.96">
-          <ellipse cx="120" cy="90" rx="70" ry="34" />
-          <ellipse cx="175" cy="72" rx="46" ry="28" />
-          <ellipse cx="70" cy="80" rx="42" ry="24" />
-        </g>
-        <g fill="#f4efe4" opacity="0.88">
-          <ellipse cx="430" cy="60" rx="60" ry="28" />
-          <ellipse cx="480" cy="78" rx="40" ry="22" />
-        </g>
-        <path d="M0,340 L0,230 C90,190 140,250 230,210 C320,175 380,235 470,205 C520,188 560,215 600,200 L600,340 Z" fill="#a9754a" />
-        <path d="M0,340 L0,270 C120,250 220,290 320,260 C420,232 500,270 600,250 L600,340 Z" fill="#8a5e3a" />
-      </svg>
-    </div>
+      data-lab-props="maxWidth,marginTop,marginBottom"
+      data-lab-asset="objects"
+      src={`${baseSlash}paper/objects/renewables-diorama.webp`}
+      alt="Papercraft diorama of wind turbines and solar panels on a green landform"
+      loading="lazy"
+    />
   </div>
+
 </section>
 
 <style>
@@ -142,10 +104,10 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     background-image: var(--paper-hero-bg);
     background-size: cover;
     background-position: center;
-    /* 19 Aug 2026 (execution round): cut well over 40% further from the
-       84px/91px this already carried — the green panel must fit inside one
-       viewport including the sticky top bar. */
-    padding-block: 40px 40px;
+    /* Copy sits lower in the panel. The green still has to fit inside one
+       viewport including the sticky top bar, so the bottom padding stays
+       tight while the top does the work. */
+    padding-block: 110px 70px;
     border-bottom: 1px solid var(--rule);
     color: var(--paper-hero-ink);
   }
@@ -158,7 +120,7 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     position: absolute;
     inset: 0;
     pointer-events: none;
-    opacity: calc(var(--grain) * 0.9);
+    opacity: var(--grain-hero);
     background-image: var(--grain-texture);
     background-size: var(--grain-size) var(--grain-size);
     mix-blend-mode: soft-light;
@@ -184,24 +146,7 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     flex-direction: column;
   }
 
-  .hero-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    width: fit-content;
-    font-family: var(--font-mono);
-    font-size: 11.5px;
-    letter-spacing: 0.1em;
-    color: rgba(244, 239, 224, 0.7);
-    margin: 0 0 16px;
-  }
 
-  .hero-chip-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: #d9a441;
-  }
 
   .hero-title {
     font-family: var(--font-display);
@@ -245,8 +190,9 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
   }
 
   .hero-photo {
-    width: 150px;
-    height: 150px;
+    /* 15% larger than the 150px it carried before. */
+    width: 172px;
+    height: 172px;
     object-fit: cover;
     object-position: top center;
     background: #eee6d4;
@@ -254,52 +200,30 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     border: none;
   }
 
-  /* Renewables diorama (change 4) — small, straight, sits opposite the copy
-     column. No border/shadow/rotation, and no colour treatment: its yellow
-     background is left as photographed. Sized so it never forces the hero
-     taller than the copy column beside it. */
+  /* Renewables diorama. Positioned to the spot Aman outlined in red: right
+     hand side, starting below the headline and running to roughly two thirds
+     of the hero's height. Absolute rather than a flex column so it lands
+     exactly there instead of being pushed around by the copy beside it.
+     Yellow studio background left exactly as photographed, on request. */
   .hero-side {
-    flex: none;
-    align-self: flex-start;
-    margin-top: 4px;
+    position: absolute;
+    left: 57%;
+    top: 34%;
+    width: 30%;
+    z-index: 1;
   }
 
   .hero-renewables {
     display: block;
-    width: 190px;
-    max-width: 32vw;
+    width: 100%;
     height: auto;
     border: none;
     box-shadow: none;
     transform: none;
   }
 
-  .hero-canvas {
-    position: relative;
-    z-index: 1;
-    max-width: 1180px;
-    margin: 32px auto 0;
-    padding-inline: 24px;
-    height: clamp(80px, 11vw, 150px);
-  }
 
-  .hero-cloudscape {
-    position: absolute;
-    left: 4%;
-    right: 4%;
-    bottom: 0;
-    height: 100%;
-    /* 19 Aug 2026: white photo-frame border removed (change 2). */
-    border: none;
-    overflow: hidden;
-    border-radius: 2px;
-  }
 
-  .hero-cloudscape svg {
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
 
   @media (max-width: 860px) {
     .paper-hero {
@@ -309,15 +233,14 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
       flex-direction: column;
     }
     .hero-side {
-      align-self: flex-start;
-      margin-top: 20px;
+      position: static;
+      width: 200px;
+      max-width: 55vw;
+      margin-top: 28px;
     }
     .hero-renewables {
       width: 150px;
       max-width: 45vw;
-    }
-    .hero-canvas {
-      margin-top: 24px;
     }
   }
 </style>

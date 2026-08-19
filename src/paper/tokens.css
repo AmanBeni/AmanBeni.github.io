@@ -178,4 +178,8 @@
   /* The page sits inset from the window edge. Section rules stop short of
      the screen, which frames the page without a four-sided box. */
   --page-inset: 16px;
+
+  /* The dark green hero keeps its paper texture even though the cream page
+     ground is flat. Page --grain sits near zero; this is independent. */
+  --grain-hero: 0.55;
 }

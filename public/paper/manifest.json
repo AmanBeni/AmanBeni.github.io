@@ -210,6 +210,16 @@
     "bytes": 198862
   },
   {
+    "id": "objects/renewables-diorama",
+    "category": "objects",
+    "name": "renewables-diorama",
+    "label": "Renewables Diorama",
+    "src": "/paper/objects/renewables-diorama.webp",
+    "width": 1200,
+    "height": 670,
+    "bytes": 57000
+  },
+  {
     "id": "text/advercase-letterpress",
     "category": "text",
     "name": "advercase-letterpress",
