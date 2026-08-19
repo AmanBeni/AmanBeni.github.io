@@ -36,13 +36,20 @@ const currentYear = new Date().getFullYear();
          running the full height of the page (see PencilFrame.astro). -->
     <PencilFrame />
 
-    <!-- Top bar, meli-style: brand left, links centred, actions right, one
-         hairline rule underneath. Sticky, and transparent so the single page
-         background runs straight through it. -->
+    <!-- Slim strip across the very top. The reference site runs a promo line
+         here; this is the same band, left empty on purpose. -->
+    <div class="site-ticker" data-lab-id="global.ticker" data-lab-kind="flow"
+      data-lab-label="Top strip" data-lab-group="Global"
+      data-lab-props="paddingTop,paddingBottom,background,color,fontSize">
+    </div>
+
+    <!-- Top bar, meli-style: links centred, actions right, one hairline rule
+         underneath. Sticky, and transparent so the single page background
+         runs straight through it. -->
     <header class="site-header" data-lab-id="global.header" data-lab-kind="flow"
       data-lab-label="Top bar" data-lab-group="Global"
       data-lab-props="paddingTop,paddingBottom,font,color">
-      <a href="#main" class="site-brand">aman</a>
+      <span class="site-brand-spacer" aria-hidden="true"></span>
 
       <nav class="site-nav" aria-label="Primary">
         <a href="#about">about</a>
@@ -145,14 +152,18 @@ const currentYear = new Date().getFullYear();
         background-attachment: fixed;
       }
 
-      .site-brand {
-        justify-self: start;
-        font-family: var(--font-display);
-        font-size: 30px;
-        line-height: 1;
-        letter-spacing: -0.03em;
-        color: var(--ink);
-        text-decoration: none;
+      /* Slim strip across the very top. The reference site runs a promo
+         line here; this is the same band left empty, which reads as a
+         weighted rule rather than an empty row. */
+      .site-ticker {
+        height: 34px;
+        border-bottom: 1px solid var(--rule);
+      }
+
+      /* Wordmark removed. The spacer holds the left column so the nav stays
+         optically centred. */
+      .site-brand-spacer {
+        display: block;
       }
 
       .site-nav {
