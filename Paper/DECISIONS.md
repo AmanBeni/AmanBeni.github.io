@@ -396,3 +396,50 @@ not render in their own face yet.
 An earlier sub-agent declined this on licensing grounds and wrote its
 reasoning into this file. That reasoning is superseded by Aman's
 confirmation.
+
+---
+
+## 19 Aug 2026 — Execution round: standing rules, settled
+
+Ran the focused change list (background, frame, hero height/layout, no
+tilts, no shadows, sentence-case headings, restored About heading, restored
+Contact's green ground, bigger body text). Writing down what's now settled
+so it isn't re-litigated:
+
+- **No drop shadows, anywhere.** `--shadow-soft`/`--shadow-lifted`/
+  `--shadow-deep` are zeroed to `none` in `tokens.css` (kept defined, not
+  deleted, so nothing that references them breaks). Every `box-shadow` and
+  `filter: drop-shadow` in `src/paper/sections/*` and `TapeStrip.astro` was
+  removed at the source too, not just masked by the token.
+- **No tilts, anywhere.** Every `transform: rotate(...)` on an image, photo,
+  or tape strip is gone. `TapeStrip`/`PaperObject` still accept a `rotate`
+  prop (machinery, unused by default) — nothing calls them with a non-zero
+  value any more.
+- **Headings are sentence case**, done via `text-transform: lowercase` +
+  `::first-letter { text-transform: uppercase }` on each heading class,
+  rather than rewriting content strings — robust to whatever text a section
+  holds. One side effect worth flagging: "AI Projects" renders "Ai
+  projects" under this rule (acronym gets lowercased). That's the literal
+  reading of "first letter capital, rest lowercase" — revisit if Aman wants
+  acronyms exempted.
+- **Flat cream ground by default.** `--paper-stock: none`, `--grain: 0.02`.
+  The asset list and the grain/noise machinery are untouched — just not on
+  by default. Hero and Contact keep their own textured green ground
+  (`--paper-hero-bg`), which is a background-image, not the grain knob, so
+  it wasn't part of this flattening.
+- **Framed page.** `PencilFrame.astro` existed but was never imported into
+  `lab.astro` — that's why the edges looked bare. Now mounted at the top of
+  `<body>`, switched from `position: fixed` (viewport-only) to `position:
+  absolute` against a `position: relative` body, and its hardcoded 28px
+  inset replaced with `--page-inset`, so the rule runs the full scrollable
+  height of the page, not just one screen.
+- **Contact bookends the page.** It now carries the same
+  `--paper-hero-tint` / `--paper-hero-bg` / `--paper-hero-ink` treatment as
+  Hero — this had been removed at some point and needed restoring, per
+  Aman's note.
+- **Body copy is ~18px**, up from 16px; smaller mono/label text scaled up
+  by roughly the same proportion throughout. Verified via `npm run build`
+  (8 pages, editor code still absent from `dist/lab/index.html`) and in
+  the dev preview at 1440px and 375px — console clean apart from the
+  already-known, expected Euclid Circular B 404 (font not yet converted
+  locally).

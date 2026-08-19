@@ -8,7 +8,13 @@
  * a border image ever lands in `public/paper/borders/`, this still switches
  * to it automatically, no code change needed.
  *
- * Fixed overlay, does not affect page layout or intercept clicks.
+ * 19 Aug 2026: this component existed but was never imported into lab.astro,
+ * so the frame was missing on the live page. Now mounted in lab.astro, right
+ * inside <body>. Inset is driven by --page-inset (was a hardcoded 28px), and
+ * it's positioned absolute against <body> (which is position:relative) so
+ * the left/right rules run the full document height, not just the viewport —
+ * a `position:fixed` frame would only cover one screen's worth as you scroll.
+ * Does not affect page layout or intercept clicks.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -54,11 +60,10 @@ try {
 
 <style>
   .pencil-frame {
-    position: fixed;
+    position: absolute;
     inset: 0;
     z-index: 40;
     pointer-events: none;
-    opacity: 0.5;
   }
 
   /* Straight-rule fallback: a single hairline inset from each edge. */
@@ -70,28 +75,28 @@ try {
 
   span.edge-top,
   span.edge-bottom {
-    left: 28px;
-    right: 28px;
+    left: var(--page-inset);
+    right: var(--page-inset);
     height: 1px;
   }
   span.edge-top {
-    top: 28px;
+    top: 0;
   }
   span.edge-bottom {
-    bottom: 28px;
+    bottom: 0;
   }
 
   span.edge-left,
   span.edge-right {
-    top: 28px;
-    bottom: 28px;
+    top: 0;
+    bottom: 0;
     width: 1px;
   }
   span.edge-left {
-    left: 28px;
+    left: var(--page-inset);
   }
   span.edge-right {
-    right: 28px;
+    right: var(--page-inset);
   }
 
   .pencil-edge {

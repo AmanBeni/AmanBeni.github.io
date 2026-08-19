@@ -38,8 +38,12 @@
 
   /* Background image, from the manifest — the page's base paper stock.
      Section-level `background` props (data-lab-props) can override this
-     per-section; this is the fallback/global mood. */
-  --paper-stock: url('/paper/backgrounds/natural-smooth-natural.webp');
+     per-section; this is the fallback/global mood.
+
+     19 Aug 2026: Aman does not like the paper texture as the page ground.
+     Default is now a flat cream ground, no image — the asset list and grain
+     machinery below stay wired up and available, just not on by default. */
+  --paper-stock: none;
   --paper-tint: #f3f2e9;
 
   --ink: #1c1a15;
@@ -106,14 +110,22 @@
   /* 0–1 strength of the paper-grain overlay. Texture itself is irregular
      fractal noise (--grain-texture below), never a repeating dot lattice —
      a dot grid reads as a pixel-art screen door, which is what this theme
-     is leaving behind. */
-  --grain: 0.35;
+     is leaving behind.
+
+     19 Aug 2026: dropped to near-zero by default alongside --paper-stock —
+     Aman wants a flat, calm ground. The overlay machinery stays wired (set
+     this back up if a section ever wants texture again). */
+  --grain: 0.02;
   --grain-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.55 0.55 0.55 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   --grain-size: 140px;
 
-  --shadow-soft: 0 1px 2px rgba(30, 20, 10, 0.1), 0 3px 8px rgba(30, 20, 10, 0.08);
-  --shadow-lifted: 0 2px 4px rgba(30, 20, 10, 0.12), 0 14px 26px rgba(30, 20, 10, 0.16);
-  --shadow-deep: 0 6px 10px rgba(30, 20, 10, 0.16), 0 30px 54px rgba(30, 20, 10, 0.26);
+  /* 19 Aug 2026: no drop shadows anywhere on the page (standing rule). These
+     three tokens are kept defined so nothing that reads them breaks, but
+     every usage across src/paper/sections and src/paper/components has been
+     removed or zeroed out — nothing on /lab casts a shadow any more. */
+  --shadow-soft: none;
+  --shadow-lifted: none;
+  --shadow-deep: none;
 
   /* Pencil/straight-rule border colour — the muted ink tone PencilFrame
      draws its four edge rules with. */

@@ -10,6 +10,7 @@
  */
 import '../paper/tokens.css';
 
+import PencilFrame from '../paper/components/PencilFrame.astro';
 import Hero from '../paper/sections/Hero.astro';
 import About from '../paper/sections/About.astro';
 import Education from '../paper/sections/Education.astro';
@@ -31,6 +32,10 @@ const currentYear = new Date().getFullYear();
     <title>Aman Beniwal · Lab</title>
   </head>
   <body>
+    <!-- Page frame: hairline rules inset by --page-inset on all four sides,
+         running the full height of the page (see PencilFrame.astro). -->
+    <PencilFrame />
+
     <!-- Top bar, meli-style: brand left, links centred, actions right, one
          hairline rule underneath. Sticky, and transparent so the single page
          background runs straight through it. -->
@@ -101,6 +106,7 @@ const currentYear = new Date().getFullYear();
         and read as a frame without being a four-sided box.
       */
       body {
+        position: relative;
         margin: 0;
         padding-inline: var(--page-inset);
         background-color: var(--paper-tint);
@@ -109,7 +115,9 @@ const currentYear = new Date().getFullYear();
         background-attachment: fixed;
         color: var(--ink);
         font-family: var(--font-body);
-        font-size: 16px;
+        /* 19 Aug 2026: bumped up from 16px — 16 read too small for
+           comfortable reading. Section-level copy sizes scale from this. */
+        font-size: 18px;
         line-height: 1.6;
         -webkit-font-smoothing: antialiased;
       }
@@ -158,7 +166,7 @@ const currentYear = new Date().getFullYear();
       .site-contact {
         font-family: var(--font-display);
         font-style: italic;
-        font-size: 15px;
+        font-size: 16px;
         letter-spacing: 0;
         text-decoration: none;
         color: var(--ink);
@@ -184,7 +192,7 @@ const currentYear = new Date().getFullYear();
       .site-footer p {
         margin: 0;
         font-family: var(--font-mono);
-        font-size: 10.5px;
+        font-size: 11.5px;
         letter-spacing: 0.03em;
         color: var(--ink-soft);
       }
@@ -202,7 +210,7 @@ const currentYear = new Date().getFullYear();
         }
         .site-nav a,
         .site-contact {
-          font-size: 13px;
+          font-size: 14px;
         }
       }
     </style>

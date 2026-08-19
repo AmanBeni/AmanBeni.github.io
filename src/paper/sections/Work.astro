@@ -85,6 +85,10 @@ const projects = (await getCollection('projects'))
     margin: 0 0 80px;
   }
 
+  .work-heading::first-letter {
+    text-transform: uppercase;
+  }
+
   /* A quiet stacked list, not a grid of cards — each project is a rule-
      separated block with room to breathe instead of a boxed tile. */
   .work-grid {
@@ -113,7 +117,7 @@ const projects = (await getCollection('projects'))
   .work-title {
     font-family: var(--font-display);
     font-weight: 400;
-    font-size: 24px;
+    font-size: 26px;
     letter-spacing: -0.01em;
     color: var(--ink);
     margin: 0 0 12px;
@@ -121,7 +125,7 @@ const projects = (await getCollection('projects'))
 
   .work-summary {
     font-family: var(--font-body);
-    font-size: 14px;
+    font-size: 16px;
     line-height: 1.6;
     color: var(--ink-soft);
     margin: 0 0 16px;
@@ -138,7 +142,7 @@ const projects = (await getCollection('projects'))
 
   .work-tag {
     font-family: var(--font-mono);
-    font-size: 10.5px;
+    font-size: 11.5px;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--ink-soft);
@@ -155,7 +159,7 @@ const projects = (await getCollection('projects'))
   .work-status {
     display: inline-block;
     font-family: var(--font-mono);
-    font-size: 10.5px;
+    font-size: 11.5px;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--accent);

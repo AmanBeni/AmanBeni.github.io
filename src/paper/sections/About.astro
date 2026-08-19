@@ -17,16 +17,16 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
   data-lab-props="paddingTop,paddingBottom,background,maxWidth"
 >
   <div class="about-inner">
-    <p
-      class="about-eyebrow"
+    <h2
+      class="about-heading"
       data-lab-id="about.eyebrow"
       data-lab-kind="flow"
-      data-lab-label="Eyebrow label"
+      data-lab-label="About heading"
       data-lab-group="About"
       data-lab-props="fontSize,letterSpacing,color,marginBottom,font"
     >
       A bit about me
-    </p>
+    </h2>
 
     <div class="about-row">
       <div class="about-copy">
@@ -101,13 +101,23 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     padding-inline: 24px;
   }
 
-  .about-eyebrow {
-    font-family: var(--font-mono);
-    font-size: 11.5px;
-    letter-spacing: 0.1em;
+  /* 19 Aug 2026: was a small mono eyebrow label; restored as a proper
+     section heading matching Education/Work/Skills/Beyond/Contact. */
+  .about-heading {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(44px, 6vw, 72px);
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    text-transform: lowercase;
+    color: var(--ink);
+    text-shadow: var(--letterpress-onlight);
+    mix-blend-mode: multiply;
+    margin: 0 0 80px;
+  }
+
+  .about-heading::first-letter {
     text-transform: uppercase;
-    color: var(--ink-soft);
-    margin: 0 0 56px;
   }
 
   .about-row {
@@ -124,7 +134,7 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
   .about-copy :global(p) {
     margin: 0;
     font-family: var(--font-body);
-    font-size: 15px;
+    font-size: 18px;
     line-height: 1.75;
     color: var(--ink);
   }
@@ -146,8 +156,6 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     width: 100%;
     height: auto;
     border: 6px solid #fdfaf0;
-    box-shadow: var(--shadow-deep);
-    transform: rotate(-2deg);
   }
 
   @media (max-width: 860px) {

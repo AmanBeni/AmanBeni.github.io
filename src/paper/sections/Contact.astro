@@ -54,10 +54,14 @@
 
 <style>
   .paper-contact {
-    /* No background of its own. The single page background runs through,
-       and the rule above it is what marks the section. */
+    /* 19 Aug 2026: restored the green textured ground Hero has, so Contact
+       bookends the page (was accidentally left transparent). */
+    background-color: var(--paper-hero-tint);
+    background-image: var(--paper-hero-bg);
+    background-size: cover;
+    background-position: center;
     padding-block: 180px;
-    color: var(--ink);
+    color: var(--paper-hero-ink);
     position: relative;
   }
 
@@ -66,13 +70,11 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    /* Light ground now, so the grain multiplies down into the paper rather
-       than soft-lighting up off a dark one. Lighter touch too, since the
-       page background already carries its own texture underneath. */
-    opacity: calc(var(--grain) * 0.35);
+    /* Dark ground, same as Hero — soft-light instead of multiply. */
+    opacity: calc(var(--grain) * 0.9);
     background-image: var(--grain-texture);
     background-size: var(--grain-size) var(--grain-size);
-    mix-blend-mode: multiply;
+    mix-blend-mode: soft-light;
   }
 
   .contact-inner {
@@ -90,9 +92,13 @@
     letter-spacing: -0.03em;
     line-height: 1.05;
     text-transform: lowercase;
-    color: var(--ink);
+    color: var(--paper-hero-ink);
     text-shadow: var(--letterpress-ondark);
     margin: 0 0 64px;
+  }
+
+  .contact-heading::first-letter {
+    text-transform: uppercase;
   }
 
   .contact-lines {
@@ -103,7 +109,7 @@
 
   .contact-line {
     font-family: var(--font-body);
-    font-size: 16px;
+    font-size: 18px;
     margin: 0;
     display: flex;
     align-items: baseline;
@@ -112,19 +118,19 @@
 
   .contact-label {
     font-family: var(--font-mono);
-    font-size: 11.5px;
+    font-size: 12.5px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: rgba(244, 239, 224, 0.6);
   }
 
   .contact-line a {
-    color: var(--ink);
+    color: var(--paper-hero-ink);
     text-decoration: none;
     border-bottom: 1px solid rgba(244, 239, 224, 0.5);
   }
 
   .contact-line a:hover {
-    border-bottom-color: var(--ink);
+    border-bottom-color: var(--paper-hero-ink);
   }
 </style>
