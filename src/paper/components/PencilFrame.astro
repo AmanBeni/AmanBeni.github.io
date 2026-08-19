@@ -62,7 +62,9 @@ try {
   .pencil-frame {
     position: absolute;
     inset: 0;
-    z-index: 40;
+    /* Above the sticky header (z-index 45), which carries its own background
+       and was painting over the side rules as you scrolled past it. */
+    z-index: 50;
     pointer-events: none;
   }
 

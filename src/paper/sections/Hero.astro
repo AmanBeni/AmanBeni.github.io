@@ -96,6 +96,11 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
 
 </section>
 
+<div class="hero-endstrip" data-lab-id="hero.endstrip" data-lab-kind="flow"
+  data-lab-label="Strip below hero" data-lab-group="Hero"
+  data-lab-props="paddingTop,paddingBottom,background">
+</div>
+
 <style>
   .paper-hero {
     position: relative;
@@ -108,7 +113,7 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
        viewport including the sticky top bar, so the bottom padding stays
        tight while the top does the work. */
     padding-block: 110px 70px;
-    min-height: 600px;
+    min-height: 460px;
     border-bottom: 1px solid var(--rule);
     color: var(--paper-hero-ink);
   }
@@ -208,14 +213,11 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
      Yellow studio background left exactly as photographed, on request. */
   /* Same slim band as the one at the top of the page, closing the green
      panel off the way the reference site closes its hero. */
+  /* Sits under the green, same height as the band above the menu bar and as
+     the side margins are wide. */
   .hero-endstrip {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 34px;
-    border-top: 1px solid var(--rule);
-    z-index: 2;
+    height: var(--page-inset);
+    border-bottom: 1px solid var(--rule);
   }
 
   .hero-side {
