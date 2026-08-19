@@ -55,16 +55,17 @@ const { shadow = 'lifted', torn = false, tint, class: className = '', ...rest } 
     padding: 28px 32px;
   }
 
-  /* Faint fibre-grain overlay, strength driven by --grain. */
+  /* Faint fibre-grain overlay — irregular fractal noise, not a dot lattice,
+     strength driven by --grain. */
   .paper-card::before {
     content: '';
     position: absolute;
     inset: 0;
     border-radius: inherit;
     pointer-events: none;
-    opacity: var(--grain);
-    background-image: radial-gradient(rgba(36, 28, 18, 0.5) 0.5px, transparent 0.5px);
-    background-size: 3px 3px;
+    opacity: calc(var(--grain) * 0.7);
+    background-image: var(--grain-texture);
+    background-size: var(--grain-size) var(--grain-size);
     mix-blend-mode: multiply;
   }
 

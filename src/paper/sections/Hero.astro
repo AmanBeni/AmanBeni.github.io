@@ -128,20 +128,23 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     background-image: var(--paper-hero-bg);
     background-size: cover;
     background-position: center;
-    padding-block: 88px 64px;
+    padding-block: 120px 130px;
+    border-bottom: 1px solid var(--rule);
     color: var(--paper-hero-ink);
   }
 
-  /* Grain overlay over the hero art, driven by --grain. */
+  /* Grain overlay over the hero art — irregular fractal noise, driven by
+     --grain. Soft-light instead of multiply here since the ground is dark:
+     multiplying black noise onto near-black paper would barely register. */
   .paper-hero::after {
     content: '';
     position: absolute;
     inset: 0;
     pointer-events: none;
-    opacity: calc(var(--grain) * 0.6);
-    background-image: radial-gradient(rgba(0, 0, 0, 0.7) 0.6px, transparent 0.6px);
-    background-size: 3px 3px;
-    mix-blend-mode: multiply;
+    opacity: calc(var(--grain) * 0.9);
+    background-image: var(--grain-texture);
+    background-size: var(--grain-size) var(--grain-size);
+    mix-blend-mode: soft-light;
   }
 
   .hero-inner {
@@ -159,7 +162,6 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
   .hero-copy {
     display: flex;
     flex-direction: column;
-    gap: 4px;
   }
 
   .hero-chip {
@@ -168,10 +170,10 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     gap: 8px;
     width: fit-content;
     font-family: var(--font-mono);
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    color: rgba(244, 239, 224, 0.82);
-    margin: 0 0 18px;
+    font-size: 11.5px;
+    letter-spacing: 0.1em;
+    color: rgba(244, 239, 224, 0.7);
+    margin: 0 0 40px;
   }
 
   .hero-chip-dot {
@@ -183,12 +185,13 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
 
   .hero-title {
     font-family: var(--font-display);
-    font-weight: 700;
-    font-size: clamp(42px, 6vw, 68px);
-    line-height: 1.04;
-    letter-spacing: -0.01em;
-    margin: 0 0 18px;
+    font-weight: 400;
+    font-size: clamp(52px, 8.5vw, 100px);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin: 0 0 40px;
     color: var(--paper-hero-ink);
+    text-shadow: var(--letterpress-ondark);
   }
 
   .hero-title-image {
@@ -205,10 +208,10 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
 
   .hero-subtitle {
     font-family: var(--font-body);
-    font-size: 17px;
+    font-size: 15px;
     line-height: 1.6;
-    color: rgba(244, 239, 224, 0.86);
-    max-width: 46ch;
+    color: rgba(244, 239, 224, 0.8);
+    max-width: 42ch;
     margin: 0;
   }
 
@@ -239,9 +242,9 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     position: relative;
     z-index: 1;
     max-width: 1180px;
-    margin: 48px auto 0;
+    margin: 120px auto 0;
     padding-inline: 24px;
-    height: clamp(160px, 20vw, 240px);
+    height: clamp(180px, 24vw, 280px);
   }
 
   .hero-cloudscape {
@@ -271,7 +274,10 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
       justify-self: start;
     }
     .paper-hero {
-      padding-block: 120px 48px;
+      padding-block: 140px 72px;
+    }
+    .hero-canvas {
+      margin-top: 72px;
     }
   }
 </style>

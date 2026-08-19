@@ -103,8 +103,8 @@ const tools = [
 
 <style>
   .paper-skills {
-    background: var(--paper-alt-tint);
-    padding-block: 88px;
+    border-bottom: 1px solid var(--rule);
+    padding-block: 160px;
   }
 
   .skills-inner {
@@ -115,57 +115,61 @@ const tools = [
 
   .skills-heading {
     font-family: var(--font-display);
-    font-weight: 700;
-    font-size: clamp(32px, 4vw, 44px);
+    font-weight: 400;
+    font-size: clamp(44px, 6vw, 72px);
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    text-transform: lowercase;
     color: var(--ink);
-    margin: 0 0 40px;
+    text-shadow: var(--letterpress-onlight);
+    mix-blend-mode: multiply;
+    margin: 0 0 80px;
   }
 
   .skills-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 48px;
+    gap: 64px;
+    max-width: 900px;
   }
 
   .skills-colhead {
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: 11.5px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--ink-soft);
-    margin: 0 0 16px;
+    margin: 0 0 20px;
   }
 
+  /* Plain flowing text, not a grid of chip boxes — one line per item,
+     quiet and comma-free so it reads as a short list, not decoration. */
   .skills-tags {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+    flex-direction: column;
+    gap: 10px;
   }
 
   .skills-tag {
     font-family: var(--font-body);
-    font-size: 13px;
-    padding: 7px 13px;
-    background: var(--paper-card);
-    border: 1px solid var(--paper-line);
-    box-shadow: var(--shadow-soft);
+    font-size: 14px;
     color: var(--ink);
   }
 
   .skills-tag-tool {
-    font-family: var(--font-mono);
-    font-size: 11.5px;
-    color: var(--accent-green);
-    background: color-mix(in srgb, var(--accent-green) 6%, var(--paper-card));
+    color: var(--accent);
   }
 
   @media (max-width: 767px) {
+    .paper-skills {
+      padding-block: 100px;
+    }
     .skills-grid {
       grid-template-columns: 1fr;
-      gap: 32px;
+      gap: 40px;
     }
   }
 </style>

@@ -41,3 +41,10 @@ README.md
 # Paper theme: source art originals are huge (127MB). Keep them local only.
 # Web-ready copies live in Paper/assets/ and public/paper/ and ARE committed.
 Paper/References/
+
+# Paper theme: raw font files Aman dropped in (19 Aug 2026). Several of
+# these (Apple's SF Pro/SF Mono/New York, the commercial Euclid Circular B)
+# are not cleared for redistribution — never let the originals into git
+# history regardless of what gets self-hosted. Converted woff2 web copies
+# of the actually-licensed fonts live in public/fonts/ and ARE committed.
+Paper/Fonts/

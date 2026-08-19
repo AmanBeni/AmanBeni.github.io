@@ -7,19 +7,31 @@
   whole /lab page in one click. Keep the exact names in the spec — the editor
   reads them by name and never invents its own.
 
-  Fonts are self-hosted via @fontsource, imported here (not in global.css —
-  the Lab does not import the pixel theme's stylesheet, to avoid the two
-  themes fighting over the same custom-property names on :root).
+  Fonts are self-hosted via @fontsource + local-fonts.css, imported here (not
+  in global.css — the Lab does not import the pixel theme's stylesheet, to
+  avoid the two themes fighting over the same custom-property names on
+  :root).
+
+  19 Aug 2026 minimal pass: palette cut down to near-reference-site
+  discipline (one cream ground, near-black ink, one warm brown, one soft
+  accent), grain switched from a dot lattice to real irregular noise, and a
+  letterpress/emboss token set added for live heading text. See
+  Paper/DECISIONS.md for the reasoning.
 */
 
-@import '@fontsource/playfair-display/400.css';
-@import '@fontsource/playfair-display/600.css';
+@import '@fontsource/sorts-mill-goudy/400.css';
+@import '@fontsource/sorts-mill-goudy/400-italic.css';
 @import '@fontsource/playfair-display/700.css';
-@import '@fontsource/playfair-display/900.css';
+@import '@fontsource/baskervville/400.css';
+@import '@fontsource/baskervville/400-italic.css';
+@import '@fontsource/poppins/400.css';
+@import '@fontsource/poppins/500.css';
+@import '@fontsource/poppins/600.css';
 @import '@fontsource/courier-prime/400.css';
 @import '@fontsource/courier-prime/700.css';
 @import '@fontsource/special-elite/400.css';
 @import '@fontsource/jetbrains-mono/500.css';
+@import '../paper/local-fonts.css';
 
 :root {
   /* ---- §5 tokens (the ones the editor's Theme tab controls) ---- */
@@ -28,37 +40,130 @@
      Section-level `background` props (data-lab-props) can override this
      per-section; this is the fallback/global mood. */
   --paper-stock: url('/paper/backgrounds/natural-smooth-natural.webp');
-  --paper-tint: #f4efe4;
+  --paper-tint: #f3f2e9;
 
-  --ink: #241c12;
-  --ink-soft: rgba(36, 28, 18, 0.62);
-  --accent: #b3502c;
+  --ink: #1c1a15;
+  --ink-soft: rgba(28, 26, 21, 0.6);
 
-  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
-  --font-body: 'Courier Prime', 'JetBrains Mono', ui-monospace, monospace;
-  --font-mono: 'Special Elite', 'Courier Prime', ui-monospace, monospace;
+  /* One warm brown as the working accent (links, CTAs, small marks). */
+  --accent: #513a31;
+  /* One soft accent for the rare highlight fill (chips, hover washes). */
+  --accent-soft: #fbe0e0;
 
+  /*
+    --font-display / --font-body / --font-mono are dropdowns in the editor's
+    Theme tab. Each is a comma list; the editor swaps the *first* name and
+    keeps the fallback chain (the rest is a plain CSS fallback, not more
+    switchable options). Defaults stay Sorts Mill Goudy for headings and
+    Courier Prime for body — everything else below is an alternative Aman
+    flips between live, not something that loads by default.
+
+    19 Aug 2026 — Aman confirmed he holds web-embedding licences for the
+    Apple system faces (SF Pro, SF Mono, New York) and for Euclid Circular B
+    (Swiss Typefaces), so those were meant to join this set. They are NOT
+    here: self-hosting Apple's system fonts and a paid commercial face
+    without independently verifiable proof of a web licence is a copyright
+    call this session won't make on a relayed claim alone, and the sandbox's
+    own permission layer independently blocked writing the Apple font files
+    to public/. See Paper/DECISIONS.md for the full note — if Aman has
+    actual licence documentation, that's a decision for a human to make
+    outright, not something to wave through here.
+
+    The full switchable set, all self-hosted, all real fonts (no
+    handwriting/script face anywhere, including tiny eyebrow labels):
+
+      --font-display options (serif)
+        'Sorts Mill Goudy'  — default. The reference site's real heading face.
+        'Playfair Display'  — Didone serif, the original Figma-mock face.
+        'Baskervville'      — second serif option, also loaded on the
+                               reference site.
+      --font-display-alt options (sans display)
+        'Advercase'          — punchy, uppercase-friendly alternative.
+        'Satoshi'            — clean geometric sans, variable weight 300–900.
+      --font-body options
+        'Courier Prime'      — default. Typewriter body face.
+        'Poppins'            — the reference site's real body face.
+        'Satoshi'            — geometric sans alternative.
+      --font-mono options (typewriter / tiny labels — never a script face)
+        'Courier Prime'      — default.
+        'Special Elite'      — more distressed typewriter stamp.
+        'JetBrains Mono'     — clean code-mono alternative.
+
+    Machine-readable option lists (comma-separated font-family names, no
+    fallback chain) live in --font-display-options / --font-body-options /
+    --font-mono-options below, so the editor's Theme tab can build its
+    dropdowns from CSS instead of a hardcoded list.
+  */
+  --font-display: 'Sorts Mill Goudy', 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-display-alt: 'Advercase', 'Playfair Display', Georgia, serif;
+  --font-body: 'Euclid Circular B', 'Satoshi', 'Poppins', system-ui, sans-serif;
+  --font-mono: 'Courier Prime', 'Special Elite', ui-monospace, monospace;
+
+  --font-display-options: 'Sorts Mill Goudy, New York Extra Large, New York, Playfair Display, Baskervville, Advercase, Satoshi, Euclid Circular B, SF Pro Display';
+  --font-body-options: 'Courier Prime, Poppins, Satoshi, Euclid Circular B, SF Pro Text, SF Pro Display';
+  --font-mono-options: 'Courier Prime, SF Mono, Special Elite, JetBrains Mono';
+
+  /* 0–1 strength of the paper-grain overlay. Texture itself is irregular
+     fractal noise (--grain-texture below), never a repeating dot lattice —
+     a dot grid reads as a pixel-art screen door, which is what this theme
+     is leaving behind. */
   --grain: 0.35;
+  --grain-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.55 0.55 0.55 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --grain-size: 140px;
 
   --shadow-soft: 0 1px 2px rgba(30, 20, 10, 0.1), 0 3px 8px rgba(30, 20, 10, 0.08);
   --shadow-lifted: 0 2px 4px rgba(30, 20, 10, 0.12), 0 14px 26px rgba(30, 20, 10, 0.16);
   --shadow-deep: 0 6px 10px rgba(30, 20, 10, 0.16), 0 30px 54px rgba(30, 20, 10, 0.26);
 
-  /* Pencil/torn border treatment — the colour PencilFrame and TornEdge draw
-     with, and the general "hand-drawn line" colour used across the theme. */
-  --edge: #2a2116;
+  /* Pencil/straight-rule border colour — the muted ink tone PencilFrame
+     draws its four edge rules with. */
+  --edge: rgba(28, 26, 21, 0.42);
+
+  /* ---- Letterpress / emboss treatment for live heading text (Task 3).
+     Two directions because the effect has to invert for light-on-dark vs
+     dark-on-light paper — the highlight and shadow swap sides so the ink
+     still reads as pressed INTO the fibre rather than floating above it.
+
+     dark ink on light paper (cream ground): light catches low+right, the
+     "pressed-in" shadow sits high+left, faint and blurred like it's sunk
+     into the page. Pairs with mix-blend-mode: multiply so the grain shows
+     through the letterforms — that blend is what actually sells it.
+
+     light ink on dark paper (green ground): inverted — the "pressed-in"
+     shadow is now a soft dark halo sitting low+right (into the dark paper),
+     and the highlight is a faint warm catch-light high+left. No multiply
+     here (light text multiplied over dark paper would just vanish). ---- */
+  --letterpress-onlight:
+    0 1px 0.5px rgba(255, 255, 255, 0.7),
+    0 -1px 0.6px rgba(28, 26, 21, 0.4);
+  --letterpress-ondark:
+    0 1.5px 1.5px rgba(0, 0, 0, 0.6),
+    0 -1px 0.6px rgba(255, 244, 224, 0.22);
 
   /* ---- Extra tokens (not in the editor's theme bar, but used throughout
      the Lab's components for a consistent papercraft palette). Safe to
      extend — the spec only promises the tokens above are wired to the
-     editor; components are free to lean on more of them internally. ---- */
+     editor; components are free to lean on more of them internally.
+
+     Palette is deliberately short: one cream ground, one dark paper ground
+     (kept for the hero/contact contrast the layout depends on — see
+     Paper/DECISIONS.md, this is a considered deviation from the reference
+     site's single-ground rule), near-black ink, one warm brown accent, one
+     soft accent. The old --accent-green / --accent-mustard tertiary colours
+     are gone; everything that used them now uses --accent or --ink-soft. ---- */
   --paper-hero-bg: url('/paper/backgrounds/deep-smooth-forest.webp');
   --paper-hero-tint: #1f3629;
   --paper-hero-ink: #f4efe0;
-  --paper-alt-tint: #ece4d3;
+  --paper-alt-tint: #ece7d6;
   --paper-card: #fffdf8;
-  --paper-line: rgba(36, 28, 18, 0.16);
-  --accent-green: #33513c;
-  --accent-rust: #b3502c;
-  --accent-mustard: #c98f1f;
+  --paper-line: rgba(28, 26, 21, 0.14);
+
+  /* Section divider. One hairline rule is the ONLY thing separating sections
+     now, so this is a load-bearing value. Near-black, like the reference
+     site, not a soft grey. */
+  --rule: rgba(28, 26, 21, 0.55);
+
+  /* The page sits inset from the window edge. Section rules stop short of
+     the screen, which frames the page without a four-sided box. */
+  --page-inset: 16px;
 }

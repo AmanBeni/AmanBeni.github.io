@@ -5,7 +5,6 @@
  * no lorem ipsum).
  */
 import { getCollection } from 'astro:content';
-import PaperCard from '../components/PaperCard.astro';
 
 const AI_PROJECTS = ['daily-cactus', 'youtube-year', 'second-brain'];
 const projects = (await getCollection('projects'))
@@ -34,17 +33,16 @@ const projects = (await getCollection('projects'))
       AI Projects
     </h2>
 
-    <div class="work-grid" data-lab-id="work.grid" data-lab-kind="flow" data-lab-label="Project grid" data-lab-group="Work" data-lab-props="gap,maxWidth">
+    <div class="work-grid" data-lab-id="work.grid" data-lab-kind="flow" data-lab-label="Project list" data-lab-group="Work" data-lab-props="gap,maxWidth">
       {
         projects.map((project) => (
-          <PaperCard
-            shadow="lifted"
+          <div
             class="work-card"
             data-lab-id={`work.card.${project.id}`}
             data-lab-kind="flow"
             data-lab-label={`Project — ${project.data.title}`}
             data-lab-group="Work"
-            data-lab-props="fontSize,color,marginTop,marginBottom,maxWidth,shadow,font"
+            data-lab-props="fontSize,color,marginTop,marginBottom,maxWidth,font"
           >
             <span class="work-emoji" aria-hidden="true">{project.data.emoji}</span>
             <h3 class="work-title">{project.data.title}</h3>
@@ -55,7 +53,7 @@ const projects = (await getCollection('projects'))
               ))}
             </ul>
             <span class="work-status">{project.data.status}</span>
-          </PaperCard>
+          </div>
         ))
       }
     </div>
@@ -64,8 +62,8 @@ const projects = (await getCollection('projects'))
 
 <style>
   .paper-work {
-    background: var(--paper-tint);
-    padding-block: 88px;
+    border-bottom: 1px solid var(--rule);
+    padding-block: 160px;
   }
 
   .work-inner {
@@ -76,34 +74,49 @@ const projects = (await getCollection('projects'))
 
   .work-heading {
     font-family: var(--font-display);
-    font-weight: 700;
-    font-size: clamp(32px, 4vw, 44px);
+    font-weight: 400;
+    font-size: clamp(44px, 6vw, 72px);
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    text-transform: lowercase;
     color: var(--ink);
-    margin: 0 0 40px;
+    text-shadow: var(--letterpress-onlight);
+    mix-blend-mode: multiply;
+    margin: 0 0 80px;
   }
 
+  /* A quiet stacked list, not a grid of cards — each project is a rule-
+     separated block with room to breathe instead of a boxed tile. */
   .work-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 28px;
+    display: flex;
+    flex-direction: column;
+    max-width: 640px;
   }
 
   .work-card {
     position: relative;
+    padding-block: 40px;
+    border-top: 1px solid var(--paper-line);
+  }
+
+  .work-card:first-child {
+    border-top: none;
+    padding-top: 0;
   }
 
   .work-emoji {
-    font-size: 26px;
+    font-size: 22px;
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
   }
 
   .work-title {
     font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 19px;
+    font-weight: 400;
+    font-size: 24px;
+    letter-spacing: -0.01em;
     color: var(--ink);
-    margin: 0 0 10px;
+    margin: 0 0 12px;
   }
 
   .work-summary {
@@ -116,22 +129,27 @@ const projects = (await getCollection('projects'))
 
   .work-tags {
     list-style: none;
-    margin: 0 0 16px;
+    margin: 0 0 12px;
     padding: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 14px;
   }
 
   .work-tag {
     font-family: var(--font-mono);
     font-size: 10.5px;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    padding: 4px 9px;
-    border: 1px dashed var(--paper-line);
     color: var(--ink-soft);
-    border-radius: 2px;
+  }
+
+  .work-tag::before {
+    content: '· ';
+  }
+
+  .work-tag:first-child::before {
+    content: '';
   }
 
   .work-status {
@@ -140,6 +158,12 @@ const projects = (await getCollection('projects'))
     font-size: 10.5px;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--accent-green);
+    color: var(--accent);
+  }
+
+  @media (max-width: 767px) {
+    .paper-work {
+      padding-block: 100px;
+    }
   }
 </style>

@@ -3,9 +3,6 @@
  * About — cream section, a white floating PaperCard of body copy on the
  * left, the papercraft desk photo sitting on graph paper on the right.
  */
-import PaperCard from '../components/PaperCard.astro';
-import GraphPaper from '../components/GraphPaper.astro';
-
 const base = import.meta.env.BASE_URL;
 const baseSlash = base.endsWith('/') ? base : base + '/';
 ---
@@ -32,7 +29,7 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     </p>
 
     <div class="about-row">
-      <PaperCard shadow="lifted" class="about-card">
+      <div class="about-copy">
         <div
           data-lab-id="about.paragraph1"
           data-lab-kind="flow"
@@ -72,10 +69,9 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
             our society and the planet.
           </p>
         </div>
-      </PaperCard>
+      </div>
 
       <div class="about-photo-stage" data-lab-canvas>
-        <GraphPaper />
         <div
           class="about-desk"
           data-lab-id="about.desk-photo"
@@ -94,8 +90,8 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
 
 <style>
   .paper-about {
-    background: var(--paper-tint);
-    padding-block: 72px;
+    border-bottom: 1px solid var(--rule);
+    padding-block: 160px;
     position: relative;
   }
 
@@ -107,50 +103,42 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
 
   .about-eyebrow {
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: 11.5px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--ink-soft);
-    margin: 0 0 28px;
+    margin: 0 0 56px;
   }
 
   .about-row {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 48px;
+    grid-template-columns: 1fr 0.9fr;
+    gap: 72px;
     align-items: center;
   }
 
-  .about-card {
-    max-width: 62ch;
+  .about-copy {
+    max-width: 52ch;
   }
 
-  .about-card :global(p) {
+  .about-copy :global(p) {
     margin: 0;
     font-family: var(--font-body);
-    font-size: 15.5px;
+    font-size: 15px;
     line-height: 1.75;
     color: var(--ink);
   }
 
-  .about-card :global(div + div) {
-    margin-top: 16px;
+  .about-copy :global(div + div) {
+    margin-top: 24px;
   }
 
   .about-photo-stage {
     position: relative;
-    aspect-ratio: 4 / 3;
-    border-radius: 3px;
-    overflow: hidden;
-    box-shadow: var(--shadow-soft);
   }
 
   .about-desk {
-    position: absolute;
-    left: 50%;
-    top: 55%;
-    width: 62%;
-    transform: translate(-50%, -50%) rotate(-2deg);
+    position: relative;
   }
 
   .about-desk img {
@@ -159,13 +147,18 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     height: auto;
     border: 6px solid #fdfaf0;
     box-shadow: var(--shadow-deep);
+    transform: rotate(-2deg);
   }
 
   @media (max-width: 860px) {
+    .paper-about {
+      padding-block: 100px;
+    }
     .about-row {
       grid-template-columns: 1fr;
+      gap: 56px;
     }
-    .about-card {
+    .about-copy {
       max-width: none;
     }
   }

@@ -113,7 +113,9 @@ const slides = onRepeat.slides as { src: string; title: string; subtitle: string
     </div>
   </div>
 
-  <!-- Free decorative papercraft objects — a little reading-nook scene. -->
+  <!-- Free decorative papercraft object — one per section, per the minimal
+       pass (19 Aug 2026): the reading nook used to be two objects
+       (armchair + lamp); the lamp is dropped, see Paper/DECISIONS.md. -->
   <div class="beyond-canvas" data-lab-canvas aria-hidden="true">
     <div
       class="beyond-object"
@@ -126,25 +128,14 @@ const slides = onRepeat.slides as { src: string; title: string; subtitle: string
     >
       <img src={`${baseSlash}paper/objects/gemini-generated-image-93jsn593jsn593js.webp`} alt="" loading="lazy" />
     </div>
-    <div
-      class="beyond-object beyond-object-lamp"
-      data-lab-id="beyond.lamp"
-      data-lab-kind="free"
-      data-lab-label="Desk lamp object"
-      data-lab-group="Beyond"
-      data-lab-props="x,y,rotate,scale,z,opacity,shadow"
-      data-lab-asset="objects"
-    >
-      <img src={`${baseSlash}paper/objects/gemini-generated-image-9msdt19msdt19msd.webp`} alt="" loading="lazy" />
-    </div>
   </div>
 </section>
 
 <style>
   .paper-beyond {
     position: relative;
-    background: var(--paper-tint);
-    padding-block: 96px;
+    border-bottom: 1px solid var(--rule);
+    padding-block: 160px;
     overflow: hidden;
   }
 
@@ -158,22 +149,27 @@ const slides = onRepeat.slides as { src: string; title: string; subtitle: string
 
   .beyond-heading {
     font-family: var(--font-display);
-    font-weight: 700;
-    font-size: clamp(32px, 4vw, 44px);
+    font-weight: 400;
+    font-size: clamp(44px, 6vw, 72px);
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    text-transform: lowercase;
     color: var(--ink);
-    margin: 0 0 14px;
+    text-shadow: var(--letterpress-onlight);
+    mix-blend-mode: multiply;
+    margin: 0 0 20px;
   }
 
   .beyond-sub {
     font-family: var(--font-body);
-    font-size: 15px;
+    font-size: 14px;
     color: var(--ink-soft);
-    max-width: 60ch;
+    max-width: 52ch;
     margin: 0;
   }
 
   .beyond-sub-music {
-    margin-top: 64px;
+    margin-top: 96px;
   }
 
   .books-row {
@@ -182,7 +178,7 @@ const slides = onRepeat.slides as { src: string; title: string; subtitle: string
     display: flex;
     gap: 22px;
     overflow-x: auto;
-    padding: 40px 24px 8px;
+    padding: 56px 24px 8px;
     max-width: 1180px;
     margin-inline: auto;
     scrollbar-width: thin;
@@ -267,17 +263,10 @@ const slides = onRepeat.slides as { src: string; title: string; subtitle: string
   .beyond-object {
     position: absolute;
     left: 88%;
-    top: 12%;
-    width: 15%;
+    top: 14%;
+    width: 20%;
     transform: translate(-50%, -50%) rotate(3deg);
     filter: drop-shadow(0 14px 22px rgba(20, 14, 8, 0.2));
-  }
-
-  .beyond-object-lamp {
-    left: 6%;
-    top: 78%;
-    width: 9%;
-    transform: translate(-50%, -50%) rotate(-6deg);
   }
 
   .beyond-object img {
@@ -288,6 +277,9 @@ const slides = onRepeat.slides as { src: string; title: string; subtitle: string
   }
 
   @media (max-width: 767px) {
+    .paper-beyond {
+      padding-block: 100px;
+    }
     .beyond-object {
       display: none;
     }

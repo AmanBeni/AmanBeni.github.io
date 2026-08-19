@@ -1,0 +1,130 @@
+/*
+  local-fonts.css — self-hosted @font-face declarations for the fonts Aman
+  dropped in Paper/Fonts/ that don't have @fontsource packages.
+
+  Source .otf/.ttf files live in Paper/Fonts/ (untouched, per Paper/README).
+  Web copies are woff2, converted with `fonttools ttLib.woff2 compress` and
+  committed under public/fonts/. See Paper/DECISIONS.md, 19 Aug 2026 entry,
+  for which fonts were left out on licensing grounds (SF Pro/Mono, New York,
+  Euclid Circular B) and are NOT present anywhere under public/.
+*/
+
+@font-face {
+  font-family: 'Advercase';
+  src: url('/fonts/advercase/Advercase-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Advercase';
+  src: url('/fonts/advercase/Advercase-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Satoshi Variable covers the whole 300–900 weight axis in one file — this
+   is the one actually wired to the theme tokens. The static Regular/Light
+   woff2 files are also self-hosted here as a non-variable fallback. */
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/satoshi/Satoshi-Variable.woff2') format('woff2');
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Satoshi Static';
+  src: url('/fonts/satoshi/Satoshi-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Satoshi Static';
+  src: url('/fonts/satoshi/Satoshi-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* --------------------------------------------------------------------------
+   Fonts Aman confirmed he holds licences for (19 Aug 2026): Apple's SF Pro,
+   SF Mono and New York, plus Euclid Circular B. Declared here and wired into
+   the theme dropdowns.
+
+   The woff2 files are produced by a conversion step Aman runs himself, see
+   Paper/README.md "Converting your own fonts". Until that step runs, these
+   rules simply fall back down the stack and nothing breaks.
+   -------------------------------------------------------------------------- */
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/fonts/apple/SF-Pro-Display-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF Pro Text';
+  src: url('/fonts/apple/SF-Pro-Text-Thin.woff2') format('woff2');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF Mono';
+  src: url('/fonts/apple/SF-Mono-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF Mono';
+  src: url('/fonts/apple/SF-Mono-Semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF Mono';
+  src: url('/fonts/apple/SF-Mono-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'New York';
+  src: url('/fonts/apple/NewYork.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* The Extra Large optical size is cut for display use, which is exactly the
+   80px-headline job on this site. Kept as its own family so it can be picked
+   deliberately rather than being swapped in at a weight boundary. */
+@font-face {
+  font-family: 'New York Extra Large';
+  src: url('/fonts/apple/NewYorkExtraLarge-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Euclid Circular B';
+  src: url('/fonts/euclid/EuclidCircularB-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}

@@ -9,7 +9,7 @@
  * are untouched.
  */
 import '../paper/tokens.css';
-import PencilFrame from '../paper/components/PencilFrame.astro';
+
 import Hero from '../paper/sections/Hero.astro';
 import About from '../paper/sections/About.astro';
 import Education from '../paper/sections/Education.astro';
@@ -31,15 +31,24 @@ const currentYear = new Date().getFullYear();
     <title>Aman Beniwal · Lab</title>
   </head>
   <body>
-    <PencilFrame />
+    <!-- Top bar, meli-style: brand left, links centred, actions right, one
+         hairline rule underneath. Sticky, and transparent so the single page
+         background runs straight through it. -->
+    <header class="site-header" data-lab-id="global.header" data-lab-kind="flow"
+      data-lab-label="Top bar" data-lab-group="Global"
+      data-lab-props="paddingTop,paddingBottom,font,color">
+      <a href="#main" class="site-brand">aman</a>
 
-    <header class="lab-header">
-      <nav class="lab-nav" aria-label="Primary">
-        <a href="#about">About</a>
-        <a href="#work">Projects</a>
-        <a href="#beyond">Beyond Work</a>
-        <a href="#contact" class="lab-nav-cta">Get in touch</a>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="#about">about</a>
+        <a href="#work">work</a>
+        <a href="#beyond">beyond</a>
+        <a href="#career">cv</a>
       </nav>
+
+      <div class="site-actions">
+        <a href="#contact" class="site-contact">get in touch</a>
+      </div>
     </header>
 
     <main id="main">
@@ -52,7 +61,7 @@ const currentYear = new Date().getFullYear();
       <Contact />
     </main>
 
-    <footer class="lab-footer">
+    <footer class="site-footer">
       <p>&copy; {currentYear} Aman Beniwal · Lab (papercraft theme, work in progress)</p>
     </footer>
 
@@ -84,9 +93,20 @@ const currentYear = new Date().getFullYear();
         scroll-behavior: smooth;
       }
 
+      /*
+        One background for the whole site. Sections do not carry their own
+        colour any more; they are separated by a single hairline rule, the
+        way the meli site does it. The page sits inset from the window edge
+        by --page-inset, so those rules stop just short of the screen edge
+        and read as a frame without being a four-sided box.
+      */
       body {
         margin: 0;
-        background: var(--paper-tint);
+        padding-inline: var(--page-inset);
+        background-color: var(--paper-tint);
+        background-image: var(--paper-stock);
+        background-size: cover;
+        background-attachment: fixed;
         color: var(--ink);
         font-family: var(--font-body);
         font-size: 16px;
@@ -100,64 +120,68 @@ const currentYear = new Date().getFullYear();
         margin: 0;
       }
 
-      .lab-header {
-        position: fixed;
+      /* Three columns so the links sit dead centre regardless of how wide
+         the brand or the actions are. */
+      .site-header {
+        position: sticky;
         top: 0;
-        left: 0;
-        right: 0;
         z-index: 45;
-        display: flex;
-        justify-content: center;
-        padding-block: 16px;
-        pointer-events: none;
-      }
-
-      .lab-nav {
-        pointer-events: auto;
-        display: flex;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
         align-items: center;
-        gap: 4px;
-        background: rgba(253, 250, 240, 0.86);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border: 1px solid var(--paper-line);
-        box-shadow: var(--shadow-soft);
-        border-radius: 3px;
-        padding: 6px;
+        padding-block: 20px;
+        border-bottom: 1px solid var(--rule);
+        background-color: var(--paper-tint);
+        background-image: var(--paper-stock);
+        background-size: cover;
+        background-attachment: fixed;
       }
 
-      .lab-nav a {
-        font-family: var(--font-mono);
-        font-size: 12.5px;
-        letter-spacing: 0.03em;
+      .site-brand {
+        justify-self: start;
+        font-family: var(--font-display);
+        font-size: 30px;
+        line-height: 1;
+        letter-spacing: -0.03em;
+        color: var(--ink);
+        text-decoration: none;
+      }
+
+      .site-nav {
+        display: flex;
+        gap: 30px;
+      }
+
+      /* Italic serif at small size, the way meli sets its nav. Quiet enough
+         to stay out of the way of the headline. */
+      .site-nav a,
+      .site-contact {
+        font-family: var(--font-display);
+        font-style: italic;
+        font-size: 15px;
+        letter-spacing: 0;
         text-decoration: none;
         color: var(--ink);
-        padding: 7px 14px;
-        border-radius: 2px;
+        white-space: nowrap;
       }
 
-      .lab-nav a:hover {
-        background: rgba(36, 28, 18, 0.06);
+      .site-nav a:hover,
+      .site-contact:hover {
+        text-decoration: underline;
+        text-underline-offset: 4px;
       }
 
-      .lab-nav-cta {
-        background: var(--accent-rust);
-        color: #fdfaf0 !important;
-        margin-left: 4px;
+      .site-actions {
+        justify-self: end;
       }
 
-      .lab-nav-cta:hover {
-        background: color-mix(in srgb, var(--accent-rust) 85%, black);
-      }
-
-      .lab-footer {
-        background: var(--paper-alt-tint);
-        border-top: 1px solid var(--paper-line);
-        padding: 18px 24px;
+      .site-footer {
+        border-top: 1px solid var(--rule);
+        padding-block: 28px;
         text-align: center;
       }
 
-      .lab-footer p {
+      .site-footer p {
         margin: 0;
         font-family: var(--font-mono);
         font-size: 10.5px;
@@ -165,13 +189,20 @@ const currentYear = new Date().getFullYear();
         color: var(--ink-soft);
       }
 
-      @media (max-width: 560px) {
-        .lab-nav {
-          gap: 0;
+      @media (max-width: 700px) {
+        .site-header {
+          grid-template-columns: auto 1fr;
+          row-gap: 12px;
+          padding-block: 14px;
         }
-        .lab-nav a {
-          padding: 6px 9px;
-          font-size: 11px;
+        .site-nav {
+          grid-column: 1 / -1;
+          justify-content: space-between;
+          gap: 12px;
+        }
+        .site-nav a,
+        .site-contact {
+          font-size: 13px;
         }
       }
     </style>

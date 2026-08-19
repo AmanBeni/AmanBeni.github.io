@@ -54,12 +54,10 @@
 
 <style>
   .paper-contact {
-    background: var(--paper-hero-tint);
-    background-image: var(--paper-hero-bg);
-    background-size: cover;
-    background-position: center;
-    padding-block: 96px;
-    color: var(--paper-hero-ink);
+    /* No background of its own. The single page background runs through,
+       and the rule above it is what marks the section. */
+    padding-block: 180px;
+    color: var(--ink);
     position: relative;
   }
 
@@ -68,9 +66,12 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    opacity: calc(var(--grain) * 0.6);
-    background-image: radial-gradient(rgba(0, 0, 0, 0.7) 0.6px, transparent 0.6px);
-    background-size: 3px 3px;
+    /* Light ground now, so the grain multiplies down into the paper rather
+       than soft-lighting up off a dark one. Lighter touch too, since the
+       page background already carries its own texture underneath. */
+    opacity: calc(var(--grain) * 0.35);
+    background-image: var(--grain-texture);
+    background-size: var(--grain-size) var(--grain-size);
     mix-blend-mode: multiply;
   }
 
@@ -84,16 +85,20 @@
 
   .contact-heading {
     font-family: var(--font-display);
-    font-weight: 900;
-    font-size: clamp(38px, 5vw, 60px);
-    color: var(--paper-hero-ink);
-    margin: 0 0 28px;
+    font-weight: 400;
+    font-size: clamp(48px, 7vw, 88px);
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    text-transform: lowercase;
+    color: var(--ink);
+    text-shadow: var(--letterpress-ondark);
+    margin: 0 0 64px;
   }
 
   .contact-lines {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 14px;
   }
 
   .contact-line {
@@ -114,12 +119,12 @@
   }
 
   .contact-line a {
-    color: var(--paper-hero-ink);
+    color: var(--ink);
     text-decoration: none;
     border-bottom: 1px solid rgba(244, 239, 224, 0.5);
   }
 
   .contact-line a:hover {
-    border-bottom-color: var(--paper-hero-ink);
+    border-bottom-color: var(--ink);
   }
 </style>
