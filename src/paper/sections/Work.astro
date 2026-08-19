@@ -1,7 +1,7 @@
 ---
 /**
  * Work — selected AI project cards, same three projects as the pixel site's
- * "AI Projects" section, pulled from src/content/projects/*.md (real copy,
+ * "AI projects" section, pulled from src/content/projects/*.md (real copy,
  * no lorem ipsum).
  */
 import { getCollection } from 'astro:content';
@@ -78,15 +78,10 @@ const projects = (await getCollection('projects'))
     font-size: clamp(44px, 6vw, 72px);
     letter-spacing: -0.03em;
     line-height: 1.05;
-    text-transform: lowercase;
     color: var(--ink);
     text-shadow: var(--letterpress-onlight);
     mix-blend-mode: multiply;
     margin: 0 0 80px;
-  }
-
-  .work-heading::first-letter {
-    text-transform: uppercase;
   }
 
   /* A quiet stacked list, not a grid of cards — each project is a rule-
