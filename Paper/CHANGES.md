@@ -33,11 +33,16 @@ Standing preferences. No need to repeat these in a bullet.
 
 ## Next round
 
-(empty)
-
 ---
 
 ## Done
+
+### 19 Aug 2026 (execution round 2)
+- Hero photo straightened and pulled up tight under the subtitle; rotation defaults on TapeStrip/PaperObject zeroed out (nothing left to tilt it).
+- White photo-frame borders removed from every image on the page (hero photo, hero cloudscape, desk photo, book covers, music covers).
+- Hero panel height cut well over 40% (was ~975px of content, now 599px) — hero + sticky header (599 + 71 = 670px) sits inside the 900px first viewport at 1440px.
+- Added the renewables diorama small on the right of the hero's copy column — straight, no border, no shadow, no rotation, no colour treatment.
+- Desk photo in "A bit about me" shifted left (48px) within its column.
 
 ### 19 Aug 2026
 - Moved nav to a sticky top bar, meli-style.

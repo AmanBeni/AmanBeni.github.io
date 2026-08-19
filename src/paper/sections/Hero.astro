@@ -91,6 +91,21 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     </div>
   </div>
 
+  <div class="hero-side">
+    <img
+      class="hero-renewables"
+      data-lab-id="hero.renewables"
+      data-lab-kind="flow"
+      data-lab-label="Renewables diorama"
+      data-lab-group="Hero"
+      data-lab-props="maxWidth,marginTop,marginBottom"
+      data-lab-asset="objects"
+      src={`${baseSlash}paper/objects/renewables-diorama.webp`}
+      alt="Papercraft diorama of wind turbines and solar panels on a green landform"
+      loading="lazy"
+    />
+  </div>
+
   <!-- Free-floating collage layer: the cut-paper cloud landscape sits here,
        draggable/rescalable independent of the flow copy above it. -->
   <div class="hero-canvas" data-lab-canvas aria-hidden="false">
@@ -128,9 +143,10 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     background-image: var(--paper-hero-bg);
     background-size: cover;
     background-position: center;
-    /* 19 Aug 2026: 30% shorter than the original 120px/130px — the green
-       panel read too tall. */
-    padding-block: 84px 91px;
+    /* 19 Aug 2026 (execution round): cut well over 40% further from the
+       84px/91px this already carried — the green panel must fit inside one
+       viewport including the sticky top bar. */
+    padding-block: 40px 40px;
     border-bottom: 1px solid var(--rule);
     color: var(--paper-hero-ink);
   }
@@ -149,8 +165,9 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     mix-blend-mode: soft-light;
   }
 
-  /* 19 Aug 2026: text first, photo below — was a two-column side-by-side
-     grid, now a single stacked column (photo follows copy in DOM order). */
+  /* 19 Aug 2026 (execution round): text column plus a small side column for
+     the renewables diorama (change 4). Aman's photo stays in the copy
+     column, pulled up tight under the subtitle (change 1). */
   .hero-inner {
     position: relative;
     z-index: 1;
@@ -158,9 +175,9 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     margin-inline: auto;
     padding-inline: 24px;
     display: flex;
-    flex-direction: column;
     align-items: flex-start;
-    gap: 32px;
+    justify-content: space-between;
+    gap: 24px;
   }
 
   .hero-copy {
@@ -177,7 +194,7 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     font-size: 11.5px;
     letter-spacing: 0.1em;
     color: rgba(244, 239, 224, 0.7);
-    margin: 0 0 40px;
+    margin: 0 0 16px;
   }
 
   .hero-chip-dot {
@@ -190,10 +207,10 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
   .hero-title {
     font-family: var(--font-display);
     font-weight: 400;
-    font-size: clamp(52px, 8.5vw, 100px);
+    font-size: clamp(40px, 6vw, 72px);
     line-height: 1.05;
     letter-spacing: -0.03em;
-    margin: 0 0 40px;
+    margin: 0 0 16px;
     color: var(--paper-hero-ink);
     text-shadow: var(--letterpress-ondark);
   }
@@ -212,25 +229,30 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
 
   .hero-subtitle {
     font-family: var(--font-body);
-    font-size: 17px;
-    line-height: 1.6;
+    font-size: 16px;
+    line-height: 1.5;
     color: rgba(244, 239, 224, 0.8);
-    max-width: 42ch;
+    max-width: 40ch;
     margin: 0;
   }
 
+  /* 19 Aug 2026 (execution round): pulled tight against the subtitle above
+     it (change 1) — was a 32px gap between the whole copy block and the
+     photo; now a small margin directly on the wrap. */
   .hero-photo-wrap {
     position: relative;
     justify-self: start;
+    margin-top: 18px;
   }
 
   .hero-photo {
-    width: 220px;
-    height: 220px;
+    width: 150px;
+    height: 150px;
     object-fit: cover;
     object-position: top center;
     background: #eee6d4;
-    border: 6px solid #fdfaf0;
+    /* 19 Aug 2026: white photo-frame border removed (change 2). */
+    border: none;
   }
 
   .hero-photo-tape {
@@ -240,13 +262,33 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     transform: translateX(-50%);
   }
 
+  /* Renewables diorama (change 4) — small, straight, sits opposite the copy
+     column. No border/shadow/rotation, and no colour treatment: its yellow
+     background is left as photographed. Sized so it never forces the hero
+     taller than the copy column beside it. */
+  .hero-side {
+    flex: none;
+    align-self: flex-start;
+    margin-top: 4px;
+  }
+
+  .hero-renewables {
+    display: block;
+    width: 190px;
+    max-width: 32vw;
+    height: auto;
+    border: none;
+    box-shadow: none;
+    transform: none;
+  }
+
   .hero-canvas {
     position: relative;
     z-index: 1;
     max-width: 1180px;
-    margin: 84px auto 0;
+    margin: 32px auto 0;
     padding-inline: 24px;
-    height: clamp(126px, 17vw, 196px);
+    height: clamp(80px, 11vw, 150px);
   }
 
   .hero-cloudscape {
@@ -255,7 +297,8 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     right: 4%;
     bottom: 0;
     height: 100%;
-    border: 6px solid #fdfaf0;
+    /* 19 Aug 2026: white photo-frame border removed (change 2). */
+    border: none;
     overflow: hidden;
     border-radius: 2px;
   }
@@ -268,11 +311,21 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
 
   @media (max-width: 860px) {
     .paper-hero {
-      /* 30% shorter than the original 140px/72px mobile padding. */
-      padding-block: 98px 50px;
+      padding-block: 32px 28px;
+    }
+    .hero-inner {
+      flex-direction: column;
+    }
+    .hero-side {
+      align-self: flex-start;
+      margin-top: 20px;
+    }
+    .hero-renewables {
+      width: 150px;
+      max-width: 45vw;
     }
     .hero-canvas {
-      margin-top: 50px;
+      margin-top: 24px;
     }
   }
 </style>

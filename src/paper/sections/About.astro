@@ -144,13 +144,17 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
 
   .about-desk {
     position: relative;
+    /* 19 Aug 2026 (execution round): shifted left within its column
+       (change 5). */
+    margin-left: -48px;
   }
 
   .about-desk img {
     display: block;
     width: 100%;
     height: auto;
-    border: 6px solid #fdfaf0;
+    /* 19 Aug 2026: white photo-frame border removed (change 2). */
+    border: none;
   }
 
   @media (max-width: 860px) {
@@ -163,6 +167,9 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     }
     .about-copy {
       max-width: none;
+    }
+    .about-desk {
+      margin-left: 0;
     }
   }
 </style>
