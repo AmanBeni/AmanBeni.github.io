@@ -8,7 +8,6 @@
  * sharing data-lab-variant-of="hero.title". The image is hidden by default
  * (class="lab-variant-hidden") — Track B's editor toggles visibility.
  */
-import TapeStrip from '../components/TapeStrip.astro';
 
 const base = import.meta.env.BASE_URL;
 const baseSlash = base.endsWith('/') ? base : base + '/';
@@ -73,38 +72,38 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
       >
         Strategy generalist and AI builder. Figuring out the rest.
       </p>
+
+      <div class="hero-photo-wrap">
+        <img
+          class="hero-photo"
+          data-lab-id="hero.photo"
+          data-lab-kind="flow"
+          data-lab-label="Aman's photo"
+          data-lab-group="Hero"
+          data-lab-props="maxWidth,rotate,shadow,marginTop,marginBottom"
+          data-lab-asset="photos"
+          src={`${baseSlash}paper/photos/aman-headshot.webp`}
+          alt="Aman Beniwal"
+        />
+      </div>
     </div>
 
-    <div class="hero-photo-wrap">
+    <div class="hero-side">
       <img
-        class="hero-photo"
-        data-lab-id="hero.photo"
+        class="hero-renewables"
+        data-lab-id="hero.renewables"
         data-lab-kind="flow"
-        data-lab-label="Aman's photo"
+        data-lab-label="Renewables diorama"
         data-lab-group="Hero"
-        data-lab-props="maxWidth,rotate,shadow,marginTop,marginBottom"
-        data-lab-asset="photos"
-        src={`${baseSlash}paper/photos/aman-headshot.webp`}
-        alt="Aman Beniwal"
+        data-lab-props="maxWidth,marginTop,marginBottom"
+        data-lab-asset="objects"
+        src={`${baseSlash}paper/objects/renewables-diorama-cut.webp`}
+        alt="Papercraft diorama of wind turbines and solar panels on a green landform"
+        loading="lazy"
       />
-      <TapeStrip rotate={0} tone="kraft" class="hero-photo-tape" />
     </div>
   </div>
 
-  <div class="hero-side">
-    <img
-      class="hero-renewables"
-      data-lab-id="hero.renewables"
-      data-lab-kind="flow"
-      data-lab-label="Renewables diorama"
-      data-lab-group="Hero"
-      data-lab-props="maxWidth,marginTop,marginBottom"
-      data-lab-asset="objects"
-      src={`${baseSlash}paper/objects/renewables-diorama.webp`}
-      alt="Papercraft diorama of wind turbines and solar panels on a green landform"
-      loading="lazy"
-    />
-  </div>
 
   <!-- Free-floating collage layer: the cut-paper cloud landscape sits here,
        draggable/rescalable independent of the flow copy above it. -->
@@ -253,13 +252,6 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     background: #eee6d4;
     /* 19 Aug 2026: white photo-frame border removed (change 2). */
     border: none;
-  }
-
-  .hero-photo-tape {
-    position: absolute;
-    top: -14px;
-    left: 50%;
-    transform: translateX(-50%);
   }
 
   /* Renewables diorama (change 4) — small, straight, sits opposite the copy

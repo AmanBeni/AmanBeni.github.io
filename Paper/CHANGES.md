@@ -60,3 +60,6 @@ Standing preferences. No need to repeat these in a bullet.
 - Restored the missing "A bit about me" heading in About.
 - Restored the green textured ground on Contact so it bookends the page.
 - Increased body copy size (~17-18px) and scaled smaller text up with it.
+- Diorama moved to the right of the hero (it was rendering outside the layout row).
+- Removed the stray olive tape strip under the hero photo.
+- Cut the yellow background out of the diorama so it sits on the green.
