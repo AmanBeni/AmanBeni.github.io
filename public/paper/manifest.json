@@ -200,6 +200,16 @@
     "bytes": 71380
   },
   {
+    "id": "objects/hero-support",
+    "category": "objects",
+    "name": "hero-support",
+    "label": "Hero Support",
+    "src": "/paper/objects/hero-support.webp",
+    "width": 1200,
+    "height": 805,
+    "bytes": 82496
+  },
+  {
     "id": "objects/renewables-diorama-cut",
     "category": "objects",
     "name": "renewables-diorama-cut",
