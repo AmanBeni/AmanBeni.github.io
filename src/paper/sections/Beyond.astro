@@ -1,0 +1,295 @@
+---
+/**
+ * Beyond Work — books + music, same content as the pixel site's "Beyond
+ * Work" section. The cozy-armchair and desk-lamp Gemini objects sit here as
+ * free decorative pieces (they're the reading-nook art), swappable/
+ * draggable from the asset picker.
+ */
+import onRepeat from '../../data/on-repeat.json';
+
+const base = import.meta.env.BASE_URL;
+const baseSlash = base.endsWith('/') ? base : base + '/';
+
+const books = [
+  { title: 'Essentialism', author: 'Greg McKeown', cover: 'essentialism.jpg' },
+  { title: 'Stillness is the Key', author: 'Ryan Holiday', cover: 'stillness.jpg' },
+  { title: 'The Almanack of Naval Ravikant', author: 'Eric Jorgenson', cover: 'almanack-naval.jpg' },
+  { title: 'Siddhartha', author: 'Hermann Hesse', cover: 'siddhartha.jpg' },
+  { title: 'Zero to Scale', author: 'Arindam Paul', cover: 'zero-to-scale.jpg' },
+  { title: 'Zero to One', author: 'Peter Thiel', cover: 'zero-to-one.jpg' },
+  { title: 'Man’s Search for Meaning', author: 'Viktor Frankl', cover: 'mans-search.jpg' },
+  { title: 'The Money Trap', author: 'Alok Sama', cover: 'money-trap.jpg' },
+  { title: 'Clearing the Air', author: 'Hannah Ritchie', cover: 'clearing-the-air.jpg' },
+];
+const coverBase = baseSlash + 'book-covers/';
+const slides = onRepeat.slides as { src: string; title: string; subtitle: string }[];
+---
+
+<section
+  id="beyond"
+  class="paper-beyond"
+  data-lab-id="beyond"
+  data-lab-kind="flow"
+  data-lab-label="Beyond Work section"
+  data-lab-group="Beyond"
+  data-lab-props="paddingTop,paddingBottom,background,maxWidth"
+>
+  <div class="beyond-inner">
+    <h2
+      class="beyond-heading"
+      data-lab-id="beyond.heading"
+      data-lab-kind="flow"
+      data-lab-label="Beyond Work heading"
+      data-lab-group="Beyond"
+      data-lab-props="fontSize,letterSpacing,color,align,marginBottom,font"
+    >
+      Beyond Work
+    </h2>
+    <p
+      class="beyond-sub"
+      data-lab-id="beyond.subtitle"
+      data-lab-kind="flow"
+      data-lab-label="Books subtitle"
+      data-lab-group="Beyond"
+      data-lab-props="fontSize,color,marginBottom,font"
+    >
+      Books I enjoyed reading and would like to recommend.
+    </p>
+  </div>
+
+  <div
+    class="books-row"
+    data-lab-id="beyond.books"
+    data-lab-kind="flow"
+    data-lab-label="Books row"
+    data-lab-group="Beyond"
+    data-lab-props="gap,paddingTop,paddingBottom"
+  >
+    {
+      books.map((book) => (
+        <figure class="book-item">
+          <img src={`${coverBase}${book.cover}`} alt={`${book.title} cover`} loading="lazy" />
+          <figcaption>
+            <p class="book-title">{book.title}</p>
+            <p class="book-author">{book.author}</p>
+          </figcaption>
+        </figure>
+      ))
+    }
+  </div>
+
+  <div class="beyond-inner">
+    <p
+      class="beyond-sub beyond-sub-music"
+      data-lab-id="beyond.music-subtitle"
+      data-lab-kind="flow"
+      data-lab-label="Music subtitle"
+      data-lab-group="Beyond"
+      data-lab-props="fontSize,color,marginTop,marginBottom,font"
+    >
+      A small snapshot of what I have been listening to lately. These are the top songs live from
+      my Spotify repeat playlist.
+    </p>
+
+    <div
+      class="music-row"
+      data-lab-id="beyond.music"
+      data-lab-kind="flow"
+      data-lab-label="On Repeat playlist row"
+      data-lab-group="Beyond"
+      data-lab-props="gap,marginTop,maxWidth"
+    >
+      {
+        slides.slice(0, 8).map((s) => (
+          <figure class="music-item">
+            <img src={s.src} alt={`${s.title} cover art`} loading="lazy" />
+            <figcaption>
+              <p class="music-title">{s.title}</p>
+              <p class="music-subtitle">{s.subtitle}</p>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </div>
+
+  <!-- Free decorative papercraft objects — a little reading-nook scene. -->
+  <div class="beyond-canvas" data-lab-canvas aria-hidden="true">
+    <div
+      class="beyond-object"
+      data-lab-id="beyond.armchair"
+      data-lab-kind="free"
+      data-lab-label="Reading armchair object"
+      data-lab-group="Beyond"
+      data-lab-props="x,y,rotate,scale,z,opacity,shadow"
+      data-lab-asset="objects"
+    >
+      <img src={`${baseSlash}paper/objects/gemini-generated-image-93jsn593jsn593js.webp`} alt="" loading="lazy" />
+    </div>
+    <div
+      class="beyond-object beyond-object-lamp"
+      data-lab-id="beyond.lamp"
+      data-lab-kind="free"
+      data-lab-label="Desk lamp object"
+      data-lab-group="Beyond"
+      data-lab-props="x,y,rotate,scale,z,opacity,shadow"
+      data-lab-asset="objects"
+    >
+      <img src={`${baseSlash}paper/objects/gemini-generated-image-9msdt19msdt19msd.webp`} alt="" loading="lazy" />
+    </div>
+  </div>
+</section>
+
+<style>
+  .paper-beyond {
+    position: relative;
+    background: var(--paper-tint);
+    padding-block: 96px;
+    overflow: hidden;
+  }
+
+  .beyond-inner {
+    max-width: 1180px;
+    margin-inline: auto;
+    padding-inline: 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .beyond-heading {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(32px, 4vw, 44px);
+    color: var(--ink);
+    margin: 0 0 14px;
+  }
+
+  .beyond-sub {
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: var(--ink-soft);
+    max-width: 60ch;
+    margin: 0;
+  }
+
+  .beyond-sub-music {
+    margin-top: 64px;
+  }
+
+  .books-row {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    gap: 22px;
+    overflow-x: auto;
+    padding: 40px 24px 8px;
+    max-width: 1180px;
+    margin-inline: auto;
+    scrollbar-width: thin;
+  }
+
+  .book-item {
+    flex: none;
+    width: 118px;
+    margin: 0;
+  }
+
+  .book-item img {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+    display: block;
+    box-shadow: var(--shadow-lifted);
+    border: 4px solid var(--paper-card);
+  }
+
+  .book-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 12.5px;
+    margin: 8px 0 1px;
+    color: var(--ink);
+  }
+
+  .book-author {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .music-row {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    margin-top: 28px;
+    padding-bottom: 8px;
+  }
+
+  .music-item {
+    flex: none;
+    width: 96px;
+    margin: 0;
+  }
+
+  .music-item img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    display: block;
+    border-radius: 2px;
+    box-shadow: var(--shadow-soft);
+    border: 3px solid var(--paper-card);
+  }
+
+  .music-title {
+    font-family: var(--font-body);
+    font-size: 11px;
+    color: var(--ink);
+    margin: 6px 0 0;
+    line-height: 1.3;
+  }
+
+  .music-subtitle {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .beyond-canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .beyond-object {
+    position: absolute;
+    left: 88%;
+    top: 12%;
+    width: 15%;
+    transform: translate(-50%, -50%) rotate(3deg);
+    filter: drop-shadow(0 14px 22px rgba(20, 14, 8, 0.2));
+  }
+
+  .beyond-object-lamp {
+    left: 6%;
+    top: 78%;
+    width: 9%;
+    transform: translate(-50%, -50%) rotate(-6deg);
+  }
+
+  .beyond-object img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 3px;
+  }
+
+  @media (max-width: 767px) {
+    .beyond-object {
+      display: none;
+    }
+  }
+</style>

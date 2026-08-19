@@ -1,0 +1,82 @@
+---
+/**
+ * PaperObject — a free-floating papercraft object (the desk, the Gemini
+ * still-lifes) inside a `data-lab-canvas` container. Absolutely positioned
+ * by percentage, per LAB-SPEC.md §3 ("free" kind): the editor writes
+ * left/top/transform/z-index directly onto this element's inline style, so
+ * those four properties are set here as real inline CSS (not custom props)
+ * to match exactly what the editor will overwrite.
+ *
+ * Callers supply the full data-lab-* set except kind/asset, which are fixed
+ * here since every PaperObject is a free, asset-swappable image.
+ */
+interface Props {
+  id: string;
+  label: string;
+  group: string;
+  src: string;
+  alt?: string;
+  width?: string;
+  x: number;
+  y: number;
+  rotate?: number;
+  scale?: number;
+  z?: number;
+  shadow?: 'soft' | 'lifted' | 'deep';
+  class?: string;
+}
+
+const {
+  id,
+  label,
+  group,
+  src,
+  alt = '',
+  width = '32%',
+  x,
+  y,
+  rotate = 0,
+  scale = 1,
+  z = 1,
+  shadow = 'lifted',
+  class: className = '',
+} = Astro.props;
+
+const style =
+  `left:${x}%; top:${y}%; width:${width}; z-index:${z}; ` +
+  `transform: translate(-50%, -50%) rotate(${rotate}deg) scale(${scale});`;
+---
+
+<img
+  data-lab-id={id}
+  data-lab-kind="free"
+  data-lab-label={label}
+  data-lab-group={group}
+  data-lab-props="x,y,rotate,scale,z,opacity,shadow,src"
+  data-lab-asset="objects"
+  class:list={['paper-object', `shadow-${shadow}`, className]}
+  style={style}
+  src={src}
+  alt={alt}
+  loading="lazy"
+/>
+
+<style>
+  .paper-object {
+    position: absolute;
+    display: block;
+    height: auto;
+    border-radius: 2px;
+    pointer-events: none;
+  }
+
+  .shadow-soft {
+    filter: drop-shadow(0 4px 8px rgba(20, 14, 8, 0.18));
+  }
+  .shadow-lifted {
+    filter: drop-shadow(0 10px 20px rgba(20, 14, 8, 0.24));
+  }
+  .shadow-deep {
+    filter: drop-shadow(0 22px 40px rgba(20, 14, 8, 0.32));
+  }
+</style>

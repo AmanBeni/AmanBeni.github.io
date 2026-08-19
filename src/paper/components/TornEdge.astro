@@ -1,0 +1,42 @@
+---
+/**
+ * TornEdge — a deckled/torn paper edge as a section divider, sitting between
+ * two stacked sections so the paper stock genuinely looks torn rather than
+ * cut with a ruler. Purely decorative.
+ */
+interface Props {
+  /** Colour of the edge itself (matches the section ABOVE, since the tear
+   * reveals the section below through its jagged gap). */
+  fill?: string;
+  flip?: boolean;
+  class?: string;
+}
+
+const { fill = 'var(--paper-tint)', flip = false, class: className = '' } = Astro.props;
+---
+
+<div
+  class:list={['torn-divider', { flip }, className]}
+  style={`--torn-fill:${fill}`}
+  aria-hidden="true"
+></div>
+
+<style>
+  .torn-divider {
+    position: relative;
+    width: 100%;
+    height: 22px;
+    background: var(--torn-fill);
+    clip-path: polygon(
+      0% 0%, 2% 55%, 5% 10%, 8% 70%, 11% 25%, 14% 85%, 17% 15%, 20% 65%, 23% 5%,
+      26% 75%, 29% 30%, 32% 90%, 35% 20%, 38% 60%, 41% 10%, 44% 80%, 47% 25%,
+      50% 70%, 53% 15%, 56% 65%, 59% 5%, 62% 85%, 65% 30%, 68% 75%, 71% 20%,
+      74% 60%, 77% 10%, 80% 80%, 83% 25%, 86% 70%, 89% 15%, 92% 65%, 95% 5%,
+      98% 75%, 100% 20%, 100% 100%, 0% 100%
+    );
+  }
+
+  .torn-divider.flip {
+    transform: scaleY(-1);
+  }
+</style>

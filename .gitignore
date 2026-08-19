@@ -37,3 +37,7 @@ public/header-variants.html
 BUILD-SPEC.md
 CONTENT-INVENTORY.md
 README.md
+
+# Paper theme: source art originals are huge (127MB). Keep them local only.
+# Web-ready copies live in Paper/assets/ and public/paper/ and ARE committed.
+Paper/References/

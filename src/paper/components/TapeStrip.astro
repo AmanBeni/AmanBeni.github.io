@@ -1,0 +1,51 @@
+---
+/**
+ * TapeStrip — a decorative strip of washi/masking tape, pure CSS. Used to
+ * pin photos and cards down like a real desk collage. Purely decorative
+ * (aria-hidden), so it does not itself carry data-lab-* — the parent free
+ * element it's visually attached to owns the tag.
+ */
+interface Props {
+  rotate?: number;
+  tone?: 'kraft' | 'white' | 'mustard';
+  class?: string;
+}
+
+const { rotate = -4, tone = 'kraft', class: className = '' } = Astro.props;
+---
+
+<span
+  class:list={['tape-strip', `tone-${tone}`, className]}
+  style={`--tape-rotate:${rotate}deg`}
+  aria-hidden="true"
+></span>
+
+<style>
+  .tape-strip {
+    display: block;
+    width: 84px;
+    height: 30px;
+    transform: rotate(var(--tape-rotate));
+    opacity: 0.82;
+    box-shadow: 0 2px 4px rgba(30, 20, 10, 0.18);
+    background-image: repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.08) 0px,
+      rgba(255, 255, 255, 0.08) 2px,
+      transparent 2px,
+      transparent 6px
+    );
+  }
+
+  .tone-kraft {
+    background-color: rgba(196, 165, 116, 0.55);
+  }
+
+  .tone-white {
+    background-color: rgba(250, 248, 240, 0.7);
+  }
+
+  .tone-mustard {
+    background-color: rgba(201, 143, 31, 0.5);
+  }
+</style>

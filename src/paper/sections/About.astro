@@ -1,0 +1,172 @@
+---
+/**
+ * About — cream section, a white floating PaperCard of body copy on the
+ * left, the papercraft desk photo sitting on graph paper on the right.
+ */
+import PaperCard from '../components/PaperCard.astro';
+import GraphPaper from '../components/GraphPaper.astro';
+
+const base = import.meta.env.BASE_URL;
+const baseSlash = base.endsWith('/') ? base : base + '/';
+---
+
+<section
+  id="about"
+  class="paper-about"
+  data-lab-id="about"
+  data-lab-kind="flow"
+  data-lab-label="About section"
+  data-lab-group="About"
+  data-lab-props="paddingTop,paddingBottom,background,maxWidth"
+>
+  <div class="about-inner">
+    <p
+      class="about-eyebrow"
+      data-lab-id="about.eyebrow"
+      data-lab-kind="flow"
+      data-lab-label="Eyebrow label"
+      data-lab-group="About"
+      data-lab-props="fontSize,letterSpacing,color,marginBottom,font"
+    >
+      A bit about me
+    </p>
+
+    <div class="about-row">
+      <PaperCard shadow="lifted" class="about-card">
+        <div
+          data-lab-id="about.paragraph1"
+          data-lab-kind="flow"
+          data-lab-label="About paragraph 1"
+          data-lab-group="About"
+          data-lab-props="fontSize,lineHeight,color,marginBottom,font,maxWidth"
+        >
+          <p>
+            I am Aman. Business strategy professional with 3+ years of experience across a $3B
+            global transformation program spanning India, APAC, EMEA, and NAM. Worked closely
+            with senior leadership on strategic decisions, pricing optimisation, and AI-led
+            operations improvements across global business units.
+          </p>
+        </div>
+        <div
+          data-lab-id="about.paragraph2"
+          data-lab-kind="flow"
+          data-lab-label="About paragraph 2"
+          data-lab-group="About"
+          data-lab-props="fontSize,lineHeight,color,marginTop,marginBottom,font,maxWidth"
+        >
+          <p>
+            Took a career break in January 2026 due to personal reasons. Worked with an NGO to
+            structure their database and automate M&amp;E, alongside learning AI system design
+            from first principles and building a few projects and agents.
+          </p>
+        </div>
+        <div
+          data-lab-id="about.paragraph3"
+          data-lab-kind="flow"
+          data-lab-label="About paragraph 3"
+          data-lab-group="About"
+          data-lab-props="fontSize,lineHeight,color,marginTop,font,maxWidth"
+        >
+          <p>
+            Now looking for AI-focused strategic roles where innovation is used to do good for
+            our society and the planet.
+          </p>
+        </div>
+      </PaperCard>
+
+      <div class="about-photo-stage" data-lab-canvas>
+        <GraphPaper />
+        <div
+          class="about-desk"
+          data-lab-id="about.desk-photo"
+          data-lab-kind="free"
+          data-lab-label="Desk object photo"
+          data-lab-group="About"
+          data-lab-props="x,y,rotate,scale,z,opacity,shadow"
+          data-lab-asset="objects"
+        >
+          <img src={`${baseSlash}paper/objects/01-desk-wide-mixed.webp`} alt="Papercraft desk, lamp and books, a small still-life" loading="lazy" />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .paper-about {
+    background: var(--paper-tint);
+    padding-block: 72px;
+    position: relative;
+  }
+
+  .about-inner {
+    max-width: 1180px;
+    margin-inline: auto;
+    padding-inline: 24px;
+  }
+
+  .about-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 28px;
+  }
+
+  .about-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+
+  .about-card {
+    max-width: 62ch;
+  }
+
+  .about-card :global(p) {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 15.5px;
+    line-height: 1.75;
+    color: var(--ink);
+  }
+
+  .about-card :global(div + div) {
+    margin-top: 16px;
+  }
+
+  .about-photo-stage {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .about-desk {
+    position: absolute;
+    left: 50%;
+    top: 55%;
+    width: 62%;
+    transform: translate(-50%, -50%) rotate(-2deg);
+  }
+
+  .about-desk img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 6px solid #fdfaf0;
+    box-shadow: var(--shadow-deep);
+  }
+
+  @media (max-width: 860px) {
+    .about-row {
+      grid-template-columns: 1fr;
+    }
+    .about-card {
+      max-width: none;
+    }
+  }
+</style>

@@ -1,0 +1,95 @@
+---
+/**
+ * PaperCard — a piece of paper sitting on paper. Cream card, soft edge,
+ * layered drop shadow so it reads as physically raised off the section
+ * background, optional torn/deckled top edge.
+ *
+ * This is a plain visual wrapper, not itself a `data-lab-*` element — the
+ * caller passes lab attributes on the *content* inside (or spreads its own
+ * onto this component's root via `rest`), so PaperCard never hides an id the
+ * editor needs. See sections/*.astro for how it's tagged in place.
+ */
+interface Props {
+  shadow?: 'soft' | 'lifted' | 'deep';
+  torn?: boolean;
+  tint?: string;
+  class?: string;
+  [key: `data-${string}`]: string | undefined;
+}
+
+const { shadow = 'lifted', torn = false, tint, class: className = '', ...rest } = Astro.props;
+---
+
+<div
+  class:list={['paper-card', `shadow-${shadow}`, { torn }, className]}
+  style={tint ? `--card-tint:${tint}` : undefined}
+  {...rest}
+>
+  {torn && <div class="torn-edge torn-top" aria-hidden="true" />}
+  <div class="paper-card-inner">
+    <slot />
+  </div>
+  {torn && <div class="torn-edge torn-bottom" aria-hidden="true" />}
+</div>
+
+<style>
+  .paper-card {
+    position: relative;
+    background: var(--card-tint, var(--paper-card));
+    border: 1px solid var(--paper-line);
+    border-radius: 3px;
+  }
+
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+  .shadow-lifted {
+    box-shadow: var(--shadow-lifted);
+  }
+  .shadow-deep {
+    box-shadow: var(--shadow-deep);
+  }
+
+  .paper-card-inner {
+    position: relative;
+    padding: 28px 32px;
+  }
+
+  /* Faint fibre-grain overlay, strength driven by --grain. */
+  .paper-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: var(--grain);
+    background-image: radial-gradient(rgba(36, 28, 18, 0.5) 0.5px, transparent 0.5px);
+    background-size: 3px 3px;
+    mix-blend-mode: multiply;
+  }
+
+  /* Deckled/torn edge — a jagged strip at top/bottom via clip-path on a
+     thin sliver, layered over the card's flat edge. */
+  .torn-edge {
+    position: relative;
+    height: 8px;
+    margin: 0 -1px;
+    background: var(--card-tint, var(--paper-card));
+  }
+
+  .torn-top {
+    clip-path: polygon(
+      0% 100%, 3% 30%, 7% 90%, 11% 20%, 15% 80%, 19% 10%, 23% 70%, 27% 15%, 31% 85%,
+      35% 25%, 39% 95%, 43% 35%, 47% 75%, 51% 10%, 55% 80%, 59% 20%, 63% 90%, 67% 30%,
+      71% 70%, 75% 15%, 79% 85%, 83% 25%, 87% 95%, 91% 35%, 95% 75%, 100% 100%, 100% 100%, 0% 100%
+    );
+  }
+
+  .torn-bottom {
+    clip-path: polygon(
+      0% 0%, 3% 70%, 7% 10%, 11% 80%, 15% 20%, 19% 90%, 23% 30%, 27% 85%, 31% 15%,
+      35% 75%, 39% 5%, 43% 65%, 47% 25%, 51% 90%, 55% 20%, 59% 80%, 63% 10%, 67% 70%,
+      71% 30%, 75% 85%, 79% 15%, 83% 75%, 87% 5%, 91% 65%, 95% 25%, 100% 0%, 100% 0%, 0% 0%
+    );
+  }
+</style>

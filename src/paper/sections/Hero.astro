@@ -1,0 +1,277 @@
+---
+/**
+ * Hero — deep-green textured-paper hero with a large sans... no, serif
+ * Didone heading, Aman's photo, and a cut-paper cloud landscape.
+ *
+ * Contains the spec's required variant-toggle pair: hero.title renders
+ * twice, once as live text and once as an <img> of the letterpress art,
+ * sharing data-lab-variant-of="hero.title". The image is hidden by default
+ * (class="lab-variant-hidden") — Track B's editor toggles visibility.
+ */
+import TapeStrip from '../components/TapeStrip.astro';
+
+const base = import.meta.env.BASE_URL;
+const baseSlash = base.endsWith('/') ? base : base + '/';
+---
+
+<section
+  id="hero"
+  class="paper-hero"
+  data-lab-id="hero"
+  data-lab-kind="flow"
+  data-lab-label="Hero section"
+  data-lab-group="Hero"
+  data-lab-props="paddingTop,paddingBottom,background,maxWidth"
+  data-lab-asset="backgrounds"
+>
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <p
+        class="hero-chip"
+        data-lab-id="hero.chip"
+        data-lab-kind="flow"
+        data-lab-label="Status chip"
+        data-lab-group="Hero"
+        data-lab-props="fontSize,letterSpacing,color,marginBottom"
+      >
+        <span class="hero-chip-dot" aria-hidden="true"></span>
+        SYSTEM_ONLINE &middot; JAIPUR, IN
+      </p>
+
+      <h1
+        class="hero-title"
+        data-lab-id="hero.title"
+        data-lab-kind="flow"
+        data-lab-label="Hero heading (text)"
+        data-lab-group="Hero"
+        data-lab-props="fontSize,letterSpacing,lineHeight,color,align,marginTop,marginBottom,maxWidth,font"
+        data-lab-variant-of="hero.title"
+      >
+        Hi, I am Aman
+      </h1>
+
+      <img
+        class="hero-title-image lab-variant-hidden"
+        data-lab-id="hero.title.image"
+        data-lab-kind="flow"
+        data-lab-label="Hero heading (image)"
+        data-lab-group="Hero"
+        data-lab-props="maxWidth,marginTop,marginBottom,align,opacity"
+        data-lab-variant-of="hero.title"
+        data-lab-asset="text"
+        src={`${baseSlash}paper/text/advercase-letterpress.png`}
+        alt="Hi, I am Aman"
+      />
+
+      <p
+        class="hero-subtitle"
+        data-lab-id="hero.subtitle"
+        data-lab-kind="flow"
+        data-lab-label="Hero subheading"
+        data-lab-group="Hero"
+        data-lab-props="fontSize,letterSpacing,lineHeight,color,align,marginTop,marginBottom,maxWidth,font"
+      >
+        Strategy generalist and AI builder. Figuring out the rest.
+      </p>
+    </div>
+
+    <div class="hero-photo-wrap">
+      <img
+        class="hero-photo"
+        data-lab-id="hero.photo"
+        data-lab-kind="flow"
+        data-lab-label="Aman's photo"
+        data-lab-group="Hero"
+        data-lab-props="maxWidth,rotate,shadow,marginTop,marginBottom"
+        data-lab-asset="photos"
+        src={`${baseSlash}paper/photos/aman-headshot.webp`}
+        alt="Aman Beniwal"
+      />
+      <TapeStrip rotate={-8} tone="kraft" class="hero-photo-tape" />
+    </div>
+  </div>
+
+  <!-- Free-floating collage layer: the cut-paper cloud landscape sits here,
+       draggable/rescalable independent of the flow copy above it. -->
+  <div class="hero-canvas" data-lab-canvas aria-hidden="false">
+    <div
+      class="hero-cloudscape"
+      data-lab-id="hero.cloudscape"
+      data-lab-kind="free"
+      data-lab-label="Cloud landscape"
+      data-lab-group="Hero"
+      data-lab-props="x,y,rotate,scale,z,opacity,shadow"
+    >
+      <svg viewBox="0 0 600 340" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Cut-paper cloud landscape">
+        <rect width="600" height="340" fill="#bfe0ea" />
+        <g fill="#f4efe4" opacity="0.96">
+          <ellipse cx="120" cy="90" rx="70" ry="34" />
+          <ellipse cx="175" cy="72" rx="46" ry="28" />
+          <ellipse cx="70" cy="80" rx="42" ry="24" />
+        </g>
+        <g fill="#f4efe4" opacity="0.88">
+          <ellipse cx="430" cy="60" rx="60" ry="28" />
+          <ellipse cx="480" cy="78" rx="40" ry="22" />
+        </g>
+        <path d="M0,340 L0,230 C90,190 140,250 230,210 C320,175 380,235 470,205 C520,188 560,215 600,200 L600,340 Z" fill="#a9754a" />
+        <path d="M0,340 L0,270 C120,250 220,290 320,260 C420,232 500,270 600,250 L600,340 Z" fill="#8a5e3a" />
+      </svg>
+    </div>
+  </div>
+</section>
+
+<style>
+  .paper-hero {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--paper-hero-tint);
+    background-image: var(--paper-hero-bg);
+    background-size: cover;
+    background-position: center;
+    padding-block: 88px 64px;
+    color: var(--paper-hero-ink);
+  }
+
+  /* Grain overlay over the hero art, driven by --grain. */
+  .paper-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: calc(var(--grain) * 0.6);
+    background-image: radial-gradient(rgba(0, 0, 0, 0.7) 0.6px, transparent 0.6px);
+    background-size: 3px 3px;
+    mix-blend-mode: multiply;
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 1180px;
+    margin-inline: auto;
+    padding-inline: 24px;
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 40px;
+    align-items: center;
+  }
+
+  .hero-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .hero-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    width: fit-content;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: rgba(244, 239, 224, 0.82);
+    margin: 0 0 18px;
+  }
+
+  .hero-chip-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #d9a441;
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(42px, 6vw, 68px);
+    line-height: 1.04;
+    letter-spacing: -0.01em;
+    margin: 0 0 18px;
+    color: var(--paper-hero-ink);
+  }
+
+  .hero-title-image {
+    max-width: 460px;
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 0 18px;
+  }
+
+  .lab-variant-hidden {
+    display: none;
+  }
+
+  .hero-subtitle {
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.6;
+    color: rgba(244, 239, 224, 0.86);
+    max-width: 46ch;
+    margin: 0;
+  }
+
+  .hero-photo-wrap {
+    position: relative;
+    justify-self: center;
+  }
+
+  .hero-photo {
+    width: 220px;
+    height: 220px;
+    object-fit: cover;
+    object-position: top center;
+    background: #eee6d4;
+    border: 6px solid #fdfaf0;
+    box-shadow: var(--shadow-deep);
+    transform: rotate(-2deg);
+  }
+
+  .hero-photo-tape {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-6deg);
+  }
+
+  .hero-canvas {
+    position: relative;
+    z-index: 1;
+    max-width: 1180px;
+    margin: 48px auto 0;
+    padding-inline: 24px;
+    height: clamp(160px, 20vw, 240px);
+  }
+
+  .hero-cloudscape {
+    position: absolute;
+    left: 4%;
+    right: 4%;
+    bottom: 0;
+    height: 100%;
+    box-shadow: var(--shadow-deep);
+    border: 6px solid #fdfaf0;
+    overflow: hidden;
+    border-radius: 2px;
+  }
+
+  .hero-cloudscape svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  @media (max-width: 860px) {
+    .hero-inner {
+      grid-template-columns: 1fr;
+      text-align: left;
+    }
+    .hero-photo-wrap {
+      justify-self: start;
+    }
+    .paper-hero {
+      padding-block: 120px 48px;
+    }
+  }
+</style>

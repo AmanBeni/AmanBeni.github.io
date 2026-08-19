@@ -1,0 +1,171 @@
+---
+/** Skills & Tools — two tag columns, typewriter chips stamped on card stock. */
+const skills = [
+  'Data Analytics & Synthesis',
+  'Metrics & KPI Tracking',
+  'Stakeholder Management',
+  'Strategic Communications',
+  'Change Management',
+  'Cross-Functional Project Execution',
+  'Financial & Analytical Modeling',
+  'Data Pipelines',
+  'AI Workflow Automation',
+  'Prompt & Skill Engineering',
+  'Multi-Agent Workflows',
+];
+
+const tools = [
+  'Excel',
+  'PowerPoint',
+  'Excel VBA Macros',
+  'Power BI',
+  'Notion',
+  'Claude Code',
+  'ChatGPT & Codex',
+  'Python',
+  'GitHub Actions',
+  'VS Code',
+  'MCP',
+  'RAG / Ollama Embeddings',
+];
+---
+
+<section
+  id="skills"
+  class="paper-skills"
+  data-lab-id="skills"
+  data-lab-kind="flow"
+  data-lab-label="Skills & Tools section"
+  data-lab-group="Skills"
+  data-lab-props="paddingTop,paddingBottom,background,maxWidth"
+>
+  <div class="skills-inner">
+    <h2
+      class="skills-heading"
+      data-lab-id="skills.heading"
+      data-lab-kind="flow"
+      data-lab-label="Skills heading"
+      data-lab-group="Skills"
+      data-lab-props="fontSize,letterSpacing,color,align,marginBottom,font"
+    >
+      Skills &amp; Tools
+    </h2>
+
+    <div class="skills-grid">
+      <div>
+        <h3
+          class="skills-colhead"
+          data-lab-id="skills.skills-heading"
+          data-lab-kind="flow"
+          data-lab-label="Skills column heading"
+          data-lab-group="Skills"
+          data-lab-props="fontSize,letterSpacing,color,marginBottom,font"
+        >
+          Skills
+        </h3>
+        <ul
+          class="skills-tags"
+          data-lab-id="skills.skills-list"
+          data-lab-kind="flow"
+          data-lab-label="Skills tag list"
+          data-lab-group="Skills"
+          data-lab-props="gap,fontSize,color"
+        >
+          {skills.map((s) => <li class="skills-tag">{s}</li>)}
+        </ul>
+      </div>
+
+      <div>
+        <h3
+          class="skills-colhead"
+          data-lab-id="skills.tools-heading"
+          data-lab-kind="flow"
+          data-lab-label="Tools column heading"
+          data-lab-group="Skills"
+          data-lab-props="fontSize,letterSpacing,color,marginBottom,font"
+        >
+          Tools
+        </h3>
+        <ul
+          class="skills-tags skills-tags-tools"
+          data-lab-id="skills.tools-list"
+          data-lab-kind="flow"
+          data-lab-label="Tools tag list"
+          data-lab-group="Skills"
+          data-lab-props="gap,fontSize,color"
+        >
+          {tools.map((t) => <li class="skills-tag skills-tag-tool">{t}</li>)}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .paper-skills {
+    background: var(--paper-alt-tint);
+    padding-block: 88px;
+  }
+
+  .skills-inner {
+    max-width: 1180px;
+    margin-inline: auto;
+    padding-inline: 24px;
+  }
+
+  .skills-heading {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(32px, 4vw, 44px);
+    color: var(--ink);
+    margin: 0 0 40px;
+  }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+  }
+
+  .skills-colhead {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 16px;
+  }
+
+  .skills-tags {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .skills-tag {
+    font-family: var(--font-body);
+    font-size: 13px;
+    padding: 7px 13px;
+    background: var(--paper-card);
+    border: 1px solid var(--paper-line);
+    box-shadow: var(--shadow-soft);
+    color: var(--ink);
+  }
+
+  .skills-tag-tool {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--accent-green);
+    background: color-mix(in srgb, var(--accent-green) 6%, var(--paper-card));
+  }
+
+  @media (max-width: 767px) {
+    .skills-grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+  }
+</style>

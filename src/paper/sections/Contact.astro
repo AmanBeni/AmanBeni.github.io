@@ -1,0 +1,125 @@
+---
+/** Contact — closing section, dark kraft card with the two real contact links. */
+---
+
+<section
+  id="contact"
+  class="paper-contact"
+  data-lab-id="contact"
+  data-lab-kind="flow"
+  data-lab-label="Contact section"
+  data-lab-group="Contact"
+  data-lab-props="paddingTop,paddingBottom,background,maxWidth"
+>
+  <div class="contact-inner">
+    <h2
+      class="contact-heading"
+      data-lab-id="contact.heading"
+      data-lab-kind="flow"
+      data-lab-label="Contact heading"
+      data-lab-group="Contact"
+      data-lab-props="fontSize,letterSpacing,color,align,marginBottom,font"
+    >
+      Contact
+    </h2>
+
+    <div class="contact-lines">
+      <p
+        class="contact-line"
+        data-lab-id="contact.email"
+        data-lab-kind="flow"
+        data-lab-label="Email line"
+        data-lab-group="Contact"
+        data-lab-props="fontSize,color,marginBottom,font"
+      >
+        <span class="contact-label">Email</span>
+        <a href="mailto:beniwalaman2@gmail.com">beniwalaman2@gmail.com</a>
+      </p>
+      <p
+        class="contact-line"
+        data-lab-id="contact.linkedin"
+        data-lab-kind="flow"
+        data-lab-label="LinkedIn line"
+        data-lab-group="Contact"
+        data-lab-props="fontSize,color,marginTop,font"
+      >
+        <span class="contact-label">LinkedIn</span>
+        <a href="https://www.linkedin.com/in/aman-beniwal/" target="_blank" rel="noopener noreferrer">
+          linkedin.com/in/aman-beniwal
+        </a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .paper-contact {
+    background: var(--paper-hero-tint);
+    background-image: var(--paper-hero-bg);
+    background-size: cover;
+    background-position: center;
+    padding-block: 96px;
+    color: var(--paper-hero-ink);
+    position: relative;
+  }
+
+  .paper-contact::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: calc(var(--grain) * 0.6);
+    background-image: radial-gradient(rgba(0, 0, 0, 0.7) 0.6px, transparent 0.6px);
+    background-size: 3px 3px;
+    mix-blend-mode: multiply;
+  }
+
+  .contact-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 1180px;
+    margin-inline: auto;
+    padding-inline: 24px;
+  }
+
+  .contact-heading {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(38px, 5vw, 60px);
+    color: var(--paper-hero-ink);
+    margin: 0 0 28px;
+  }
+
+  .contact-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .contact-line {
+    font-family: var(--font-body);
+    font-size: 16px;
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  .contact-label {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(244, 239, 224, 0.6);
+  }
+
+  .contact-line a {
+    color: var(--paper-hero-ink);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(244, 239, 224, 0.5);
+  }
+
+  .contact-line a:hover {
+    border-bottom-color: var(--paper-hero-ink);
+  }
+</style>

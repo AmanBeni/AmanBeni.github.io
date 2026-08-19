@@ -1,0 +1,242 @@
+[
+  {
+    "id": "backgrounds/deep-smooth-forest",
+    "category": "backgrounds",
+    "name": "deep-smooth-forest",
+    "label": "Deep Smooth Forest",
+    "src": "/paper/backgrounds/deep-smooth-forest.webp",
+    "width": 2000,
+    "height": 1116,
+    "bytes": 161936
+  },
+  {
+    "id": "backgrounds/deep-smooth-quarz",
+    "category": "backgrounds",
+    "name": "deep-smooth-quarz",
+    "label": "Deep Smooth Quarz",
+    "src": "/paper/backgrounds/deep-smooth-quarz.webp",
+    "width": 2000,
+    "height": 1116,
+    "bytes": 56950
+  },
+  {
+    "id": "backgrounds/forest-laid-forest",
+    "category": "backgrounds",
+    "name": "forest-laid-forest",
+    "label": "Forest Laid Forest",
+    "src": "/paper/backgrounds/forest-laid-forest.webp",
+    "width": 2000,
+    "height": 1114,
+    "bytes": 404850
+  },
+  {
+    "id": "backgrounds/forest-laid-mustard",
+    "category": "backgrounds",
+    "name": "forest-laid-mustard",
+    "label": "Forest Laid Mustard",
+    "src": "/paper/backgrounds/forest-laid-mustard.webp",
+    "width": 2000,
+    "height": 1114,
+    "bytes": 319936
+  },
+  {
+    "id": "backgrounds/kraft-fine-blu",
+    "category": "backgrounds",
+    "name": "kraft-fine-blu",
+    "label": "Kraft Fine Blu",
+    "src": "/paper/backgrounds/kraft-fine-blu.webp",
+    "width": 2000,
+    "height": 1116,
+    "bytes": 124418
+  },
+  {
+    "id": "backgrounds/kraft-fine-brown",
+    "category": "backgrounds",
+    "name": "kraft-fine-brown",
+    "label": "Kraft Fine Brown",
+    "src": "/paper/backgrounds/kraft-fine-brown.webp",
+    "width": 2000,
+    "height": 1116,
+    "bytes": 262906
+  },
+  {
+    "id": "backgrounds/kraft-scan-brown",
+    "category": "backgrounds",
+    "name": "kraft-scan-brown",
+    "label": "Kraft Scan Brown",
+    "src": "/paper/backgrounds/kraft-scan-brown.webp",
+    "width": 2000,
+    "height": 1125,
+    "bytes": 530604
+  },
+  {
+    "id": "backgrounds/kraft-scan-citrine",
+    "category": "backgrounds",
+    "name": "kraft-scan-citrine",
+    "label": "Kraft Scan Citrine",
+    "src": "/paper/backgrounds/kraft-scan-citrine.webp",
+    "width": 2000,
+    "height": 1125,
+    "bytes": 460048
+  },
+  {
+    "id": "backgrounds/kraft-scan-forest",
+    "category": "backgrounds",
+    "name": "kraft-scan-forest",
+    "label": "Kraft Scan Forest",
+    "src": "/paper/backgrounds/kraft-scan-forest.webp",
+    "width": 2000,
+    "height": 1125,
+    "bytes": 469488
+  },
+  {
+    "id": "backgrounds/laid-natural",
+    "category": "backgrounds",
+    "name": "laid-natural",
+    "label": "Laid Natural",
+    "src": "/paper/backgrounds/laid-natural.webp",
+    "width": 2000,
+    "height": 1116,
+    "bytes": 76884
+  },
+  {
+    "id": "backgrounds/natural-smooth-natural",
+    "category": "backgrounds",
+    "name": "natural-smooth-natural",
+    "label": "Natural Smooth Natural",
+    "src": "/paper/backgrounds/natural-smooth-natural.webp",
+    "width": 2000,
+    "height": 1116,
+    "bytes": 25138
+  },
+  {
+    "id": "backgrounds/quarz-laid-quarz",
+    "category": "backgrounds",
+    "name": "quarz-laid-quarz",
+    "label": "Quarz Laid Quarz",
+    "src": "/paper/backgrounds/quarz-laid-quarz.webp",
+    "width": 2000,
+    "height": 1116,
+    "bytes": 63570
+  },
+  {
+    "id": "backgrounds/rust-tooth-forest",
+    "category": "backgrounds",
+    "name": "rust-tooth-forest",
+    "label": "Rust Tooth Forest",
+    "src": "/paper/backgrounds/rust-tooth-forest.webp",
+    "width": 2000,
+    "height": 1116,
+    "bytes": 105862
+  },
+  {
+    "id": "backgrounds/rust-tooth-quarz",
+    "category": "backgrounds",
+    "name": "rust-tooth-quarz",
+    "label": "Rust Tooth Quarz",
+    "src": "/paper/backgrounds/rust-tooth-quarz.webp",
+    "width": 2000,
+    "height": 1116,
+    "bytes": 98528
+  },
+  {
+    "id": "backgrounds/terracotta-fibre-blu",
+    "category": "backgrounds",
+    "name": "terracotta-fibre-blu",
+    "label": "Terracotta Fibre Blu",
+    "src": "/paper/backgrounds/terracotta-fibre-blu.webp",
+    "width": 2000,
+    "height": 1093,
+    "bytes": 232144
+  },
+  {
+    "id": "backgrounds/terracotta-fibre-terracotta",
+    "category": "backgrounds",
+    "name": "terracotta-fibre-terracotta",
+    "label": "Terracotta Fibre Terracotta",
+    "src": "/paper/backgrounds/terracotta-fibre-terracotta.webp",
+    "width": 2000,
+    "height": 1093,
+    "bytes": 279222
+  },
+  {
+    "id": "objects/01-desk-wide-coarse-cut",
+    "category": "objects",
+    "name": "01-desk-wide-coarse-cut",
+    "label": "01 Desk Wide Coarse Cut",
+    "src": "/paper/objects/01-desk-wide-coarse-cut.webp",
+    "width": 1200,
+    "height": 896,
+    "bytes": 94746
+  },
+  {
+    "id": "objects/01-desk-wide-mixed",
+    "category": "objects",
+    "name": "01-desk-wide-mixed",
+    "label": "01 Desk Wide Mixed",
+    "src": "/paper/objects/01-desk-wide-mixed.webp",
+    "width": 1200,
+    "height": 670,
+    "bytes": 49228
+  },
+  {
+    "id": "objects/gemini-generated-image-93jsn593jsn593js",
+    "category": "objects",
+    "name": "gemini-generated-image-93jsn593jsn593js",
+    "label": "Gemini Generated Image 93jsn593jsn593js",
+    "src": "/paper/objects/gemini-generated-image-93jsn593jsn593js.webp",
+    "width": 1032,
+    "height": 1024,
+    "bytes": 113420
+  },
+  {
+    "id": "objects/gemini-generated-image-9msdt19msdt19msd",
+    "category": "objects",
+    "name": "gemini-generated-image-9msdt19msdt19msd",
+    "label": "Gemini Generated Image 9msdt19msdt19msd",
+    "src": "/paper/objects/gemini-generated-image-9msdt19msdt19msd.webp",
+    "width": 1024,
+    "height": 1056,
+    "bytes": 71380
+  },
+  {
+    "id": "text/advercase-letterpress",
+    "category": "text",
+    "name": "advercase-letterpress",
+    "label": "Advercase Letterpress",
+    "src": "/paper/text/advercase-letterpress.png",
+    "width": 1400,
+    "height": 349,
+    "bytes": 186235
+  },
+  {
+    "id": "text/advercase-typewriter",
+    "category": "text",
+    "name": "advercase-typewriter",
+    "label": "Advercase Typewriter",
+    "src": "/paper/text/advercase-typewriter.png",
+    "width": 1400,
+    "height": 329,
+    "bytes": 160695
+  },
+  {
+    "id": "text/newyork-letterpress",
+    "category": "text",
+    "name": "newyork-letterpress",
+    "label": "Newyork Letterpress",
+    "src": "/paper/text/newyork-letterpress.png",
+    "width": 1400,
+    "height": 272,
+    "bytes": 175346
+  },
+  {
+    "id": "photos/aman-headshot",
+    "category": "photos",
+    "name": "aman-headshot",
+    "label": "Aman Headshot",
+    "src": "/paper/photos/aman-headshot.webp",
+    "width": 1254,
+    "height": 1254,
+    "bytes": 71914
+  }
+]

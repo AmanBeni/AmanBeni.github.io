@@ -1,0 +1,64 @@
+/*
+  Paper theme tokens — src/paper/tokens.css
+  Source of truth for the papercraft Lab's look, per Paper/LAB-SPEC.md §5.
+
+  This is the "mood dial": the editor's Theme tab edits these variables
+  directly, so changing --paper-stock (or any other value here) restyles the
+  whole /lab page in one click. Keep the exact names in the spec — the editor
+  reads them by name and never invents its own.
+
+  Fonts are self-hosted via @fontsource, imported here (not in global.css —
+  the Lab does not import the pixel theme's stylesheet, to avoid the two
+  themes fighting over the same custom-property names on :root).
+*/
+
+@import '@fontsource/playfair-display/400.css';
+@import '@fontsource/playfair-display/600.css';
+@import '@fontsource/playfair-display/700.css';
+@import '@fontsource/playfair-display/900.css';
+@import '@fontsource/courier-prime/400.css';
+@import '@fontsource/courier-prime/700.css';
+@import '@fontsource/special-elite/400.css';
+@import '@fontsource/jetbrains-mono/500.css';
+
+:root {
+  /* ---- §5 tokens (the ones the editor's Theme tab controls) ---- */
+
+  /* Background image, from the manifest — the page's base paper stock.
+     Section-level `background` props (data-lab-props) can override this
+     per-section; this is the fallback/global mood. */
+  --paper-stock: url('/paper/backgrounds/natural-smooth-natural.webp');
+  --paper-tint: #f4efe4;
+
+  --ink: #241c12;
+  --ink-soft: rgba(36, 28, 18, 0.62);
+  --accent: #b3502c;
+
+  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-body: 'Courier Prime', 'JetBrains Mono', ui-monospace, monospace;
+  --font-mono: 'Special Elite', 'Courier Prime', ui-monospace, monospace;
+
+  --grain: 0.35;
+
+  --shadow-soft: 0 1px 2px rgba(30, 20, 10, 0.1), 0 3px 8px rgba(30, 20, 10, 0.08);
+  --shadow-lifted: 0 2px 4px rgba(30, 20, 10, 0.12), 0 14px 26px rgba(30, 20, 10, 0.16);
+  --shadow-deep: 0 6px 10px rgba(30, 20, 10, 0.16), 0 30px 54px rgba(30, 20, 10, 0.26);
+
+  /* Pencil/torn border treatment — the colour PencilFrame and TornEdge draw
+     with, and the general "hand-drawn line" colour used across the theme. */
+  --edge: #2a2116;
+
+  /* ---- Extra tokens (not in the editor's theme bar, but used throughout
+     the Lab's components for a consistent papercraft palette). Safe to
+     extend — the spec only promises the tokens above are wired to the
+     editor; components are free to lean on more of them internally. ---- */
+  --paper-hero-bg: url('/paper/backgrounds/deep-smooth-forest.webp');
+  --paper-hero-tint: #1f3629;
+  --paper-hero-ink: #f4efe0;
+  --paper-alt-tint: #ece4d3;
+  --paper-card: #fffdf8;
+  --paper-line: rgba(36, 28, 18, 0.16);
+  --accent-green: #33513c;
+  --accent-rust: #b3502c;
+  --accent-mustard: #c98f1f;
+}

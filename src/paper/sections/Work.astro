@@ -1,0 +1,145 @@
+---
+/**
+ * Work — selected AI project cards, same three projects as the pixel site's
+ * "AI Projects" section, pulled from src/content/projects/*.md (real copy,
+ * no lorem ipsum).
+ */
+import { getCollection } from 'astro:content';
+import PaperCard from '../components/PaperCard.astro';
+
+const AI_PROJECTS = ['daily-cactus', 'youtube-year', 'second-brain'];
+const projects = (await getCollection('projects'))
+  .filter((p) => AI_PROJECTS.includes(p.id))
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<section
+  id="work"
+  class="paper-work"
+  data-lab-id="work"
+  data-lab-kind="flow"
+  data-lab-label="Work section"
+  data-lab-group="Work"
+  data-lab-props="paddingTop,paddingBottom,background,maxWidth"
+>
+  <div class="work-inner">
+    <h2
+      class="work-heading"
+      data-lab-id="work.heading"
+      data-lab-kind="flow"
+      data-lab-label="Work heading"
+      data-lab-group="Work"
+      data-lab-props="fontSize,letterSpacing,color,align,marginBottom,font"
+    >
+      AI Projects
+    </h2>
+
+    <div class="work-grid" data-lab-id="work.grid" data-lab-kind="flow" data-lab-label="Project grid" data-lab-group="Work" data-lab-props="gap,maxWidth">
+      {
+        projects.map((project) => (
+          <PaperCard
+            shadow="lifted"
+            class="work-card"
+            data-lab-id={`work.card.${project.id}`}
+            data-lab-kind="flow"
+            data-lab-label={`Project — ${project.data.title}`}
+            data-lab-group="Work"
+            data-lab-props="fontSize,color,marginTop,marginBottom,maxWidth,shadow,font"
+          >
+            <span class="work-emoji" aria-hidden="true">{project.data.emoji}</span>
+            <h3 class="work-title">{project.data.title}</h3>
+            <p class="work-summary">{project.data.summary}</p>
+            <ul class="work-tags">
+              {project.data.tags.map((t: string) => (
+                <li class="work-tag">{t}</li>
+              ))}
+            </ul>
+            <span class="work-status">{project.data.status}</span>
+          </PaperCard>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .paper-work {
+    background: var(--paper-tint);
+    padding-block: 88px;
+  }
+
+  .work-inner {
+    max-width: 1180px;
+    margin-inline: auto;
+    padding-inline: 24px;
+  }
+
+  .work-heading {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(32px, 4vw, 44px);
+    color: var(--ink);
+    margin: 0 0 40px;
+  }
+
+  .work-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 28px;
+  }
+
+  .work-card {
+    position: relative;
+  }
+
+  .work-emoji {
+    font-size: 26px;
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .work-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 19px;
+    color: var(--ink);
+    margin: 0 0 10px;
+  }
+
+  .work-summary {
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin: 0 0 16px;
+  }
+
+  .work-tags {
+    list-style: none;
+    margin: 0 0 16px;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .work-tag {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 4px 9px;
+    border: 1px dashed var(--paper-line);
+    color: var(--ink-soft);
+    border-radius: 2px;
+  }
+
+  .work-status {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent-green);
+  }
+</style>

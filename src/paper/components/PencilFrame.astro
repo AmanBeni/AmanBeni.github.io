@@ -1,0 +1,150 @@
+---
+/**
+ * PencilFrame — a hand-drawn pencil-line margin rule on all four edges of
+ * the page. Aman wants a real scanned pencil-line PNG here eventually
+ * (`public/paper/borders/`), but that folder is empty right now, so this
+ * renders a CSS-drawn wobbly line as a fallback. The moment a border asset
+ * lands in the manifest, this switches to it automatically — no code change
+ * needed.
+ *
+ * Fixed overlay, does not affect page layout or intercept clicks.
+ */
+import fs from 'node:fs';
+import path from 'node:path';
+
+const bordersDir = path.resolve('public/paper/borders');
+let borderFile: string | null = null;
+try {
+  const files = fs.readdirSync(bordersDir).filter((f) => /\.(png|webp|jpg|jpeg)$/i.test(f));
+  if (files.length > 0) borderFile = `/paper/borders/${files[0]}`;
+} catch {
+  borderFile = null;
+}
+---
+
+<div
+  class="pencil-frame"
+  data-lab-id="global.pencil-frame"
+  data-lab-kind="free"
+  data-lab-label="Pencil border"
+  data-lab-group="Global"
+  data-lab-props="opacity,color"
+  data-lab-asset="borders"
+  aria-hidden="true"
+>
+  {
+    borderFile ? (
+      <>
+        <img class="pencil-edge edge-top" src={borderFile} alt="" />
+        <img class="pencil-edge edge-bottom" src={borderFile} alt="" />
+        <img class="pencil-edge edge-left" src={borderFile} alt="" />
+        <img class="pencil-edge edge-right" src={borderFile} alt="" />
+      </>
+    ) : (
+      <>
+        <svg class="pencil-edge edge-top" preserveAspectRatio="none" viewBox="0 0 1000 24">
+          <path
+            d="M0,12 C40,4 80,20 120,10 C160,2 200,18 240,8 C280,2 320,18 360,10 C400,3 440,17 480,9 C520,3 560,18 600,10 C640,2 680,18 720,9 C760,2 800,18 840,10 C880,3 920,17 960,9 C980,6 990,14 1000,10"
+            fill="none"
+          />
+        </svg>
+        <svg class="pencil-edge edge-bottom" preserveAspectRatio="none" viewBox="0 0 1000 24">
+          <path
+            d="M0,12 C40,20 80,4 120,14 C160,22 200,6 240,16 C280,22 320,6 360,14 C400,21 440,7 480,15 C520,21 560,6 600,14 C640,22 680,6 720,15 C760,22 800,6 840,14 C880,21 920,7 960,15 C980,18 990,10 1000,14"
+            fill="none"
+          />
+        </svg>
+        <svg class="pencil-edge edge-left" preserveAspectRatio="none" viewBox="0 0 24 1000">
+          <path
+            d="M12,0 C4,40 20,80 10,120 C2,160 18,200 8,240 C2,280 18,320 10,360 C3,400 17,440 9,480 C3,520 18,560 10,600 C2,640 18,680 9,720 C2,760 18,800 10,840 C3,880 17,920 9,960 C6,980 14,990 10,1000"
+            fill="none"
+          />
+        </svg>
+        <svg class="pencil-edge edge-right" preserveAspectRatio="none" viewBox="0 0 24 1000">
+          <path
+            d="M12,0 C20,40 4,80 14,120 C22,160 6,200 16,240 C22,280 6,320 14,360 C21,400 7,440 15,480 C21,520 6,560 14,600 C22,640 6,680 15,720 C22,760 6,800 14,840 C21,880 7,920 15,960 C18,980 10,990 14,1000"
+            fill="none"
+          />
+        </svg>
+      </>
+    )
+  }
+</div>
+
+<style>
+  .pencil-frame {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    pointer-events: none;
+    opacity: 0.55;
+  }
+
+  .pencil-edge {
+    position: absolute;
+    display: block;
+  }
+
+  img.pencil-edge.edge-top,
+  img.pencil-edge.edge-bottom {
+    width: 100%;
+    height: 18px;
+    object-fit: cover;
+  }
+  img.pencil-edge.edge-left,
+  img.pencil-edge.edge-right {
+    height: 100%;
+    width: 18px;
+    object-fit: cover;
+  }
+  img.edge-top {
+    top: 0;
+    left: 0;
+  }
+  img.edge-bottom {
+    bottom: 0;
+    left: 0;
+    transform: scaleY(-1);
+  }
+  img.edge-left {
+    top: 0;
+    left: 0;
+  }
+  img.edge-right {
+    top: 0;
+    right: 0;
+    transform: scaleX(-1);
+  }
+
+  svg.pencil-edge path {
+    stroke: var(--edge);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+  }
+
+  svg.edge-top,
+  svg.edge-bottom {
+    width: 100%;
+    height: 14px;
+    left: 0;
+  }
+  svg.edge-top {
+    top: 6px;
+  }
+  svg.edge-bottom {
+    bottom: 6px;
+  }
+
+  svg.edge-left,
+  svg.edge-right {
+    height: 100%;
+    width: 14px;
+    top: 0;
+  }
+  svg.edge-left {
+    left: 6px;
+  }
+  svg.edge-right {
+    right: 6px;
+  }
+</style>

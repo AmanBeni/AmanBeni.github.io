@@ -1,0 +1,179 @@
+---
+/**
+ * /lab — the papercraft version of the homepage. See Paper/LAB-SPEC.md.
+ *
+ * This page does NOT import BaseLayout or global.css (the pixel theme) — it
+ * builds its own minimal head/body so the paper theme's tokens.css owns
+ * every custom property on :root without fighting the pixel theme for the
+ * same variable names. src/pages/index.astro and every existing component
+ * are untouched.
+ */
+import '../paper/tokens.css';
+import PencilFrame from '../paper/components/PencilFrame.astro';
+import Hero from '../paper/sections/Hero.astro';
+import About from '../paper/sections/About.astro';
+import Education from '../paper/sections/Education.astro';
+import Work from '../paper/sections/Work.astro';
+import Skills from '../paper/sections/Skills.astro';
+import Beyond from '../paper/sections/Beyond.astro';
+import Contact from '../paper/sections/Contact.astro';
+
+const currentYear = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Aman Beniwal — Portfolio (Lab: papercraft theme, work in progress)" />
+    <meta name="robots" content="noindex" />
+    <title>Aman Beniwal · Lab</title>
+  </head>
+  <body>
+    <PencilFrame />
+
+    <header class="lab-header">
+      <nav class="lab-nav" aria-label="Primary">
+        <a href="#about">About</a>
+        <a href="#work">Projects</a>
+        <a href="#beyond">Beyond Work</a>
+        <a href="#contact" class="lab-nav-cta">Get in touch</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <Hero />
+      <About />
+      <Education />
+      <Work />
+      <Skills />
+      <Beyond />
+      <Contact />
+    </main>
+
+    <footer class="lab-footer">
+      <p>&copy; {currentYear} Aman Beniwal · Lab (papercraft theme, work in progress)</p>
+    </footer>
+
+    <!-- Editor mount point — Track B attaches here. -->
+    <div id="lab-editor-root"></div>
+
+    {
+      import.meta.env.DEV && (
+        <script>
+          // Editor is dev-only and may not exist yet (Track B builds it
+          // separately) — guarded so a missing file never breaks the page.
+          (async () => {
+            try {
+              await import('../paper/editor/index.ts');
+            } catch (err) {
+              console.info('[lab] editor not available yet:', err);
+            }
+          })();
+        </script>
+      )
+    }
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background: var(--paper-tint);
+        color: var(--ink);
+        font-family: var(--font-body);
+        font-size: 16px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+      }
+
+      .lab-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 45;
+        display: flex;
+        justify-content: center;
+        padding-block: 16px;
+        pointer-events: none;
+      }
+
+      .lab-nav {
+        pointer-events: auto;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        background: rgba(253, 250, 240, 0.86);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid var(--paper-line);
+        box-shadow: var(--shadow-soft);
+        border-radius: 3px;
+        padding: 6px;
+      }
+
+      .lab-nav a {
+        font-family: var(--font-mono);
+        font-size: 12.5px;
+        letter-spacing: 0.03em;
+        text-decoration: none;
+        color: var(--ink);
+        padding: 7px 14px;
+        border-radius: 2px;
+      }
+
+      .lab-nav a:hover {
+        background: rgba(36, 28, 18, 0.06);
+      }
+
+      .lab-nav-cta {
+        background: var(--accent-rust);
+        color: #fdfaf0 !important;
+        margin-left: 4px;
+      }
+
+      .lab-nav-cta:hover {
+        background: color-mix(in srgb, var(--accent-rust) 85%, black);
+      }
+
+      .lab-footer {
+        background: var(--paper-alt-tint);
+        border-top: 1px solid var(--paper-line);
+        padding: 18px 24px;
+        text-align: center;
+      }
+
+      .lab-footer p {
+        margin: 0;
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.03em;
+        color: var(--ink-soft);
+      }
+
+      @media (max-width: 560px) {
+        .lab-nav {
+          gap: 0;
+        }
+        .lab-nav a {
+          padding: 6px 9px;
+          font-size: 11px;
+        }
+      }
+    </style>
+  </body>
+</html>
