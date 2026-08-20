@@ -468,3 +468,33 @@ implemented with judgment, not wholesale:**
 decisions for Aman to call separately): multi-page IA rewrite, renaming nav
 to Notes, case-study restructuring, a testimonials module, rewriting copy to
 "editorial field notes", moss/charcoal palette.
+
+---
+
+## 20 Aug 2026 — Queue run: fonts, tape, photo shadow, paper button
+
+**Two fonts only.** Headings stay Sorts Mill Goudy. Body, nav labels, ticker
+and small UI all collapse to one sans via `--font-body`; `--font-mono` now
+aliases `--font-body` so there is no typewriter face anywhere (Courier Prime
+rejected). Nav keeps the Goudy italic, which reuses the heading font, so the
+count is still two. Three sans options offered and installed/ready: Satoshi
+(default, Aman's licence), Inter, Manrope. To switch site-wide, change the
+first name in `--font-body` in `src/paper/tokens.css`.
+
+**PaperPhoto component** (`src/paper/components/PaperPhoto.astro`) now owns
+photo presentation: a two-layer paper-lift shadow (light always top-left,
+cast down-right, kept low) plus masking tape. Any photo using PaperPhoto gets
+both automatically, which is how new images get taped/shadowed with no extra
+work. Tape is chosen deterministically from a `seed` prop from the 6 real
+cutouts in `public/paper/tape/`; small photos get 1 strip (top centre), large
+get 2 (top corners). Tape 57 (aspect ~4.8) is excluded from the default pool
+as too long even when scaled. Standing behaviour now: photos carry a subtle
+shadow and tape. (Note: the blanket "no shadows" rule was earlier narrowed by
+Aman; shadows on photos are wanted, shadows elsewhere are not.)
+
+**Paper button.** The Framer marketplace "Paper button" is proprietary JS and
+cannot be imported. Rebuilt the effect in CSS on `.site-contact`: a raised
+paper chip lit from the top-left, lifting on hover and pressing on click.
+
+Tape pipeline: `Paper/scripts/process-assets.mjs` gained a `tape` category
+sourced from `Paper/References/Tape/` (outside Lab Files), PNG to keep alpha.

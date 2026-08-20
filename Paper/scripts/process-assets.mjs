@@ -26,6 +26,10 @@ import sharp from 'sharp';
 
 const ROOT = path.resolve(fileURLToPath(new URL('../..', import.meta.url)));
 const SRC = path.join(ROOT, 'Paper', 'References', 'Lab Files');
+// Tape cutouts live outside "Lab Files" (Paper/References/Tape/), so they get
+// their own source root instead of being folded into SRC above. Rule.from
+// is still 'Tape' below, so this root stops at References/.
+const TAPE_SRC = path.join(ROOT, 'Paper', 'References');
 const OUT = path.join(ROOT, 'Paper', 'assets');
 const PUB = path.join(ROOT, 'public', 'paper');
 
@@ -44,6 +48,9 @@ const RULES = [
   { from: 'Text', to: 'text', maxWidth: 1400, format: 'png', keepAlpha: true },
   { from: 'borders', to: 'borders', maxWidth: 1600, format: 'png', keepAlpha: true },
   { from: 'photos', to: 'photos', maxWidth: 1400, format: 'webp', quality: 86 },
+  // Masking/washi tape cutouts. Must stay PNG (not webp) to guarantee crisp
+  // transparency; sourced from TAPE_SRC (see srcRoot below), not Lab Files.
+  { from: 'Tape', to: 'tape', maxWidth: 1200, format: 'png', keepAlpha: true, srcRoot: TAPE_SRC },
 ];
 
 /** "kraft-scan brown lit.png" -> "kraft-scan-brown" */
@@ -65,7 +72,7 @@ function label(s) {
 const IMAGE_RE = /\.(png|jpe?g|webp|avif)$/i;
 
 async function processFolder(rule) {
-  const srcDir = path.join(SRC, rule.from);
+  const srcDir = path.join(rule.srcRoot || SRC, rule.from);
   if (!existsSync(srcDir)) return [];
 
   const outDir = path.join(OUT, rule.to);

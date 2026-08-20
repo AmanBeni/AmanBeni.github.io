@@ -3,6 +3,8 @@
  * About — cream section, a white floating PaperCard of body copy on the
  * left, the papercraft desk photo sitting on graph paper on the right.
  */
+import PaperPhoto from '../components/PaperPhoto.astro';
+
 const base = import.meta.env.BASE_URL;
 const baseSlash = base.endsWith('/') ? base : base + '/';
 ---
@@ -81,7 +83,13 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
           data-lab-props="x,y,rotate,scale,z,opacity,shadow"
           data-lab-asset="objects"
         >
-          <img src={`${baseSlash}paper/objects/01-desk-wide-mixed.webp`} alt="Papercraft desk, lamp and books, a small still-life" loading="lazy" />
+          <PaperPhoto
+            src={`${baseSlash}paper/objects/01-desk-wide-mixed.webp`}
+            alt="Papercraft desk, lamp and books, a small still-life"
+            width="100%"
+            size="large"
+            seed="about-desk"
+          />
         </div>
       </div>
     </div>

@@ -22,7 +22,6 @@ afterwards. The main chat stays small, which keeps quality high and cost low.
 
 Standing preferences. No need to repeat these in a bullet.
 
-- No drop shadows anywhere.
 - No tilted or rotated images. Everything straight.
 - Headings in sentence case: first letter capital, rest lowercase.
 - One background for the whole page.
@@ -33,16 +32,12 @@ Standing preferences. No need to repeat these in a bullet.
 
 ## Next round
 
----
-
-## Done
-
-### 19 Aug 2026 (execution round 2)
-- Hero photo straightened and pulled up tight under the subtitle; rotation defaults on TapeStrip/PaperObject zeroed out (nothing left to tilt it).
-- White photo-frame borders removed from every image on the page (hero photo, hero cloudscape, desk photo, book covers, music covers).
-- Hero panel height cut well over 40% (was ~975px of content, now 599px) — hero + sticky header (599 + 71 = 670px) sits inside the 900px first viewport at 1440px.
-- Added the renewables diorama small on the right of the hero's copy column — straight, no border, no shadow, no rotation, no colour treatment.
-- Desk photo in "A bit about me" shifted left (48px) within its column.
+- There will be only two fonts in the whole website. One is the hiding one which is fine currently, it's good. Rest all the fonts move to one single font style. Give me 3 option sto choose from. The typewriter type font that is there currently is rejected. Dont like that.
+- Replace the hero image by - "hero support original". reduce the size by 20%
+- Add shadow to the photos. It should look like the light source is at the top left in all the photos always. i don't want simple bullshit shadow. I want something that would look genuine and good. Keep in mind it's just a photo on top of a paper, so not too much height. Research on internet or maybe get UI UX ideas before like executing it. 
+- Add a tape on top of the photos, to make them stick to the board background. Tape in the folder - Reference -> Tape. Mix them and use randomly from the 6 options. Automatically add it from the next time a image is added in to the website. Use single tape for small image and two tapes on top sides for large images. Also 1-2 tapes are also very long so evaluate which one to use. 
+- Move Aman Image in the hero section a bit below.
+- Add this effect to the buttons on the top - https://framer.com/m/Paper-ayJyDp.js@v1aoTcHCkdkuXc6dy295. Link - https://www.framer.com/community/marketplace/components/paper-button/
 
 ### 19 Aug 2026
 - Moved nav to a sticky top bar, meli-style.

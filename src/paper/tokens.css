@@ -31,6 +31,11 @@
 @import '@fontsource/courier-prime/700.css';
 @import '@fontsource/special-elite/400.css';
 @import '@fontsource/jetbrains-mono/500.css';
+/* The single-sans candidates for the body/UI voice (pick one). */
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource-variable/manrope';
 @import '../paper/local-fonts.css';
 
 :root {
@@ -103,11 +108,11 @@
   */
   --font-display: 'Sorts Mill Goudy', 'Playfair Display', Georgia, 'Times New Roman', serif;
   --font-display-alt: 'Advercase', 'Playfair Display', Georgia, serif;
-  --font-body: 'Euclid Circular B', 'Satoshi', 'Poppins', system-ui, sans-serif;
-  --font-mono: 'Courier Prime', 'Special Elite', ui-monospace, monospace;
+  --font-body: 'Satoshi', 'Inter', system-ui, sans-serif;
+  --font-mono: var(--font-body);
 
   --font-display-options: 'Sorts Mill Goudy, New York Extra Large, New York, Playfair Display, Baskervville, Advercase, Satoshi, Euclid Circular B, SF Pro Display';
-  --font-body-options: 'Courier Prime, Poppins, Satoshi, Euclid Circular B, SF Pro Text, SF Pro Display';
+  --font-body-options: 'Satoshi, Inter, Manrope Variable';
   --font-mono-options: 'Courier Prime, SF Mono, Special Elite, JetBrains Mono';
 
   /* 0–1 strength of the paper-grain overlay. Texture itself is irregular

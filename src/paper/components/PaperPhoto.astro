@@ -1,0 +1,158 @@
+---
+/**
+ * PaperPhoto — a photo pinned to the paper board: a genuine paper-lift
+ * shadow plus a strip (or two) of real masking tape holding it down.
+ *
+ * Why a component: shadow and tape then live in ONE place. Any photo that
+ * uses <PaperPhoto> gets both automatically, so a new image added later is
+ * taped and shadowed with no extra work (Aman's "add it automatically from
+ * next time" requirement).
+ *
+ * The shadow models a light source at the top-left, always: the cast falls
+ * down and to the right, in two soft layers (a tight contact shadow plus a
+ * wider ambient one), kept low so it reads as paper resting on paper, not a
+ * floating card.
+ *
+ * Tape: chosen from the 6 real tape cutouts in public/paper/tape/. The pick
+ * is deterministic from `seed` so it does not reshuffle on every build, but
+ * differs photo to photo. Small photos get one strip on the top edge; large
+ * photos get two, one near each top corner (`tapes` prop, default by size).
+ * The very long tapes are scaled down to a short strip, so nothing dangles.
+ */
+interface Props {
+  src: string;
+  alt: string;
+  /** CSS width of the photo, e.g. "172px" or "100%". */
+  width?: string;
+  /** 1 or 2 tape strips. Defaults: 1 for small, 2 for large. */
+  tapes?: 1 | 2;
+  /** "small" | "large" — sets tape size and default count. */
+  size?: 'small' | 'large';
+  /** Stable string so the tape choice is deterministic per photo. */
+  seed?: string;
+  /** Passed through to the <img> so the editor can still target it. */
+  labId?: string;
+  labLabel?: string;
+  labGroup?: string;
+  class?: string;
+}
+
+const {
+  src,
+  alt,
+  width = '100%',
+  size = 'small',
+  tapes,
+  seed = src,
+  labId,
+  labLabel,
+  labGroup = 'Photos',
+  class: className = '',
+} = Astro.props;
+
+const base = import.meta.env.BASE_URL;
+const baseSlash = base.endsWith('/') ? base : base + '/';
+
+// The 6 real tapes. 57 (aspect ~4.8) is left out of the default pool — even
+// scaled it reads as an odd sliver; kept available but not auto-picked.
+const TAPES = ['34', '44', '95', '24', '62'];
+
+// Tiny deterministic hash so `seed` maps to a stable tape choice.
+function hash(str: string): number {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) >>> 0;
+  return h;
+}
+
+const count = tapes ?? (size === 'large' ? 2 : 1);
+const h = hash(seed);
+const tapeA = TAPES[h % TAPES.length];
+const tapeB = TAPES[(h >> 3) % TAPES.length];
+const tapeSize = size === 'large' ? 132 : 98;
+
+const url = (t: string) => `${baseSlash}paper/tape/${t}.png`;
+---
+
+<figure
+  class:list={['paper-photo', `is-${size}`, className]}
+  style={`width:${width};--tape-size:${tapeSize}px;`}
+  data-tape-count={count}
+>
+  <img
+    class="paper-photo-img"
+    src={src}
+    alt={alt}
+    data-lab-id={labId}
+    data-lab-kind="flow"
+    data-lab-label={labLabel}
+    data-lab-group={labGroup}
+    data-lab-props="maxWidth,marginTop,marginBottom,shadow"
+    data-lab-asset="photos"
+    loading="lazy"
+  />
+
+  {count === 1 ? (
+    <img class="paper-tape tape-center" src={url(tapeA)} alt="" aria-hidden="true" />
+  ) : (
+    <>
+      <img class="paper-tape tape-left" src={url(tapeA)} alt="" aria-hidden="true" />
+      <img class="paper-tape tape-right" src={url(tapeB)} alt="" aria-hidden="true" />
+    </>
+  )}
+</figure>
+
+<style>
+  .paper-photo {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+    /* Room above the top edge for the tape to sit. */
+    margin-top: 22px;
+  }
+
+  .paper-photo-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    /* Paper lift: light from the top-left, so the shadow falls down-right.
+       Two layers — a tight contact edge and a soft ambient spread — in a
+       warm near-black that works on both cream and green grounds. Kept low
+       so it reads as paper on paper, not a raised card. */
+    box-shadow:
+      2px 3px 4px rgba(28, 20, 12, 0.2),
+      6px 10px 20px rgba(28, 20, 12, 0.14);
+  }
+
+  .paper-tape {
+    position: absolute;
+    max-width: var(--tape-size);
+    max-height: var(--tape-size);
+    width: auto;
+    height: auto;
+    z-index: 3;
+    /* The tape itself sits on the paper, so it casts a whisper of shadow. */
+    filter: drop-shadow(1px 2px 2px rgba(28, 20, 12, 0.22));
+    opacity: 0.92;
+    pointer-events: none;
+  }
+
+  /* Single strip: straddles the top edge, centred, straight (photos stay
+     untilted; tape gets only the faintest angle so it is not mechanical). */
+  .tape-center {
+    top: -24px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-3deg);
+  }
+
+  /* Two strips: one over each top corner, angled outward like real tape. */
+  .tape-left {
+    top: -20px;
+    left: 6%;
+    transform: rotate(-18deg);
+  }
+  .tape-right {
+    top: -20px;
+    right: 6%;
+    transform: rotate(18deg);
+  }
+</style>

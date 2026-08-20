@@ -200,6 +200,16 @@
     "bytes": 71380
   },
   {
+    "id": "objects/hero-support-original",
+    "category": "objects",
+    "name": "hero-support-original",
+    "label": "Hero Support Original",
+    "src": "/paper/objects/hero-support-original.webp",
+    "width": 1200,
+    "height": 805,
+    "bytes": 45226
+  },
+  {
     "id": "objects/hero-support",
     "category": "objects",
     "name": "hero-support",
@@ -268,5 +278,65 @@
     "width": 1254,
     "height": 1254,
     "bytes": 71914
+  },
+  {
+    "id": "tape/24",
+    "category": "tape",
+    "name": "24",
+    "label": "24",
+    "src": "/paper/tape/24.png",
+    "width": 1200,
+    "height": 1844,
+    "bytes": 884191
+  },
+  {
+    "id": "tape/34",
+    "category": "tape",
+    "name": "34",
+    "label": "34",
+    "src": "/paper/tape/34.png",
+    "width": 1200,
+    "height": 427,
+    "bytes": 374305
+  },
+  {
+    "id": "tape/44",
+    "category": "tape",
+    "name": "44",
+    "label": "44",
+    "src": "/paper/tape/44.png",
+    "width": 1200,
+    "height": 1486,
+    "bytes": 639699
+  },
+  {
+    "id": "tape/57",
+    "category": "tape",
+    "name": "57",
+    "label": "57",
+    "src": "/paper/tape/57.png",
+    "width": 1032,
+    "height": 4966,
+    "bytes": 2536061
+  },
+  {
+    "id": "tape/62",
+    "category": "tape",
+    "name": "62",
+    "label": "62",
+    "src": "/paper/tape/62.png",
+    "width": 999,
+    "height": 3289,
+    "bytes": 1790181
+  },
+  {
+    "id": "tape/95",
+    "category": "tape",
+    "name": "95",
+    "label": "95",
+    "src": "/paper/tape/95.png",
+    "width": 1200,
+    "height": 3116,
+    "bytes": 1768744
   }
 ]
