@@ -72,6 +72,12 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
       </div>
 
       <div class="hero-photo-wrap">
+        <img
+          class="hero-decor hero-litho"
+          src={`${baseSlash}paper/decor/litho-grid.png`}
+          alt=""
+          aria-hidden="true"
+        />
         <PaperPhoto
           src={`${baseSlash}paper/photos/aman-headshot.webp`}
           alt="Aman Beniwal"
@@ -87,18 +93,25 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
 
   </div>
 
+  <!-- Golden-ratio spiral drawn behind the diorama, large, over the right
+       side of the panel. Screen blend so the tan lines lift off the green. -->
+  <img
+    class="hero-decor hero-spiral"
+    src={`${baseSlash}paper/decor/spiral-dotted.png`}
+    alt=""
+    aria-hidden="true"
+  />
+
   <div class="hero-side">
-    <img
-      class="hero-renewables"
-      data-lab-id="hero.renewables"
-      data-lab-kind="flow"
-      data-lab-label="Renewables diorama"
-      data-lab-group="Hero"
-      data-lab-props="maxWidth,marginTop,marginBottom"
-      data-lab-asset="objects"
+    <PaperPhoto
       src={`${baseSlash}paper/objects/hero-support-original.webp`}
       alt="Papercraft diorama of a data centre powered by wind and solar"
-      loading="lazy"
+      width="100%"
+      size="large"
+      seed="hero-renewables"
+      labId="hero.renewables"
+      labLabel="Renewables diorama"
+      labGroup="Hero"
     />
   </div>
 
@@ -259,22 +272,45 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
   .hero-side {
     position: absolute;
     left: 58%;
-    top: 20%;
+    /* Moved down a little (queue, 20 Aug). */
+    top: 27%;
     width: 34%;
     z-index: 1;
   }
 
-  .hero-renewables {
-    display: block;
-    width: 100%;
-    height: auto;
-    border: none;
-    box-shadow: none;
-    transform: none;
+  /* Decorative line-art layers, both behind their subject. Screen blend lifts
+     the light lines off the dark green without a hard edge. */
+  .hero-decor {
+    position: absolute;
+    pointer-events: none;
+    mix-blend-mode: screen;
   }
 
+  /* Golden-ratio spiral: large, over the right of the panel, behind the
+     diorama (which is z-index 1). */
+  .hero-spiral {
+    right: -3%;
+    top: 2%;
+    width: 54%;
+    opacity: 0.5;
+    z-index: 0;
+  }
 
+  /* Engineering grid behind Aman's photo, a bit larger than the photo and
+     offset up-left so it reads as a backing sheet. */
+  .hero-litho {
+    top: -18%;
+    left: -16%;
+    width: 132%;
+    opacity: 0.55;
+    z-index: 0;
+  }
 
+  /* Keep the photo above its litho backing. */
+  .hero-photo-wrap .paper-photo {
+    position: relative;
+    z-index: 1;
+  }
 
   @media (max-width: 860px) {
     .paper-hero {
@@ -285,13 +321,14 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     }
     .hero-side {
       position: static;
-      width: 200px;
-      max-width: 55vw;
+      width: 240px;
+      max-width: 62vw;
       margin-top: 28px;
     }
-    .hero-renewables {
-      width: 150px;
-      max-width: 45vw;
+    .hero-spiral {
+      width: 78%;
+      top: auto;
+      bottom: 6%;
     }
   }
 </style>

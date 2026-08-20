@@ -498,3 +498,23 @@ paper chip lit from the top-left, lifting on hover and pressing on click.
 
 Tape pipeline: `Paper/scripts/process-assets.mjs` gained a `tape` category
 sourced from `Paper/References/Tape/` (outside Lab Files), PNG to keep alpha.
+
+---
+
+## 20 Aug 2026 — Decor layers, tape/shadow fixes, font options sent
+
+- **Font choice pending.** Sent Aman a self-contained `Paper/font-options.html`
+  (three body fonts side by side, fonts embedded as data URIs). Default stays
+  Satoshi until he picks. To switch: first name in `--font-body` in tokens.css.
+- **Decor overlays.** Two transparent line-art PNGs added in `public/paper/decor/`:
+  `spiral-dotted.png` (golden-ratio spiral) sits large behind the hero diorama
+  over the right of the panel; `litho-grid.png` (engineering grid) sits behind
+  Aman's photo as a backing sheet. Both use `mix-blend-mode: screen` so the
+  light lines lift off the dark green. Both `pointer-events:none`, behind their
+  subject (z-index 0 vs subject z-index 1).
+- **Diorama** now uses PaperPhoto too, so it gets tape + shadow, and moved down.
+- **Tape bug fixed.** `(h >> 3)` went negative for some seeds, producing
+  `undefined.png` (a 404) for the second tape. Now `(h >>> 3)`, unsigned.
+- **Tape 50/50.** Tape is centred on the photo's top edge (translateY(-50%)),
+  half on the board, half on the photo, per Aman.
+- **Shadows increased** on PaperPhoto.

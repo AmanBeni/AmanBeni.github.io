@@ -66,8 +66,10 @@ function hash(str: string): number {
 
 const count = tapes ?? (size === 'large' ? 2 : 1);
 const h = hash(seed);
+// Unsigned shift + modulo so the index is never negative (a signed >> here
+// produced undefined tape picks for some seeds).
 const tapeA = TAPES[h % TAPES.length];
-const tapeB = TAPES[(h >> 3) % TAPES.length];
+const tapeB = TAPES[((h >>> 3) + 2) % TAPES.length];
 const tapeSize = size === 'large' ? 132 : 98;
 
 const url = (t: string) => `${baseSlash}paper/tape/${t}.png`;
@@ -119,8 +121,8 @@ const url = (t: string) => `${baseSlash}paper/tape/${t}.png`;
        warm near-black that works on both cream and green grounds. Kept low
        so it reads as paper on paper, not a raised card. */
     box-shadow:
-      2px 3px 4px rgba(28, 20, 12, 0.2),
-      6px 10px 20px rgba(28, 20, 12, 0.14);
+      3px 4px 6px rgba(28, 20, 12, 0.28),
+      10px 16px 32px rgba(28, 20, 12, 0.22);
   }
 
   .paper-tape {
@@ -139,20 +141,20 @@ const url = (t: string) => `${baseSlash}paper/tape/${t}.png`;
   /* Single strip: straddles the top edge, centred, straight (photos stay
      untilted; tape gets only the faintest angle so it is not mechanical). */
   .tape-center {
-    top: -24px;
+    top: 0;
     left: 50%;
-    transform: translateX(-50%) rotate(-3deg);
+    transform: translate(-50%, -50%) rotate(-3deg);
   }
 
   /* Two strips: one over each top corner, angled outward like real tape. */
   .tape-left {
-    top: -20px;
+    top: 0;
     left: 6%;
-    transform: rotate(-18deg);
+    transform: translateY(-50%) rotate(-18deg);
   }
   .tape-right {
-    top: -20px;
+    top: 0;
     right: 6%;
-    transform: rotate(18deg);
+    transform: translateY(-50%) rotate(18deg);
   }
 </style>
