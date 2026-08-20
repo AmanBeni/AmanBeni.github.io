@@ -518,3 +518,27 @@ sourced from `Paper/References/Tape/` (outside Lab Files), PNG to keep alpha.
 - **Tape 50/50.** Tape is centred on the photo's top edge (translateY(-50%)),
   half on the board, half on the photo, per Aman.
 - **Shadows increased** on PaperPhoto.
+
+---
+
+## 20 Aug 2026 — Spacing, About grid, font options expanded
+
+- **Tighter spacing.** Section padding 160->96px (Contact 180->110), heading
+  bottom margins 80/88/64 -> 40/44/40, Beyond music gap 96->52. Aman felt
+  there was too much empty space around headings.
+- **About backing grid.** litho-grid now also sits behind the desk photo in
+  About (cream ground, no blend), shifted down-left so it peeks like a backing
+  sheet, per Aman's reference. `.about-litho`.
+- **Fonts.** All Apple faces were already converted (Aman ran
+  convert-fonts.sh): public/fonts/apple has NewYork, SF-Pro-Display-Regular,
+  SF-Pro-Text-Thin woff2. Added to `--font-body-options`: Satoshi, Satoshi
+  Static, Inter, Manrope, New York, SF Pro Display, SF Pro Text. Satoshi Light
+  + Regular both available via Satoshi Static (300/400) and the variable face.
+- **font-options.html** rebuilt with all seven as columns, fonts embedded as
+  data URIs. SF Pro woff2 were 3.1MB each; subset to the sample text (~5KB)
+  with pyftsubset so the file stays ~390KB.
+
+Dev note: `astro dev` served a stale stylesheet after edits (heading margin
+still 80px, .about-litho rule absent) until the server was killed and
+restarted. When edits do not appear, restart the dev server rather than
+trusting HMR.

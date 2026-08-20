@@ -74,6 +74,12 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
       </div>
 
       <div class="about-photo-stage" data-lab-canvas>
+        <img
+          class="about-litho"
+          src={`${baseSlash}paper/decor/litho-grid.png`}
+          alt=""
+          aria-hidden="true"
+        />
         <div
           class="about-desk"
           data-lab-id="about.desk-photo"
@@ -99,7 +105,7 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
 <style>
   .paper-about {
     border-bottom: 1px solid var(--rule);
-    padding-block: 160px;
+    padding-block: 96px;
     position: relative;
   }
 
@@ -120,7 +126,7 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     color: var(--ink);
     text-shadow: var(--letterpress-onlight);
     mix-blend-mode: multiply;
-    margin: 0 0 80px;
+    margin: 0 0 40px;
   }
 
   .about-row {
@@ -148,6 +154,27 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
 
   .about-photo-stage {
     position: relative;
+  }
+
+  /* Engineering grid sitting behind and below the desk photo, peeking out at
+     the left and bottom like a backing sheet (Aman's reference). Cream ground
+     here, so the grey lines show directly, no blend. */
+  .about-litho {
+    position: absolute;
+    z-index: 0;
+    width: 78%;
+    /* Sits mostly behind the photo, shifted down and slightly left so it
+       peeks out at the bottom-left like a backing sheet, without crossing
+       far into the body text. */
+    left: -6%;
+    top: 26%;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .about-desk {
+    position: relative;
+    z-index: 1;
   }
 
   .about-desk {

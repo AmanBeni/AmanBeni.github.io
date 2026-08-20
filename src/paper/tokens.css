@@ -112,7 +112,7 @@
   --font-mono: var(--font-body);
 
   --font-display-options: 'Sorts Mill Goudy, New York Extra Large, New York, Playfair Display, Baskervville, Advercase, Satoshi, Euclid Circular B, SF Pro Display';
-  --font-body-options: 'Satoshi, Inter, Manrope Variable';
+  --font-body-options: 'Satoshi, Satoshi Static, Inter, Manrope Variable, New York, SF Pro Display, SF Pro Text';
   --font-mono-options: 'Courier Prime, SF Mono, Special Elite, JetBrains Mono';
 
   /* 0–1 strength of the paper-grain overlay. Texture itself is irregular
