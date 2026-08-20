@@ -1,0 +1,101 @@
+---
+/**
+ * ProofTicker — a slim horizontal band of capabilities that sits directly
+ * under the hero, the reference site's "proof ribbon" (teardown section 2,
+ * row 6). Capabilities, not slogans.
+ *
+ * Motion: a slow marquee, paused entirely for anyone with
+ * prefers-reduced-motion. The full list is duplicated so the loop is
+ * seamless; the copy is aria-hidden so a screen reader hears it once.
+ */
+const items = [
+  'Strategy',
+  'Operations',
+  'Data',
+  'AI systems',
+  'Executive communication',
+];
+---
+
+<section
+  class="proof"
+  data-lab-id="proof"
+  data-lab-kind="flow"
+  data-lab-label="Proof ticker"
+  data-lab-group="Proof"
+  data-lab-props="paddingTop,paddingBottom,background,color,fontSize"
+>
+  <div class="proof-track">
+    <ul class="proof-list">
+      {items.map((item) => (
+        <li>{item}</li>
+      ))}
+    </ul>
+    <ul class="proof-list" aria-hidden="true">
+      {items.map((item) => (
+        <li>{item}</li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .proof {
+    overflow: hidden;
+    border-bottom: 1px solid var(--rule);
+    padding-block: 18px;
+  }
+
+  .proof-track {
+    display: flex;
+    width: max-content;
+    animation: proof-scroll 32s linear infinite;
+  }
+
+  .proof-list {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .proof-list li {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+    padding-inline: 30px;
+    white-space: nowrap;
+  }
+
+  /* A small brown dot between items, like the reference site's separators. */
+  .proof-list li::after {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    margin-left: 60px;
+    border-radius: 50%;
+    background: var(--accent);
+    vertical-align: middle;
+  }
+
+  @keyframes proof-scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      /* Half, because the list is duplicated once for a seamless loop. */
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .proof-track {
+      animation: none;
+    }
+  }
+</style>

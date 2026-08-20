@@ -46,8 +46,11 @@
   --paper-stock: none;
   --paper-tint: #f3f2e9;
 
-  --ink: #1c1a15;
-  --ink-soft: rgba(28, 26, 21, 0.6);
+  /* 20 Aug 2026: Aman wants all text on the light ground in brown. This is
+     the deep ink brown; --ink-soft is the same hue at lower strength. The
+     dark green hero/contact keep --paper-hero-ink (cream) instead. */
+  --ink: #4a3527;
+  --ink-soft: rgba(74, 53, 39, 0.62);
 
   /* One warm brown as the working accent (links, CTAs, small marks). */
   --accent: #513a31;
@@ -168,12 +171,12 @@
   --paper-hero-ink: #f4efe0;
   --paper-alt-tint: #ece7d6;
   --paper-card: #fffdf8;
-  --paper-line: rgba(28, 26, 21, 0.14);
+  --paper-line: rgba(74, 53, 39, 0.16);
 
   /* Section divider. One hairline rule is the ONLY thing separating sections
      now, so this is a load-bearing value. Near-black, like the reference
      site, not a soft grey. */
-  --rule: rgba(28, 26, 21, 0.55);
+  --rule: rgba(74, 53, 39, 0.5);
 
   /* The page sits inset from the window edge. Section rules stop short of
      the screen, which frames the page without a four-sided box. */

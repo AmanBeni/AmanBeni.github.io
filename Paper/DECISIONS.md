@@ -443,3 +443,28 @@ so it isn't re-litigated:
   the dev preview at 1440px and 375px — console clean apart from the
   already-known, expected Euclid Circular B 404 (font not yet converted
   locally).
+
+---
+
+## 20 Aug 2026 — Brown ink + Meli teardown pass
+
+**Brown ink.** Aman wants all text on the light ground in brown: `--ink`
+#4a3527, `--ink-soft` and the hairline rules follow the same hue. The dark
+green hero/contact keep cream text (`--paper-hero-ink`) since brown on green
+is unreadable. Note: the teardown doc explicitly warns brown+cream is the one
+combination that reads as a direct Meli copy and suggests moss/charcoal
+instead. Aman was told and chose brown anyway. His call, settled.
+
+**From the teardown (`Paper/References/meli-design-teardown-by GTP.md`),
+implemented with judgment, not wholesale:**
+- Hero CTAs: two equal dotted-outline routes, "View selected work" /
+  "Read my background" (doc section 2 row 5). `hero.ctas`.
+- Proof ticker under the hero: a slow marquee of capabilities
+  (Strategy, Operations, Data, AI systems, Executive communication),
+  reduced-motion safe (doc row 6). `src/paper/components/ProofTicker.astro`,
+  id `proof`.
+
+**Deliberately NOT done** (out of scope for a styling pass; content-IA
+decisions for Aman to call separately): multi-page IA rewrite, renaming nav
+to Notes, case-study restructuring, a testimonials module, rewriting copy to
+"editorial field notes", moss/charcoal palette.
