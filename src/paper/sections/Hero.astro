@@ -64,24 +64,15 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
         Strategy generalist and AI builder.<br />Figuring out the rest.
       </p>
 
-      <div class="hero-cta-row" data-lab-id="hero.ctas" data-lab-kind="flow"
-        data-lab-label="Hero actions" data-lab-group="Hero"
-        data-lab-props="marginTop,marginBottom,gap">
-        <a class="hero-cta" href="#work">View selected work</a>
-        <a class="hero-cta" href="#career">Read my background</a>
-      </div>
+      <!-- 20 Aug 2026 (queue): hero CTA row removed. -->
 
+      <!-- 20 Aug 2026 (queue r2): engineering-grid layer behind the photo
+           removed. -->
       <div class="hero-photo-wrap">
-        <img
-          class="hero-decor hero-litho"
-          src={`${baseSlash}paper/decor/litho-grid.png`}
-          alt=""
-          aria-hidden="true"
-        />
         <PaperPhoto
           src={`${baseSlash}paper/photos/aman-headshot.webp`}
           alt="Aman Beniwal"
-          width="172px"
+          width="206px"
           size="small"
           seed="hero-aman"
           labId="hero.photo"
@@ -126,14 +117,18 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
   .paper-hero {
     position: relative;
     overflow: hidden;
-    background-color: var(--paper-hero-tint);
-    background-image: var(--paper-hero-bg);
+    /* 20 Aug 2026 (queue): terracotta background, swapped off the shared
+       green hero tokens (Contact keeps those). */
+    background-color: var(--paper-terracotta-tint);
+    background-image: var(--paper-terracotta-bg);
     background-size: cover;
     background-position: center;
     /* Copy sits lower in the panel. The green still has to fit inside one
        viewport including the sticky top bar, so the bottom padding stays
        tight while the top does the work. */
     padding-block: 110px 70px;
+    /* 20 Aug 2026 (queue r3): min-height reverted to a fixed 460px — the
+       85vh change (queue r2) was a mistake per Aman; original was right. */
     min-height: 460px;
     border-bottom: 1px solid var(--rule);
     color: var(--paper-hero-ink);
@@ -200,39 +195,17 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
 
   .hero-subtitle {
     font-family: var(--font-body);
-    font-size: 16px;
-    line-height: 1.5;
+    /* 20 Aug 2026 (queue r2): 16px read too small — bumped to 20px, with a
+       touch more line-height for comfort at the larger size. */
+    font-size: 20px;
+    line-height: 1.55;
     color: rgba(244, 239, 224, 0.8);
     max-width: none;
     margin: 0;
   }
 
-  /* Two equal outlined routes, the reference site's paired CTAs. Dotted
-     outline for the tactile, less-corporate feel the teardown calls out.
-     Cream on the dark green ground. */
-  .hero-cta-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 14px;
-    margin-top: 26px;
-  }
-
-  .hero-cta {
-    font-family: var(--font-mono);
-    font-size: 13px;
-    letter-spacing: 0.04em;
-    text-decoration: none;
-    color: var(--paper-hero-ink);
-    padding: 11px 18px;
-    border: 1px dotted rgba(244, 239, 224, 0.6);
-    border-radius: 2px;
-    transition: background 200ms ease, border-color 200ms ease;
-  }
-
-  .hero-cta:hover {
-    background: rgba(244, 239, 224, 0.1);
-    border-color: var(--paper-hero-ink);
-  }
+  /* 20 Aug 2026 (queue): .hero-cta-row / .hero-cta / .hero-cta:hover
+     removed along with the CTA markup above. */
 
   /* 19 Aug 2026 (execution round): pulled tight against the subtitle above
      it (change 1) — was a 32px gap between the whole copy block and the
@@ -245,9 +218,9 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
   }
 
   .hero-photo {
-    /* 15% larger than the 150px it carried before. */
-    width: 172px;
-    height: 172px;
+    /* 20 Aug 2026 (queue r3): +20% over the previous 172px (item 36). */
+    width: 206px;
+    height: 206px;
     object-fit: cover;
     object-position: top center;
     background: #eee6d4;
@@ -296,16 +269,6 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     z-index: 0;
   }
 
-  /* Engineering grid behind Aman's photo, a bit larger than the photo and
-     offset up-left so it reads as a backing sheet. */
-  .hero-litho {
-    top: -18%;
-    left: -16%;
-    width: 132%;
-    opacity: 0.55;
-    z-index: 0;
-  }
-
   /* Keep the photo above its litho backing. */
   .hero-photo-wrap .paper-photo {
     position: relative;
@@ -329,6 +292,73 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
       width: 78%;
       top: auto;
       bottom: 6%;
+    }
+  }
+
+  /* 20 Aug 2026 (mobile): phone pass. Tightens the vertical rhythm (this
+     section was stacking photo-over-diorama into a very tall scroll on
+     small screens), shrinks the side diorama + its tape (sized for the
+     desktop panel), and dials the decorative spiral back so it reads as a
+     quiet backdrop instead of competing with the copy. */
+  @media (max-width: 767px) {
+    .paper-hero {
+      padding-block: 28px 24px;
+    }
+    .hero-inner {
+      padding-inline: 16px;
+      gap: 16px;
+    }
+    .hero-subtitle {
+      font-size: 17px;
+    }
+    .hero-photo-wrap {
+      margin-top: 24px;
+    }
+    .hero-side {
+      width: 200px;
+      max-width: 70vw;
+      margin-inline: auto;
+      margin-top: 20px;
+    }
+    /* Tape art ships at desktop scale (~132px) via the `size="large"` prop
+       on PaperPhoto, which CSS alone can't override — so cap the rendered
+       tape images directly instead. */
+    #hero .hero-side :global(.paper-tape) {
+      max-width: 62px;
+      max-height: 62px;
+    }
+    .hero-spiral {
+      width: 60%;
+      opacity: 0.32;
+    }
+  }
+
+  /* 20 Aug 2026 (mobile): 480px and below (incl. 375/320 targets) — the
+     260px-wide diorama still reads big next to a 320-375px viewport, so it
+     comes down further along with its tape, and the hero's vertical padding
+     tightens once more. */
+  @media (max-width: 480px) {
+    .paper-hero {
+      padding-block: 24px 20px;
+    }
+    .hero-inner {
+      padding-inline: 12px;
+    }
+    .hero-photo-wrap {
+      margin-top: 20px;
+    }
+    .hero-side {
+      width: 168px;
+      max-width: 60vw;
+      margin-top: 16px;
+    }
+    #hero .hero-side :global(.paper-tape) {
+      max-width: 48px;
+      max-height: 48px;
+    }
+    .hero-spiral {
+      width: 52%;
+      opacity: 0.26;
     }
   }
 </style>

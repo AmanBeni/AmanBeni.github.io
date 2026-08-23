@@ -128,4 +128,34 @@
   .contact-line a:hover {
     border-bottom-color: var(--paper-hero-ink);
   }
+
+  /* 20 Aug 2026 (mobile): this section had no responsive rules at all — the
+     fixed 110px padding-block was desktop-sized, and the label+link flex row
+     had no wrap, so a long LinkedIn URL next to its mono label could overflow
+     a 375/320px viewport instead of dropping to a second line. */
+  @media (max-width: 767px) {
+    .paper-contact {
+      padding-block: 72px;
+    }
+    .contact-inner {
+      padding-inline: 20px;
+    }
+    .contact-heading {
+      margin-bottom: 28px;
+    }
+    .contact-line {
+      flex-wrap: wrap;
+      gap: 4px 12px;
+    }
+  }
+
+  /* 20 Aug 2026 (mobile): 375/320px. */
+  @media (max-width: 480px) {
+    .paper-contact {
+      padding-block: 56px;
+    }
+    .contact-line {
+      font-size: 16px;
+    }
+  }
 </style>

@@ -10,6 +10,10 @@ const AI_PROJECTS = ['daily-cactus', 'youtube-year', 'second-brain'];
 const projects = (await getCollection('projects'))
   .filter((p) => AI_PROJECTS.includes(p.id))
   .sort((a, b) => a.data.order - b.data.order);
+
+// 20 Aug 2026 (queue r2): tiles link out to their project pages.
+const base = import.meta.env.BASE_URL;
+const baseSlash = base.endsWith('/') ? base : base + '/';
 ---
 
 <section
@@ -21,6 +25,14 @@ const projects = (await getCollection('projects'))
   data-lab-group="Work"
   data-lab-props="paddingTop,paddingBottom,background,maxWidth"
 >
+  {/* 20 Aug 2026 (queue r3): neuralnet decor, top-right, behind the content. */}
+  <img
+    src={`${baseSlash}paper/decor/neuralnet.png`}
+    alt=""
+    aria-hidden="true"
+    class="work-decor-neuralnet"
+  />
+
   <div class="work-inner">
     <h2
       class="work-heading"
@@ -36,24 +48,41 @@ const projects = (await getCollection('projects'))
     <div class="work-grid" data-lab-id="work.grid" data-lab-kind="flow" data-lab-label="Project list" data-lab-group="Work" data-lab-props="gap,maxWidth">
       {
         projects.map((project) => (
-          <div
-            class="work-card"
+          <a
+            class="work-tile"
+            href={`${baseSlash}work/${project.id}`}
             data-lab-id={`work.card.${project.id}`}
             data-lab-kind="flow"
-            data-lab-label={`Project — ${project.data.title}`}
+            data-lab-label={`Project | ${project.data.title}`}
             data-lab-group="Work"
             data-lab-props="fontSize,color,marginTop,marginBottom,maxWidth,font"
           >
-            <span class="work-emoji" aria-hidden="true">{project.data.emoji}</span>
-            <h3 class="work-title">{project.data.title}</h3>
-            <p class="work-summary">{project.data.summary}</p>
-            <ul class="work-tags">
+            <h3 class="work-tile-title">{project.data.title}</h3>
+            {project.data.bullets ? (
+              <ul class="work-tile-bullets">
+                {project.data.bullets.map((b: string) => (
+                  <li>{b}</li>
+                ))}
+              </ul>
+            ) : (
+              <p class="work-tile-summary">{project.data.summary}</p>
+            )}
+
+            {/* 20 Aug 2026 (queue r3): project art fills the reserved slot. */}
+            <div class="work-tile-image">
+              <img
+                src={`${baseSlash}paper/objects/${project.id}.webp`}
+                alt=""
+                aria-hidden="true"
+              />
+            </div>
+
+            <ul class="work-tile-tags">
               {project.data.tags.map((t: string) => (
-                <li class="work-tag">{t}</li>
+                <li class="work-tile-tag">{t}</li>
               ))}
             </ul>
-            <span class="work-status">{project.data.status}</span>
-          </div>
+          </a>
         ))
       }
     </div>
@@ -62,11 +91,33 @@ const projects = (await getCollection('projects'))
 
 <style>
   .paper-work {
+    position: relative;
+    overflow: hidden;
     border-bottom: 1px solid var(--rule);
-    padding-block: 96px;
+    /* 20 Aug 2026 (queue r10): standard 80px top space (line → heading), same
+       as every other section. */
+    padding-block: 80px 96px;
+  }
+
+  /* 20 Aug 2026 (queue r3): neuralnet decor, top-right, subtle and behind the
+     content. Section above is position:relative + overflow:hidden so this
+     can't spill past the section edges. */
+  /* 20 Aug 2026 (queue r6): +25% bigger, pushed up + right to almost touch the
+     top-right boundary (still fully inside — section clips overflow). */
+  .work-decor-neuralnet {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    z-index: 0;
+    width: min(37vw, 550px);
+    height: auto;
+    opacity: 0.4;
+    pointer-events: none;
   }
 
   .work-inner {
+    position: relative;
+    z-index: 1;
     max-width: 1180px;
     margin-inline: auto;
     padding-inline: 24px;
@@ -84,85 +135,204 @@ const projects = (await getCollection('projects'))
     margin: 0 0 40px;
   }
 
-  /* A quiet stacked list, not a grid of cards — each project is a rule-
-     separated block with room to breathe instead of a boxed tile. */
+  /* 20 Aug 2026 (queue): three project tiles side by side. Each tile is a
+     sheet of the terracotta hero paper; heading + one-line summary sit on it
+     in white, a reserved image slot fills the middle, tags close it out on a
+     single line at the bottom. */
+  /* 20 Aug 2026 (queue r2): smaller tiles, spread further apart, capped and
+     centred so the grid doesn't stretch edge to edge. */
+  /* 20 Aug 2026 (queue r3): wider tiles, more air between them, room for tape
+     + 2 bullets + image. */
   .work-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 64px;
+    max-width: 1120px;
+    margin-inline: auto;
+  }
+
+  .work-tile {
+    position: relative;
     display: flex;
     flex-direction: column;
-    max-width: 640px;
+    min-height: 400px;
+    padding: 26px 24px;
+    border-radius: 4px;
+    /* 20 Aug 2026 (queue r3): visible (not hidden) so the top tape strip can
+       overhang the tile's top edge; the grain ::after below carries its own
+       border-radius so corners still read as rounded. */
+    overflow: visible;
+    color: var(--paper-hero-ink);
+    text-decoration: none;
+    background-color: var(--paper-terracotta-tint);
+    background-image: var(--paper-terracotta-bg);
+    background-size: cover;
+    background-position: center;
+    /* Paper-lift shadow, light from the top-left, same language as the photos. */
+    box-shadow:
+      1px 2px 0 rgba(74, 53, 39, 0.18),
+      6px 10px 22px rgba(28, 20, 12, 0.22);
   }
 
-  .work-card {
+  /* Grain over the terracotta so it reads as stock, not a flat swatch. Carries
+     its own border-radius now that .work-tile is overflow:visible (queue r3). */
+  .work-tile::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 4px;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: var(--grain-hero);
+    background-image: var(--grain-texture);
+    background-size: var(--grain-size) var(--grain-size);
+    mix-blend-mode: soft-light;
+  }
+
+  .work-tile > * {
     position: relative;
-    padding-block: 40px;
-    border-top: 1px solid var(--paper-line);
+    z-index: 1;
   }
 
-  .work-card:first-child {
-    border-top: none;
-    padding-top: 0;
-  }
+  /* 20 Aug 2026 (queue r3): one piece of tape at the top-centre of each tile,
+     overhanging the top edge. */
 
-  .work-emoji {
-    font-size: 22px;
-    display: block;
-    margin-bottom: 12px;
-  }
-
-  .work-title {
+  .work-tile-title {
     font-family: var(--font-display);
     font-weight: 400;
-    font-size: 26px;
-    letter-spacing: -0.01em;
-    color: var(--ink);
+    font-size: clamp(26px, 2.4vw, 34px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--paper-hero-ink);
+    text-shadow: var(--letterpress-ondark);
     margin: 0 0 12px;
   }
 
-  .work-summary {
+  /* 20 Aug 2026 (queue r2): full summary now, wraps instead of clipping to
+     one line. */
+  .work-tile-summary {
     font-family: var(--font-body);
-    font-size: 16px;
-    line-height: 1.6;
-    color: var(--ink-soft);
-    margin: 0 0 16px;
+    font-size: 14.5px;
+    line-height: 1.4;
+    color: rgba(244, 239, 224, 0.82);
+    margin: 0 0 20px;
   }
 
-  .work-tags {
+  /* 20 Aug 2026 (queue r3): two bullets in place of the one-line summary.
+     White text on the terracotta tile, small and readable. */
+  .work-tile-bullets {
     list-style: none;
-    margin: 0 0 12px;
+    margin: 0 0 20px;
     padding: 0;
     display: flex;
-    flex-wrap: wrap;
-    gap: 14px;
+    flex-direction: column;
+    gap: 8px;
   }
 
-  .work-tag {
+  .work-tile-bullets li {
+    position: relative;
+    padding-left: 14px;
+    font-family: var(--font-body);
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: rgba(244, 239, 224, 0.88);
+  }
+
+  .work-tile-bullets li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: rgba(244, 239, 224, 0.6);
+  }
+
+  /* 20 Aug 2026 (queue r4): fixed 3:2 slot (matches the source art) so all
+     three project images crop identically and read as one consistent set. */
+  .work-tile-image {
+    flex: none;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    margin-bottom: 20px;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .work-tile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+
+  /* Pinned to the bottom so the tags line up across tiles of differing height. */
+  .work-tile-tags {
+    list-style: none;
+    margin: auto 0 0;
+    padding: 0;
+    display: flex;
+    gap: 12px;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .work-tile-tag {
+    flex: none;
     font-family: var(--font-mono);
-    font-size: 11.5px;
+    font-size: 11px;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--ink-soft);
+    color: rgba(244, 239, 224, 0.72);
   }
 
-  .work-tag::before {
+  .work-tile-tag::before {
     content: '· ';
   }
 
-  .work-tag:first-child::before {
+  .work-tile-tag:first-child::before {
     content: '';
   }
 
-  .work-status {
-    display: inline-block;
-    font-family: var(--font-mono);
-    font-size: 11.5px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--accent);
+  @media (max-width: 860px) {
+    .work-grid {
+      grid-template-columns: 1fr;
+      max-width: 460px;
+    }
+    .work-tile {
+      min-height: 420px;
+    }
   }
 
+  /* 20 Aug 2026 (mobile): trimmed the desktop-sized 100px padding, and pulled
+     the neuralnet decor down so it stays a subtle corner accent instead of
+     dominating a narrow tile column (it was already small in vw terms, but
+     confirming an explicit mobile size here rather than relying on vw math). */
   @media (max-width: 767px) {
     .paper-work {
-      padding-block: 100px;
+      padding-block: 64px 72px;
+    }
+    .work-inner {
+      padding-inline: 20px;
+    }
+    .work-decor-neuralnet {
+      width: min(45vw, 200px);
+      opacity: 0.3;
+    }
+    .work-tile {
+      padding: 22px 20px;
+      min-height: 0;
+    }
+  }
+
+  /* 20 Aug 2026 (mobile): 375/320px. */
+  @media (max-width: 480px) {
+    .paper-work {
+      padding-block: 48px 56px;
+    }
+    .work-heading {
+      margin-bottom: 28px;
+    }
+    .work-decor-neuralnet {
+      width: min(40vw, 160px);
     }
   }
 </style>

@@ -2,6 +2,10 @@
 title: 'The Daily Cactus'
 emoji: '🌵'
 summary: 'A daily newspaper based on my interests and preferred sources. An AI agent handles the data sourcing, editing, and publishing via automated cron tasks.'
+# 20 Aug 2026 (queue r3): tile bullets, replacing the one-line summary on the card.
+bullets:
+  - 'A daily newspaper based on my interests and from my preferred sources.'
+  - 'Special features: I can upvote/downvote articles from the newspaper and train the editor agent. The AI editor agent also gives additional insights based on my background.'
 tags: ['AI', 'Automation', 'Product']
 status: 'live'
 order: 1

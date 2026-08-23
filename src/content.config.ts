@@ -9,6 +9,9 @@ const projects = defineCollection({
     title: z.string(),
     emoji: z.string(), // e.g. "🌵" — tile marker until custom pixel icons exist
     summary: z.string(), // one-line for the tile
+    // 20 Aug 2026 (queue r3): two bullet points for the tile, replacing the
+    // one-line summary there (summary is still used on the project page).
+    bullets: z.array(z.string()).optional(),
     tags: z.array(z.string()), // e.g. ["AI", "Automation", "Product"]
     status: z.enum(['live', 'ongoing', 'archived', 'case-study']),
     order: z.number(), // controls tile ordering

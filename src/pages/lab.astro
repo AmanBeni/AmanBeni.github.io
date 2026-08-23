@@ -12,7 +12,7 @@ import '../paper/tokens.css';
 
 import PencilFrame from '../paper/components/PencilFrame.astro';
 import Hero from '../paper/sections/Hero.astro';
-import ProofTicker from '../paper/components/ProofTicker.astro';
+// 20 Aug 2026 (queue r3): ProofTicker import removed (item 37).
 import About from '../paper/sections/About.astro';
 import Education from '../paper/sections/Education.astro';
 import Work from '../paper/sections/Work.astro';
@@ -28,9 +28,8 @@ const currentYear = new Date().getFullYear();
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Aman Beniwal — Portfolio (Lab: papercraft theme, work in progress)" />
-    <meta name="robots" content="noindex" />
-    <title>Aman Beniwal · Lab</title>
+    <meta name="description" content="Aman Beniwal — strategy generalist and AI builder. Selected AI projects, background, and ways to get in touch." />
+    <title>Aman Beniwal — Portfolio</title>
   </head>
   <body>
     <!-- Page frame: hairline rules inset by --page-inset on all four sides,
@@ -50,23 +49,21 @@ const currentYear = new Date().getFullYear();
     <header class="site-header" data-lab-id="global.header" data-lab-kind="flow"
       data-lab-label="Top bar" data-lab-group="Global"
       data-lab-props="paddingTop,paddingBottom,font,color">
-      <span class="site-brand-spacer" aria-hidden="true"></span>
-
+      <!-- 20 Aug 2026 (queue r2): single centred row of five links, no brand
+           spacer, no separate actions block — "get in touch" is just another
+           nav link now. -->
       <nav class="site-nav" aria-label="Primary">
-        <a href="#about">about</a>
-        <a href="#work">work</a>
-        <a href="#beyond">beyond</a>
-        <a href="#career">cv</a>
+        <a href="#about">About</a>
+        <a href="#education">Work</a>
+        <a href="#work">Projects</a>
+        <a href="#beyond">Beyond Work</a>
+        <a href="#contact">Get in touch</a>
       </nav>
-
-      <div class="site-actions">
-        <a href="#contact" class="site-contact">get in touch</a>
-      </div>
     </header>
 
     <main id="main">
       <Hero />
-      <ProofTicker />
+      {/* 20 Aug 2026 (queue r3): ProofTicker element removed (item 37). */}
       <About />
       <Education />
       <Work />
@@ -76,8 +73,98 @@ const currentYear = new Date().getFullYear();
     </main>
 
     <footer class="site-footer">
-      <p>&copy; {currentYear} Aman Beniwal · Lab (papercraft theme, work in progress)</p>
+      <p>&copy; {currentYear} Aman Beniwal</p>
     </footer>
+
+    <!-- 20 Aug 2026 (queue r8): flowing custom cursor — a small sketchy
+         triangle that eases toward the pointer (see script below). -->
+    <div id="flow-cursor" aria-hidden="true">
+      <svg viewBox="0 0 40 42" width="34" height="34">
+        <!-- Symmetric paper plane, nose up (rotates to face travel). Outer
+             wings cream, inner keel panels dark (fold shadow), thin brown edge. -->
+        <path class="pl-wing" d="M20 2 L3 34 L15.5 35.5 Z" />
+        <path class="pl-wing" d="M20 2 L37 34 L24.5 35.5 Z" />
+        <path class="pl-keel" d="M20 2 L15.5 35.5 L20 40 Z" />
+        <path class="pl-keel" d="M20 2 L20 40 L24.5 35.5 Z" />
+        <path class="pl-line" d="M20 2 L37 34 L24.5 35.5 L20 40 L15.5 35.5 L3 34 Z" />
+        <path class="pl-line" d="M20 2 L20 40" />
+      </svg>
+    </div>
+
+    <!-- 20 Aug 2026 (queue r8): butter-smooth scroll (Lenis) + the flowing
+         cursor, driven by ONE shared requestAnimationFrame loop so scroll and
+         cursor read as a single motion system. Both bow out for reduced-motion;
+         the cursor also bows out on touch. -->
+    <script>
+      import Lenis from 'lenis';
+
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const coarse = window.matchMedia('(pointer: coarse)').matches;
+
+      // Eased scrolling. syncTouch:false leaves native touch scrolling alone;
+      // anchors:true lets Lenis ease the #section nav links itself.
+      let lenis = null;
+      if (!reduce) {
+        lenis = new Lenis({
+          duration: 1.15,
+          // 20 Aug 2026 (queue r9): travel a bit further per wheel notch.
+          wheelMultiplier: 1.5,
+          smoothWheel: true,
+          syncTouch: false,
+          anchors: true,
+        });
+      }
+
+      // Flowing cursor.
+      const cursor = document.getElementById('flow-cursor');
+      const useCursor = !!cursor && !coarse && !reduce;
+      let tx = 0, ty = 0, cx = 0, cy = 0, moved = false;
+      // Facing angle: 0deg = nose up. Turns to face the direction of travel.
+      let angle = 0, targetAngle = 0;
+
+      if (useCursor) {
+        window.addEventListener('mousemove', (e) => {
+          tx = e.clientX; ty = e.clientY;
+          if (!moved) {
+            cx = tx; cy = ty; moved = true;
+            cursor.classList.add('is-visible');
+          }
+        }, { passive: true });
+
+        const root = document.documentElement;
+        root.addEventListener('mouseleave', () => cursor.classList.remove('is-visible'));
+        root.addEventListener('mouseenter', () => { if (moved) cursor.classList.add('is-visible'); });
+
+        // Over a clickable element: hide the paper cursor so only the native
+        // hand pointer shows (see .over-link CSS).
+        document.addEventListener('mouseover', (e) => {
+          const hit = (e.target instanceof Element) &&
+            e.target.closest('a, button, [role="button"], input, textarea, select, label, summary');
+          cursor.classList.toggle('over-link', !!hit);
+        });
+      }
+
+      function raf(time) {
+        if (lenis) lenis.raf(time);
+        if (useCursor) {
+          // Direction comes from the eased (rendered → target) vector, which is
+          // inherently smooth — no per-event jitter. Only re-aim while actually
+          // travelling, so a resting cursor doesn't spin.
+          const dx = tx - cx, dy = ty - cy;
+          if (dx * dx + dy * dy > 12) {
+            targetAngle = Math.atan2(dy, dx) * 180 / Math.PI + 90;
+          }
+          let diff = ((targetAngle - angle + 540) % 360) - 180;
+          angle += diff * 0.12; // gentle turn
+          cx += dx * 0.15;
+          cy += dy * 0.15;
+          cursor.style.transform =
+            `translate3d(${cx}px, ${cy}px, 0) rotate(${angle}deg)`;
+        }
+        requestAnimationFrame(raf);
+      }
+      if (lenis || useCursor) requestAnimationFrame(raf);
+    </script>
 
     <!-- Editor mount point — Track B attaches here. -->
     <div id="lab-editor-root"></div>
@@ -103,8 +190,89 @@ const currentYear = new Date().getFullYear();
         box-sizing: border-box;
       }
 
+      /* 20 Aug 2026 (queue r8): native smooth-scroll OFF — Lenis drives eased
+         scrolling now (the two fight each other if both are on). */
       html {
-        scroll-behavior: smooth;
+        scroll-behavior: auto;
+      }
+
+      /* Flowing custom cursor: a small hand-drawn paper triangle that eases
+         toward the pointer and turns to face the way it's moving. Only takes
+         over on real mice/trackpads. !important on every element so the native
+         cursor never flickers back over links (queue r9). */
+      @media (any-hover: hover) and (pointer: fine) {
+        *,
+        *::before,
+        *::after {
+          cursor: none !important;
+        }
+        /* Over clickable things: show the native hand pointer instead (and the
+           paper cursor hides itself — see .over-link below), so it's never
+           both at once. Matches the reference site. */
+        a,
+        a *,
+        button,
+        button *,
+        [role='button'],
+        input,
+        textarea,
+        select,
+        label,
+        summary {
+          cursor: pointer !important;
+        }
+      }
+
+      #flow-cursor {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 30px;
+        height: 30px;
+        margin: -15px 0 0 -15px;
+        pointer-events: none;
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 0.25s ease;
+        will-change: transform;
+        transform: translate3d(-100px, -100px, 0);
+        /* Soft lift so the brown plane reads on cream and dark grounds alike. */
+        filter: drop-shadow(0 1px 1.5px rgba(28, 20, 12, 0.35));
+      }
+
+
+      #flow-cursor.is-visible {
+        opacity: 0.9;
+      }
+
+      /* Over a clickable element the native hand takes over, so hide the
+         paper cursor to avoid showing two cursors at once. */
+      #flow-cursor.over-link {
+        opacity: 0;
+      }
+
+      /* Symmetric paper plane (Aman's reference): outer wings in normal cream,
+         the two inner keel panels darker for the fold shadow, thin brown
+         definition. */
+      #flow-cursor .pl-wing {
+        fill: var(--paper-tint);
+      }
+      #flow-cursor .pl-keel {
+        fill: #c4b79c;
+      }
+      #flow-cursor .pl-line {
+        fill: none;
+        stroke: var(--ink);
+        stroke-width: 1px;
+        stroke-linejoin: round;
+        stroke-linecap: round;
+      }
+
+      /* No custom cursor on touch or for reduced-motion users. */
+      @media (pointer: coarse), (prefers-reduced-motion: reduce) {
+        #flow-cursor {
+          display: none;
+        }
       }
 
       /*
@@ -137,14 +305,14 @@ const currentYear = new Date().getFullYear();
         margin: 0;
       }
 
-      /* Three columns so the links sit dead centre regardless of how wide
-         the brand or the actions are. */
+      /* 20 Aug 2026 (queue r2): plain cream paper bar, single centred nav,
+         no scroll-flip machinery. */
       .site-header {
         position: sticky;
         top: 0;
         z-index: 45;
-        display: grid;
-        grid-template-columns: 1fr auto 1fr;
+        display: flex;
+        justify-content: center;
         align-items: center;
         padding-block: 20px;
         border-bottom: 1px solid var(--rule);
@@ -162,23 +330,17 @@ const currentYear = new Date().getFullYear();
         border-bottom: 1px solid var(--rule);
       }
 
-      /* Wordmark removed. The spacer holds the left column so the nav stays
-         optically centred. */
-      .site-brand-spacer {
-        display: block;
-      }
-
+      /* 20 Aug 2026 (queue r2): one centred row, evenly spaced. */
       .site-nav {
         display: flex;
-        gap: 30px;
+        justify-content: center;
+        gap: 40px;
       }
 
-      /* Italic serif at small size, the way meli sets its nav. Quiet enough
-         to stay out of the way of the headline. */
+      /* 20 Aug 2026 (queue): Satoshi (the body sans), not the italic serif. */
       .site-nav a {
-        font-family: var(--font-display);
-        font-style: italic;
-        font-size: 16px;
+        font-family: var(--font-body);
+        font-size: 15px;
         letter-spacing: 0;
         text-decoration: none;
         color: var(--ink);
@@ -188,47 +350,6 @@ const currentYear = new Date().getFullYear();
       .site-nav a:hover {
         text-decoration: underline;
         text-underline-offset: 4px;
-      }
-
-      /* Paper button: a raised paper chip lit from the top-left. The bottom-
-         right shadow gives it thickness, an inset top-left sheen gives it the
-         paper highlight. Hover lifts it, click presses it down. */
-      .site-contact {
-        font-family: var(--font-body);
-        font-size: 13.5px;
-        letter-spacing: 0.01em;
-        text-decoration: none;
-        white-space: nowrap;
-        color: var(--ink);
-        background: var(--paper-card);
-        padding: 9px 16px;
-        border: 1px solid rgba(74, 53, 39, 0.25);
-        border-radius: 3px;
-        box-shadow:
-          1px 2px 0 rgba(74, 53, 39, 0.16),
-          2px 4px 8px rgba(28, 20, 12, 0.14),
-          inset 1px 1px 0 rgba(255, 253, 248, 0.7);
-        transition: transform 160ms ease, box-shadow 160ms ease;
-      }
-
-      .site-contact:hover {
-        transform: translateY(-1px);
-        box-shadow:
-          1px 3px 0 rgba(74, 53, 39, 0.18),
-          3px 6px 12px rgba(28, 20, 12, 0.16),
-          inset 1px 1px 0 rgba(255, 253, 248, 0.8);
-      }
-
-      .site-contact:active {
-        transform: translateY(1px);
-        box-shadow:
-          0 1px 0 rgba(74, 53, 39, 0.16),
-          1px 2px 4px rgba(28, 20, 12, 0.12),
-          inset 1px 1px 2px rgba(74, 53, 39, 0.16);
-      }
-
-      .site-actions {
-        justify-self: end;
       }
 
       .site-footer {
@@ -245,20 +366,38 @@ const currentYear = new Date().getFullYear();
         color: var(--ink-soft);
       }
 
-      @media (max-width: 700px) {
+      /* 20 Aug 2026 (mobile): nav wraps onto two centred rows instead of
+         cramming five links edge-to-edge; header gets its own horizontal
+         padding so links never sit flush against the screen edge even
+         though body already carries --page-inset. */
+      @media (max-width: 767px) {
         .site-header {
-          grid-template-columns: auto 1fr;
-          row-gap: 12px;
           padding-block: 14px;
+          padding-inline: 12px;
         }
         .site-nav {
-          grid-column: 1 / -1;
-          justify-content: space-between;
-          gap: 12px;
+          flex-wrap: wrap;
+          row-gap: 8px;
+          column-gap: 16px;
         }
-        .site-nav a,
-        .site-contact {
-          font-size: 14px;
+        .site-nav a {
+          font-size: 13.5px;
+        }
+      }
+
+      /* 20 Aug 2026 (mobile): at 480px and below, --page-inset (16px) plus
+         its own border eats a lot of a 375/320px viewport; tighten it here
+         only (token stays untouched everywhere else) and give the nav a
+         touch more breathing room. */
+      @media (max-width: 480px) {
+        body {
+          padding-inline: 10px;
+        }
+        .site-header {
+          padding-inline: 8px;
+        }
+        .site-nav {
+          column-gap: 12px;
         }
       }
     </style>

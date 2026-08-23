@@ -28,6 +28,8 @@ interface Props {
   tapes?: 1 | 2;
   /** "small" | "large" — sets tape size and default count. */
   size?: 'small' | 'large';
+  /** Override the tape length in px (defaults: 98 small / 132 large). */
+  tapeSize?: number;
   /** Stable string so the tape choice is deterministic per photo. */
   seed?: string;
   /** Passed through to the <img> so the editor can still target it. */
@@ -43,6 +45,7 @@ const {
   width = '100%',
   size = 'small',
   tapes,
+  tapeSize: tapeSizeProp,
   seed = src,
   labId,
   labLabel,
@@ -70,7 +73,7 @@ const h = hash(seed);
 // produced undefined tape picks for some seeds).
 const tapeA = TAPES[h % TAPES.length];
 const tapeB = TAPES[((h >>> 3) + 2) % TAPES.length];
-const tapeSize = size === 'large' ? 132 : 98;
+const tapeSize = tapeSizeProp ?? (size === 'large' ? 132 : 98);
 
 const url = (t: string) => `${baseSlash}paper/tape/${t}.png`;
 ---

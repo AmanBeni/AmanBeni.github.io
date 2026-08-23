@@ -542,3 +542,105 @@ Dev note: `astro dev` served a stale stylesheet after edits (heading margin
 still 80px, .about-litho rule absent) until the server was killed and
 restarted. When edits do not appear, restart the dev server rather than
 trusting HMR.
+
+---
+
+## 20 Aug 2026 — Queue round (terracotta hero, project tiles, motion restored)
+
+Ten-item change queue, split by model per Aman's new rule: mechanical single-
+file edits to a Sonnet 4.6 sub-agent (Hero.astro, tokens.css, Education.astro),
+taste/interconnected work kept on Opus (lab.astro nav, Work.astro tiles,
+Beyond.astro motion).
+
+- **Terracotta hero.** Added `--paper-terracotta-bg` / `--paper-terracotta-tint`
+  (#8a4a30) tokens and pointed `.paper-hero` at them. Deliberately did NOT
+  repoint the shared `--paper-hero-*` tokens, because Contact reuses them for
+  its forest-green bookend — Aman wants the hero terracotta but Contact to stay
+  green. The two grounds are now independent.
+- **Hero height** `min-height: 78vh` (was 460px), so the hero fills most of the
+  first screen. Both hero CTAs removed.
+- **Project tiles.** Work section moved from a quiet stacked list to three
+  side-by-side terracotta paper tiles (grid, 3 cols → 1 col under 860px). Order
+  Aman specified: big white serif heading → strict one-line summary (nowrap +
+  ellipsis) → reserved image slot (faint inset panel; he supplies art later) →
+  tags on one line. Paper-lift shadow + soft-light grain so the tile reads as
+  stock, matching the photo language.
+- **Scroll-reactive nav.** Header ink is now a `--nav-ink` variable; an
+  IntersectionObserver on `#hero` toggles `.is-scrolled`, which flips
+  `--nav-ink` to cream and cross-fades a terracotta `::before` layer in. Chose a
+  pseudo-element opacity cross-fade over swapping `background-image` because the
+  latter can't tween. Nav font is now Satoshi (was italic serif) and "get in
+  touch" is a plain link (paper button dropped).
+- **Motion restored from the pixel site.** Books are the continuous "assembly
+  belt" marquee again (list ×2, `translateX(-50%)` loop, hover-pause, reduced-
+  motion falls back to a scroll container). Songs use the pixel `Coverflow`
+  component (imported from `src/components/`), draggable + autoplaying, with the
+  Spotify playlist linked under the subtitle (`onRepeat.source`). Dropped the
+  floating armchair object near the Beyond heading.
+
+Verified: `npm run build` passes (8 pages); nav flip, tiles, marquee and
+coverflow confirmed in the browser. The throttled Browser pane made
+`getComputedStyle` reads unreliable while hidden — the screenshot was the
+source of truth for the nav flip.
+
+---
+
+## 20 Aug 2026 — Queue round 2 (token-lean pass)
+
+Aman flagged low token budget; priority was cost. Approach: locked the four
+risky calls up front with one batched question set, then delegated the whole
+queue to two Sonnet 4.6 sub-agents split by file (no collisions) — Agent A owned
+lab.astro/Hero/Work/Education/Beyond/Contact, Agent B owned About/Skills plus
+their new-image asset processing. Opus only read the hero-height reference image,
+wrote the agent specs, and did a single build + focused visual verification.
+
+Decisions confirmed with Aman:
+- Nav "Work" → Career & Education (#education); "Projects" → AI projects (#work).
+- Kept Satoshi for the nav (undid only the scroll-flip + button, not the font).
+- Nav rebuilt as one centred row of five Title Case links, CV dropped.
+- Hero height → 85vh (red-line reference; the earlier 78vh min-height was being
+  overrun by content on his shorter window, so it read as ~full height).
+- AI project-page import (item 50) deferred to its own run; tiles link out to
+  the existing pages meanwhile.
+- Em dash rule: "|"/":" for label/title separators, short "-" in bracketed
+  dates. Applied across section files; the summary em dash in
+  `src/content/projects/youtube-year.md` (the only one surfacing on /lab) was
+  fixed to a comma. Remaining project-md em dashes deferred with the page import.
+
+Verified: `npm run build` passes (8 pages); nav, hero (height + grid removed +
+bigger subtitle), About (rename + new desk photo + grown grid), Work tiles
+(smaller/spread/wrapping/linked), Skills (bullets + photo + dot-pattern) all
+confirmed by screenshot. skills.webp served 200 (the naturalWidth=0 flag was a
+below-fold lazy-load false positive).
+
+---
+
+## 20 Aug 2026 — Queue round 3 (three parallel agents)
+
+Large queue, token-constrained. Locked 4 rework-risky calls up front (only
+neuralnet top-right not circle-meet; minimal paper wrapper for project pages;
+keep tile tags; cursor + smooth-scroll deferred to their own run), then ran
+THREE Sonnet 4.6 agents in parallel split by file to avoid collisions:
+- AI Projects cluster: Work.astro + content.config.ts (+ `bullets` field) + the
+  3 project .md files + assets (neuralnet, 3 project 3D images).
+- Other sections: lab.astro (ticker removed), Hero (460px height + photo +20%),
+  About (grid bigger/up/right), Education (sub-item indent), Skills (photo 2x),
+  Beyond (heading + still shadowed clouds + cloud assets).
+- Project pages: re-skinned src/pages/work/[...slug].astro into the paper theme
+  (reused old text/photos, paper shell + back link).
+
+Notable decisions:
+- Tiles now carry tape (TapeStrip), so `.work-tile` went overflow:visible with
+  the grain ::after taking over the clip so corners stay rounded and the tape
+  overhang isn't cut.
+- Bullets stored as an optional `bullets` array in the projects schema; tile
+  renders bullets when present, else falls back to the summary paragraph.
+- Project pages import (previously deferred) done this round at Aman's request,
+  minimal effort.
+
+One collision was observed and self-healed: a project-pages build raced a
+concurrent lab.astro edit (ticker removal); the retry built clean. Final
+`npm run build` passes 8/8. Verified by screenshot: AI Projects (neuralnet +
+tape + bullets + images), Beyond clouds, and a re-skinned project page.
+
+Still open (own run): custom cursor + butter-smooth scroll.

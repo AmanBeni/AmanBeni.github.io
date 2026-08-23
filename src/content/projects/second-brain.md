@@ -2,6 +2,10 @@
 title: 'Second Brain | My AI Chief of Staff'
 emoji: '🧠'
 summary: 'An AI chief of staff I built on top of two years of journals, notes, learnings and todos. Sensitive data runs offline on my laptop; frontier models do the execution. It helps me get work done quickly and keeps me on track.'
+# 20 Aug 2026 (queue r3): tile bullets, replacing the one-line summary on the card.
+bullets:
+  - 'Built locally on top of two years of notes, learnings and todos from my Notion.'
+  - 'Sensitive data runs offline on my laptop; execution is done by frontier models with improved context. Executes tasks from my to-do list, saving 1-2 hrs/day.'
 tags: ['AI', 'Automation']
 status: 'live'
 order: 3

@@ -6,28 +6,31 @@
  * (same source of truth, duplicated here since Track A doesn't touch that
  * file) — keep the two in sync if Aman edits his CV.
  */
+
 const base = import.meta.env.BASE_URL;
 const baseSlash = base.endsWith('/') ? base : base + '/';
 const logoBase = baseSlash + 'logos/';
 
+// 20 Aug 2026 (queue r2): short hyphen inside date ranges, "|" between a
+// title and its qualifier (dash cleanup, per queue).
 const experience = [
   {
     org: 'Infosys',
     logo: 'infosys.svg',
     roles: [
-      { title: 'Analyst — Corporate Strategy', period: 'Dec 2023 — Dec 2025' },
-      { title: 'Associate Functional Consultant', period: 'Jun 2022 — Nov 2023' },
+      { title: 'Analyst | Corporate Strategy', period: 'Dec 2023 - Dec 2025' },
+      { title: 'Associate Functional Consultant', period: 'Jun 2022 - Nov 2023' },
     ],
   },
   {
     org: 'appengine.ai',
     logo: 'appengine.png',
-    roles: [{ title: 'Associate Intern', period: 'Jun — Aug 2021' }],
+    roles: [{ title: 'Associate Intern', period: 'Jun - Aug 2021' }],
   },
   {
     org: 'Plutomen Technologies',
     logo: 'plutomen.png',
-    roles: [{ title: 'Summer Intern', period: 'Apr — Jul 2021' }],
+    roles: [{ title: 'Summer Intern', period: 'Apr - Jul 2021' }],
   },
   {
     org: 'Lemon Tree Hotels',
@@ -42,13 +45,13 @@ const education = [
     logo: 'nirma.png',
     roles: [
       {
-        title: 'MBA — Business Administration',
-        period: '2020 — 2022',
+        title: 'MBA | Business Administration',
+        period: '2020 - 2022',
         notes: ['Treasurer & Member Secretary, Placement Cell'],
       },
       {
-        title: 'BBA — Business Administration',
-        period: '2017 — 2020',
+        title: 'BBA | Business Administration',
+        period: '2017 - 2020',
         notes: ['Member, Cultural Committee', 'Lead, Photography Committee'],
       },
     ],
@@ -56,7 +59,7 @@ const education = [
 ];
 
 const volunteering = [
-  { org: 'Asaadharan NGO', roles: [{ title: 'Volunteer', period: 'Apr — Jun 2026' }] },
+  { org: 'Asaadharan NGO', roles: [{ title: 'Volunteer', period: 'Apr - Jun 2026' }] },
   { org: 'Naya Sawera NGO', roles: [{ title: 'Volunteer', period: 'May 2018' }] },
 ];
 ---
@@ -79,7 +82,7 @@ const volunteering = [
       data-lab-group="Education"
       data-lab-props="fontSize,letterSpacing,lineHeight,color,align,marginBottom,font"
     >
-      Career &amp; education
+      Career &amp; Education
     </h2>
 
     <div class="education-grid">
@@ -100,7 +103,7 @@ const volunteering = [
               class="cv-entry"
               data-lab-id={`education.experience.${i}`}
               data-lab-kind="flow"
-              data-lab-label={`Experience — ${item.org}`}
+              data-lab-label={`Experience | ${item.org}`}
               data-lab-group="Education"
               data-lab-props="fontSize,color,marginTop,marginBottom,font"
             >
@@ -111,7 +114,7 @@ const volunteering = [
                 <p class="cv-org">{item.org}</p>
                 {item.roles.map((r) => (
                   <p class="cv-role">
-                    {r.title} <span class="cv-period">{r.period}</span>
+                    {r.title} <span class="cv-period">({r.period})</span>
                   </p>
                 ))}
               </div>
@@ -137,7 +140,7 @@ const volunteering = [
               class="cv-entry"
               data-lab-id={`education.education.${i}`}
               data-lab-kind="flow"
-              data-lab-label={`Education — ${item.org}`}
+              data-lab-label={`Education | ${item.org}`}
               data-lab-group="Education"
               data-lab-props="fontSize,color,marginTop,marginBottom,font"
             >
@@ -149,7 +152,7 @@ const volunteering = [
                 {item.roles.map((r) => (
                   <>
                     <p class="cv-role">
-                      {r.title} <span class="cv-period">{r.period}</span>
+                      {r.title} <span class="cv-period">({r.period})</span>
                     </p>
                     {r.notes?.map((n) => <p class="cv-note">{n}</p>)}
                   </>
@@ -175,7 +178,7 @@ const volunteering = [
               class="cv-entry cv-entry-plain"
               data-lab-id={`education.volunteering.${i}`}
               data-lab-kind="flow"
-              data-lab-label={`Volunteering — ${item.org}`}
+              data-lab-label={`Volunteering | ${item.org}`}
               data-lab-group="Education"
               data-lab-props="fontSize,color,marginTop,marginBottom,font"
             >
@@ -183,7 +186,7 @@ const volunteering = [
                 <p class="cv-org">{item.org}</p>
                 {item.roles.map((r) => (
                   <p class="cv-role">
-                    {r.title} <span class="cv-period">{r.period}</span>
+                    {r.title} <span class="cv-period">({r.period})</span>
                   </p>
                 ))}
               </div>
@@ -192,20 +195,25 @@ const volunteering = [
         }
       </div>
     </div>
+
   </div>
 </section>
 
 <style>
   .paper-education {
     border-bottom: 1px solid var(--rule);
-    padding-block: 96px;
+    /* 20 Aug 2026 (queue r10): standard 80px top space (line → heading). */
+    padding-block: 80px 96px;
+    position: relative;
   }
 
   .education-inner {
     max-width: 1180px;
     margin-inline: auto;
     padding-inline: 24px;
+    position: relative;
   }
+
 
   .education-heading {
     font-family: var(--font-display);
@@ -216,18 +224,21 @@ const volunteering = [
     color: var(--ink);
     text-shadow: var(--letterpress-onlight);
     mix-blend-mode: multiply;
-    margin: 0 0 44px;
+    margin: 0 0 40px;
   }
 
+  /* 20 Aug 2026 (queue r6): back to full-width two columns (r5's narrowing
+     cramped them). The photo just tucks into the bottom-right corner. */
   .education-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 64px;
   }
 
+  /* 20 Aug 2026 (queue r2): 12.5px read as body text — bumped to 15px. */
   .education-colhead {
     font-family: var(--font-mono);
-    font-size: 12.5px;
+    font-size: 15px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--ink-soft);
@@ -280,33 +291,59 @@ const volunteering = [
     margin: 0 0 4px;
   }
 
+  /* 20 Aug 2026 (queue r2): role is now the dominant colour, period is the
+     soft/bracketed one — this was backwards before. */
   .cv-role {
     font-family: var(--font-body);
+    font-weight: 600;
     font-size: 15px;
-    color: var(--ink-soft);
+    color: var(--ink);
     margin: 0;
   }
 
   .cv-period {
     font-family: var(--font-mono);
     font-size: 12.5px;
-    color: var(--accent);
+    color: var(--ink-soft);
   }
 
+  /* 20 Aug 2026 (queue r3): indented so committee notes read as sub-items
+     under their role (item 41) — no bullet/marker, just the indent. */
   .cv-note {
     font-family: var(--font-body);
     font-size: 14px;
     color: var(--ink-soft);
     margin: 2px 0 0;
+    margin-left: 20px;
   }
 
+  /* 20 Aug 2026 (mobile): confirmed single-column CV grid holds at 767 and
+     narrower; just trimmed the desktop-sized 100px padding down to something
+     comfortable on a phone. */
   @media (max-width: 767px) {
     .paper-education {
-      padding-block: 100px;
+      padding-block: 64px 72px;
+    }
+    .education-inner {
+      padding-inline: 20px;
     }
     .education-grid {
       grid-template-columns: 1fr;
       gap: 48px;
+    }
+  }
+
+  /* 20 Aug 2026 (mobile): 375/320px — logo+text row stays comfortable, just
+     less top/bottom air. */
+  @media (max-width: 480px) {
+    .paper-education {
+      padding-block: 48px 56px;
+    }
+    .education-heading {
+      margin-bottom: 28px;
+    }
+    .cv-entry {
+      gap: 12px;
     }
   }
 </style>

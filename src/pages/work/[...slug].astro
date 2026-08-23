@@ -1,6 +1,12 @@
 ---
+/* 20 Aug 2026 (queue r3): re-skinned into the paper theme. Reuses the exact
+   same markdown body + project images as before — this is a shell re-skin
+   only, not a content redesign. Mirrors the minimal head/body shell from
+   src/pages/lab.astro (own <html> shell + tokens.css import, no BaseLayout /
+   global.css) so this page shares the paper background, brown ink, and
+   paper typography with /lab instead of the pixel theme. */
 import { getCollection, render } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../paper/tokens.css';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
@@ -22,169 +28,231 @@ const statusLabel: Record<string, string> = {
   archived: 'Archived',
   'case-study': 'Case study',
 };
-
-const statusClass: Record<string, string> = {
-  live: 'pill-live',
-  ongoing: 'pill-ongoing',
-  archived: 'pill-archived',
-  'case-study': 'pill-case-study',
-};
 ---
 
-<BaseLayout title={project.data.title} description={project.data.summary}>
-  <article class="section project-article">
-    <div class="site-container project-article-inner">
-      <a href={`${home}#work`} class="back-link mono-label">&larr; Back to AI Projects</a>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={project.data.summary} />
+    <title>{project.data.title} · Aman Beniwal</title>
+  </head>
+  <body>
+    <header class="proj-topbar">
+      <a href={`${home}lab#work`} class="proj-back">&larr; Aman Beniwal</a>
+    </header>
 
-      <header class="project-article-header">
-        <span class="project-article-emoji" role="img" aria-label={`${project.data.title} icon`}>
-          {project.data.emoji}
-        </span>
-        <h1 class="project-article-title">{project.data.title}</h1>
+    <main id="main">
+      <article class="proj-article">
+        <header class="proj-header">
+          <span class="proj-emoji" role="img" aria-label={`${project.data.title} icon`}>
+            {project.data.emoji}
+          </span>
+          <h1 class="proj-title">{project.data.title}</h1>
 
-        <div class="project-article-meta">
-          <span class={`pill ${statusClass[project.data.status]}`}>{statusLabel[project.data.status]}</span>
-          <ul class="project-article-tags mono-label">
-            {project.data.tags.map((tag) => <li class="pill">{tag}</li>)}
-          </ul>
-        </div>
-      </header>
-
-      <div class="project-article-body">
-        <Content />
-      </div>
-
-      {
-        project.data.images && project.data.images.length > 0 && (
-          <div class="project-article-shots">
-            {project.data.images.map((src) => (
-              <img class="project-shot" src={`${home}${src}`} alt={`${project.data.title} screenshot`} loading="lazy" />
-            ))}
+          <div class="proj-meta">
+            <span class="proj-pill">{statusLabel[project.data.status]}</span>
+            <ul class="proj-tags">
+              {project.data.tags.map((tag) => <li class="proj-pill">{tag}</li>)}
+            </ul>
           </div>
-        )
+        </header>
+
+        <div class="proj-body">
+          <Content />
+        </div>
+
+        {
+          project.data.images && project.data.images.length > 0 && (
+            <div class="proj-shots">
+              {project.data.images.map((src) => (
+                <img class="proj-shot" src={`${home}${src}`} alt={`${project.data.title} screenshot`} loading="lazy" />
+              ))}
+            </div>
+          )
+        }
+      </article>
+    </main>
+
+    <footer class="proj-footer">
+      <p>&copy; {new Date().getFullYear()} Aman Beniwal</p>
+    </footer>
+
+    <style>
+      * {
+        box-sizing: border-box;
       }
-    </div>
-  </article>
 
-  <style>
-    .back-link {
-      display: inline-block;
-      color: var(--primary);
-      text-decoration: none;
-      margin-bottom: 32px;
-    }
-
-    .back-link:hover {
-      text-decoration: underline;
-    }
-
-    .project-article-inner {
-      max-width: 940px;
-    }
-
-    .project-article-header {
-      margin-bottom: 48px;
-      border-bottom: 1px solid var(--border-low);
-      padding-bottom: 32px;
-    }
-
-    .project-article-emoji {
-      font-size: 40px;
-      display: block;
-      margin-bottom: 12px;
-    }
-
-    .project-article-title {
-      font-size: 32px;
-      margin: 0 0 16px;
-    }
-
-    .project-article-meta {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .project-article-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-
-    /* Solid card behind the write-up so the text stays legible over the
-       dot-grid background. */
-    .project-article-body {
-      font-size: 17px;
-      line-height: 1.7;
-      background: var(--container);
-      border: 1px solid var(--border-low);
-      border-radius: var(--radius-card);
-      padding: 32px 36px;
-      box-shadow: 0 6px 26px rgba(18, 34, 58, 0.06);
-    }
-
-    @media (max-width: 640px) {
-      .project-article-body {
-        padding: 22px 20px;
+      body {
+        margin: 0;
+        padding-inline: var(--page-inset);
+        background-color: var(--paper-tint);
+        background-image: var(--paper-stock);
+        background-size: cover;
+        background-attachment: fixed;
+        color: var(--ink);
+        font-family: var(--font-body);
+        font-size: 18px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
       }
-    }
 
-    .project-article-body :global(h2) {
-      font-size: 22px;
-      margin-top: 40px;
-      margin-bottom: 12px;
-    }
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        font-family: var(--font-display);
+      }
 
-    .project-article-body :global(h3) {
-      font-size: 18px;
-      margin-top: 28px;
-      margin-bottom: 8px;
-    }
+      .proj-topbar {
+        display: flex;
+        align-items: center;
+        padding: 20px 0;
+        border-bottom: 1px solid var(--rule);
+      }
 
-    .project-article-body :global(p) {
-      margin: 0 0 16px;
-      color: var(--ink);
-    }
+      .proj-back {
+        color: var(--ink);
+        text-decoration: none;
+        font-family: var(--font-mono);
+        font-size: 14px;
+        letter-spacing: 0.02em;
+      }
 
-    /* Tailwind's preflight strips list bullets globally — restore them here. */
-    .project-article-body :global(ul) {
-      margin: 0 0 16px;
-      padding-left: 24px;
-      list-style: disc;
-    }
+      .proj-back:hover {
+        text-decoration: underline;
+      }
 
-    .project-article-body :global(li) {
-      margin-bottom: 6px;
-      display: list-item;
-    }
+      .proj-article {
+        /* 20 Aug 2026 (queue r12): widened from 760 — too much wasted side space. */
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 48px 0 64px;
+      }
 
-    .project-article-body :global(li)::marker {
-      color: var(--primary);
-    }
+      .proj-header {
+        margin-bottom: 40px;
+        border-bottom: 1px solid var(--rule);
+        padding-bottom: 28px;
+      }
 
-    .project-article-body :global(a) {
-      color: var(--primary);
-    }
+      .proj-emoji {
+        font-size: 40px;
+        display: block;
+        margin-bottom: 12px;
+      }
 
-    /* Project screenshots, after the write-up */
-    .project-article-shots {
-      margin-top: 40px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
+      .proj-title {
+        font-size: 32px;
+        margin: 0 0 16px;
+        color: var(--ink);
+      }
 
-    .project-shot {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 8px;
-      border: 1px solid var(--border-low);
-      box-shadow: 0 8px 28px rgba(18, 34, 58, 0.1);
-    }
-  </style>
-</BaseLayout>
+      .proj-meta {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .proj-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .proj-pill {
+        display: inline-block;
+        padding: 4px 12px;
+        border: 1px solid var(--rule);
+        border-radius: 999px;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 0.02em;
+        color: var(--ink-soft);
+        background: var(--paper-card);
+      }
+
+      .proj-body {
+        font-size: 17px;
+        line-height: 1.7;
+        background: var(--paper-card);
+        border: 1px solid var(--rule);
+        border-radius: 10px;
+        padding: 32px 36px;
+      }
+
+      @media (max-width: 640px) {
+        .proj-body {
+          padding: 22px 20px;
+        }
+      }
+
+      .proj-body :global(h2) {
+        font-size: 22px;
+        margin-top: 40px;
+        margin-bottom: 12px;
+        color: var(--ink);
+      }
+
+      .proj-body :global(h3) {
+        font-size: 18px;
+        margin-top: 28px;
+        margin-bottom: 8px;
+        color: var(--ink);
+      }
+
+      .proj-body :global(p) {
+        margin: 0 0 16px;
+        color: var(--ink);
+      }
+
+      .proj-body :global(ul) {
+        margin: 0 0 16px;
+        padding-left: 24px;
+        list-style: disc;
+      }
+
+      .proj-body :global(li) {
+        margin-bottom: 6px;
+        display: list-item;
+      }
+
+      .proj-body :global(li)::marker {
+        color: var(--accent);
+      }
+
+      .proj-body :global(a) {
+        color: var(--accent);
+      }
+
+      .proj-shots {
+        margin-top: 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .proj-shot {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 8px;
+        border: 1px solid var(--rule);
+      }
+
+      .proj-footer {
+        text-align: center;
+        padding: 24px 0 40px;
+        font-family: var(--font-mono);
+        font-size: 13px;
+        color: var(--ink-soft);
+        border-top: 1px solid var(--rule);
+      }
+    </style>
+  </body>
+</html>

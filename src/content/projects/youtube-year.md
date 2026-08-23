@@ -1,7 +1,11 @@
 ---
 title: 'YouTube Watch History Analyzer'
 emoji: '📺'
-summary: 'I consume a lot of YouTube, so I wanted to analyse my usage patterns. I extracted a year of watch history and turned it into a dashboard to see where my attention actually goes — all analysed locally on my laptop.'
+summary: 'I consume a lot of YouTube, so I wanted to analyse my usage patterns. I extracted a year of watch history and turned it into a dashboard to see where my attention actually goes, all analysed locally on my laptop.'
+# 20 Aug 2026 (queue r3): tile bullets, replacing the one-line summary on the card.
+bullets:
+  - 'Cleaned all the data and bucketed it into categories. Excluded categories like YT Shorts, background music and live streams.'
+  - 'Runs locally on my laptop via a local model, so no sensitive information leaves the system.'
 tags: ['AI', 'Data Analysis', 'Automation']
 status: 'case-study'
 order: 2

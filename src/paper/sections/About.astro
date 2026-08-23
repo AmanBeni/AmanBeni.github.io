@@ -27,7 +27,7 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
       data-lab-group="About"
       data-lab-props="fontSize,letterSpacing,color,marginBottom,font"
     >
-      A bit about me
+      About
     </h2>
 
     <div class="about-row">
@@ -89,8 +89,9 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
           data-lab-props="x,y,rotate,scale,z,opacity,shadow"
           data-lab-asset="objects"
         >
+          {/* 20 Aug 2026 (queue r2): swapped to the new about-desk render; tape + shadow follow automatically via PaperPhoto. */}
           <PaperPhoto
-            src={`${baseSlash}paper/objects/01-desk-wide-mixed.webp`}
+            src={`${baseSlash}paper/objects/about-desk.webp`}
             alt="Papercraft desk, lamp and books, a small still-life"
             width="100%"
             size="large"
@@ -105,8 +106,12 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
 <style>
   .paper-about {
     border-bottom: 1px solid var(--rule);
-    padding-block: 96px;
+    /* 20 Aug 2026 (queue r10): standard 80px top space (line → heading). */
+    padding-block: 80px 96px;
     position: relative;
+    /* 20 Aug 2026 (queue r2): hard clip so the enlarged/repositioned litho
+       grid below can never spill past the section frame. */
+    overflow: hidden;
   }
 
   .about-inner {
@@ -162,12 +167,14 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
   .about-litho {
     position: absolute;
     z-index: 0;
-    width: 78%;
-    /* Sits mostly behind the photo, shifted down and slightly left so it
-       peeks out at the bottom-left like a backing sheet, without crossing
-       far into the body text. */
-    left: -6%;
-    top: 26%;
+    /* 20 Aug 2026 (queue r3): sized up further and moved up + right again
+       per Aman's note; .paper-about clips overflow so it stays inside the
+       section frame at this larger size. */
+    width: 135%;
+    left: 10%;
+    /* 20 Aug 2026 (queue r4): moved higher per Aman's note; .paper-about
+       still clips overflow so this stays inside the section frame. */
+    top: -18%;
     opacity: 0.5;
     pointer-events: none;
   }
@@ -205,6 +212,41 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     }
     .about-desk {
       margin-left: 0;
+    }
+  }
+
+  /* 20 Aug 2026 (mobile): comfortable phone padding (was still the 100px
+     tablet value), and the enlarged/offset litho grid pulled back in so it
+     reads as a backing sheet instead of a near-full-bleed graphic behind the
+     stacked photo. Section still clips overflow so this is belt-and-braces. */
+  @media (max-width: 767px) {
+    .paper-about {
+      padding-block: 64px 72px;
+    }
+    .about-inner {
+      padding-inline: 20px;
+    }
+    .about-litho {
+      width: 100%;
+      left: 0;
+      top: -6%;
+      opacity: 0.4;
+    }
+  }
+
+  /* 20 Aug 2026 (mobile): tighter still at 375/320px. */
+  @media (max-width: 480px) {
+    .paper-about {
+      padding-block: 48px 56px;
+    }
+    .about-heading {
+      margin-bottom: 28px;
+    }
+    .about-row {
+      gap: 40px;
+    }
+    .about-litho {
+      top: -4%;
     }
   }
 </style>

@@ -200,6 +200,26 @@
     "bytes": 71380
   },
   {
+    "id": "objects/about-desk",
+    "category": "objects",
+    "name": "about-desk",
+    "label": "About Desk",
+    "src": "/paper/objects/about-desk.webp",
+    "width": 907,
+    "height": 591,
+    "bytes": 50686
+  },
+  {
+    "id": "objects/daily-cactus-1",
+    "category": "objects",
+    "name": "daily-cactus-1",
+    "label": "Daily Cactus 1",
+    "src": "/paper/objects/daily-cactus-1.webp",
+    "width": 1200,
+    "height": 805,
+    "bytes": 54800
+  },
+  {
     "id": "objects/hero-support-original",
     "category": "objects",
     "name": "hero-support-original",
@@ -238,6 +258,36 @@
     "width": 1200,
     "height": 670,
     "bytes": 57000
+  },
+  {
+    "id": "objects/second-brain-1",
+    "category": "objects",
+    "name": "second-brain-1",
+    "label": "Second Brain 1",
+    "src": "/paper/objects/second-brain-1.webp",
+    "width": 1200,
+    "height": 805,
+    "bytes": 66338
+  },
+  {
+    "id": "objects/skills",
+    "category": "objects",
+    "name": "skills",
+    "label": "Skills",
+    "src": "/paper/objects/skills.webp",
+    "width": 1200,
+    "height": 805,
+    "bytes": 72898
+  },
+  {
+    "id": "objects/youtube-history-analysis",
+    "category": "objects",
+    "name": "youtube-history-analysis",
+    "label": "Youtube History Analysis",
+    "src": "/paper/objects/youtube-history-analysis.webp",
+    "width": 1200,
+    "height": 805,
+    "bytes": 91540
   },
   {
     "id": "text/advercase-letterpress",

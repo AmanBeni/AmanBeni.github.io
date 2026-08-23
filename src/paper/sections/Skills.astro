@@ -1,5 +1,6 @@
 ---
 /** Skills & Tools — two tag columns, typewriter chips stamped on card stock. */
+import PaperPhoto from '../components/PaperPhoto.astro';
 const skills = [
   'Data Analytics & Synthesis',
   'Metrics & KPI Tracking',
@@ -28,6 +29,10 @@ const tools = [
   'MCP',
   'RAG / Ollama Embeddings',
 ];
+
+// 20 Aug 2026 (queue r2): base path for the new skills photo + dot-pattern decor.
+const base = import.meta.env.BASE_URL;
+const baseSlash = base.endsWith('/') ? base : base + '/';
 ---
 
 <section
@@ -39,6 +44,14 @@ const tools = [
   data-lab-group="Skills"
   data-lab-props="paddingTop,paddingBottom,background,maxWidth"
 >
+  {/* 20 Aug 2026 (queue r2): dot-pattern decor, top-right corner, behind content. */}
+  <img
+    class="skills-dot-decor"
+    src={`${baseSlash}paper/decor/dot-pattern.png`}
+    alt=""
+    aria-hidden="true"
+  />
+
   <div class="skills-inner">
     <h2
       class="skills-heading"
@@ -51,6 +64,7 @@ const tools = [
       Skills &amp; Tools
     </h2>
 
+    <div class="skills-row">
     <div class="skills-grid">
       <div>
         <h3
@@ -98,19 +112,97 @@ const tools = [
         </ul>
       </div>
     </div>
+
+    {/* 20 Aug 2026 (queue r4): photo moved back down to 320px so it sits
+        beside the lists as a right-hand column instead of forcing its own
+        row below them (item was 560px, too wide to sit on the right). */}
+    <div class="skills-photo-stage" data-lab-canvas>
+      <PaperPhoto
+        src={`${baseSlash}paper/objects/skills.webp`}
+        alt="Papercraft still-life of tools and skill icons"
+        width="540px"
+        size="small"
+        seed="skills-photo"
+      />
+    </div>
+    </div>
   </div>
 </section>
 
 <style>
   .paper-skills {
     border-bottom: 1px solid var(--rule);
-    padding-block: 96px;
+    /* 20 Aug 2026 (queue r10): standard 80px top space (line → heading). */
+    padding-block: 80px 96px;
+    position: relative;
+    /* 20 Aug 2026 (queue r2): clip so the top-right dot-pattern decor can
+       never spill past the section frame. */
+    overflow: hidden;
+  }
+
+  /* 20 Aug 2026 (queue r2): dot-pattern decor, tucked in the top-right
+     corner, behind all content, subtle and fully inside the section. */
+  .skills-dot-decor {
+    position: absolute;
+    z-index: 0;
+    top: -6%;
+    right: -4%;
+    width: 34%;
+    max-width: 420px;
+    opacity: 0.35;
+    pointer-events: none;
   }
 
   .skills-inner {
     max-width: 1180px;
     margin-inline: auto;
     padding-inline: 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* 20 Aug 2026 (queue r4): lists on the left, photo on the right, side by
+     side on desktop. At 320px the photo now fits next to the 900px grid
+     without crushing the columns, so it no longer needs to drop to its own
+     row until the genuinely narrow/mobile breakpoint below. */
+  /* 20 Aug 2026 (queue r5): no wrap on desktop so the larger photo stays on the
+     right instead of dropping below; the grid shrinks to make room. */
+  .skills-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 44px;
+    flex-wrap: nowrap;
+  }
+
+  .skills-photo-stage {
+    flex: 0 0 auto;
+  }
+
+  /* 20 Aug 2026 (queue r4): only stack the photo below the lists once the
+     viewport is genuinely narrow — matches the .skills-grid single-column
+     breakpoint below so both change together. */
+  @media (max-width: 767px) {
+    .skills-row {
+      flex-wrap: wrap;
+    }
+    .skills-grid {
+      max-width: none;
+      flex: 1 1 480px;
+    }
+    .skills-photo-stage {
+      flex: 1 1 100%;
+      min-width: 0;
+      display: flex;
+      justify-content: center;
+      margin-top: 8px;
+      margin-inline: auto;
+    }
+    /* 20 Aug 2026 (mobile fix): the 540px photo was overflowing/clipped — cap
+       it to the screen. !important beats PaperPhoto's inline width. */
+    .skills-photo-stage .paper-photo {
+      width: min(100%, 320px) !important;
+    }
   }
 
   .skills-heading {
@@ -125,28 +217,38 @@ const tools = [
     margin: 0 0 40px;
   }
 
+  /* 20 Aug 2026 (queue r5): grid narrowed so the now-larger (480px) photo sits
+     beside it on the right instead of wrapping below. */
+  /* 20 Aug 2026 (queue r9): wider gap between the Skills and Tools columns
+     (they were almost touching), and a narrower grid so the photo sits further
+     to the right. */
   .skills-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 64px;
-    max-width: 900px;
+    gap: 100px;
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 520px;
   }
 
   .skills-colhead {
     font-family: var(--font-mono);
-    font-size: 12.5px;
+    /* 20 Aug 2026 (queue r2): bumped up from 12.5px so it reads as a
+       sub-heading rather than body text. */
+    font-size: 15px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--ink-soft);
     margin: 0 0 20px;
   }
 
-  /* Plain flowing text, not a grid of chip boxes — one line per item,
-     quiet and comma-free so it reads as a short list, not decoration. */
+  /* Plain flowing text, one line per item. 20 Aug 2026 (queue r2): each
+     line now carries a small disc bullet so the list reads as a list. */
   .skills-tags {
-    list-style: none;
+    list-style: disc;
+    list-style-position: outside;
     margin: 0;
-    padding: 0;
+    padding-left: 1.1em;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -158,17 +260,53 @@ const tools = [
     color: var(--ink);
   }
 
+  .skills-tag::marker {
+    color: var(--ink-soft);
+  }
+
+  .skills-tag-tool::marker {
+    color: var(--accent);
+  }
+
   .skills-tag-tool {
     color: var(--accent);
   }
 
+  /* 20 Aug 2026 (mobile): desktop-sized 100px padding trimmed down; the
+     100px column gap only applied above 767px anyway (mobile grid was
+     already single-column at 40px gap here, kept as-is since one column
+     doesn't need a column gap). Dot-pattern decor shrunk so it can't
+     dominate the narrow heading row. */
   @media (max-width: 767px) {
     .paper-skills {
-      padding-block: 100px;
+      padding-block: 64px 72px;
+    }
+    .skills-inner {
+      padding-inline: 20px;
     }
     .skills-grid {
       grid-template-columns: 1fr;
-      gap: 40px;
+      gap: 32px;
+    }
+    .skills-dot-decor {
+      width: 44%;
+      max-width: 160px;
+      opacity: 0.25;
+    }
+  }
+
+  /* 20 Aug 2026 (mobile): 375/320px — photo (540px prop, but figure has
+     max-width:100%) now fills the column edge-to-edge instead of sitting at
+     an awkward in-between size. */
+  @media (max-width: 480px) {
+    .paper-skills {
+      padding-block: 48px 56px;
+    }
+    .skills-heading {
+      margin-bottom: 28px;
+    }
+    .skills-row {
+      gap: 32px;
     }
   }
 </style>
