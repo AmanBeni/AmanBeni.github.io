@@ -348,13 +348,43 @@ const slides = onRepeat.slides as { src: string; title: string; subtitle: string
     .beyond-heading {
       margin-bottom: 24px;
     }
-    .beyond-cloud-hero {
-      display: none;
-    }
+    /* 24 Aug 2026 (mobile queue): two clouds, cascading down the right edge
+       (the heading is left-aligned and fills the width, so the clear sky is
+       on the right). Wide cloud sits in the top-right corner by the heading;
+       the second drifts lower-right in the band below the subtitle, clear of
+       the books row. */
     .beyond-cloud-wide {
+      width: 30%;
+      max-width: 124px;
+      top: 1%;
+      right: -3%;
+      opacity: 0.78;
+    }
+    .beyond-cloud-hero {
+      display: block;
       width: 24%;
-      max-width: 110px;
-      opacity: 0.5;
+      max-width: 96px;
+      top: 20%;
+      left: auto;
+      right: 8%;
+      opacity: 0.62;
+    }
+
+    /* 24 Aug 2026 (mobile queue): shrink book covers so ~3 fit across a
+       375px viewport instead of ~2. */
+    .book-item {
+      width: 88px;
+    }
+    .books-track {
+      gap: 16px;
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+    .book-title {
+      font-size: 12px;
+    }
+    .book-author {
+      font-size: 10.5px;
     }
   }
 </style>

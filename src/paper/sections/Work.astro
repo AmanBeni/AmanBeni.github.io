@@ -313,9 +313,10 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     .work-inner {
       padding-inline: 20px;
     }
+    /* 24 Aug 2026 (mobile queue): neuralnet decor read poorly on phone; hide it
+       instead of resizing. */
     .work-decor-neuralnet {
-      width: min(45vw, 200px);
-      opacity: 0.3;
+      display: none;
     }
     .work-tile {
       padding: 22px 20px;
@@ -330,9 +331,6 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     }
     .work-heading {
       margin-bottom: 28px;
-    }
-    .work-decor-neuralnet {
-      width: min(40vw, 160px);
     }
   }
 </style>

@@ -288,10 +288,14 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
       grid-template-columns: 1fr;
       gap: 32px;
     }
+    /* 24 Aug 2026 (mobile queue): dots were cut off in the top-right corner;
+       moved down/left and boosted opacity so the pattern reads clearly. */
     .skills-dot-decor {
-      width: 44%;
-      max-width: 160px;
-      opacity: 0.25;
+      top: 90px;
+      right: 4%;
+      width: 42%;
+      max-width: 150px;
+      opacity: 0.5;
     }
   }
 

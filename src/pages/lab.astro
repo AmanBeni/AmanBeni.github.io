@@ -52,11 +52,19 @@ const currentYear = new Date().getFullYear();
       <!-- 20 Aug 2026 (queue r2): single centred row of five links, no brand
            spacer, no separate actions block — "get in touch" is just another
            nav link now. -->
+      <!-- 24 Aug 2026 (mobile queue): middot separators between links — the
+           bare links read as "too close" (esp. on the phone one-row nav).
+           Spans, not part of the <a> hit area; aria-hidden so they're skipped
+           by screen readers. -->
       <nav class="site-nav" aria-label="Primary">
         <a href="#about">About</a>
+        <span class="nav-sep" aria-hidden="true">·</span>
         <a href="#education">Work</a>
+        <span class="nav-sep" aria-hidden="true">·</span>
         <a href="#work">Projects</a>
+        <span class="nav-sep" aria-hidden="true">·</span>
         <a href="#beyond">Beyond Work</a>
+        <span class="nav-sep" aria-hidden="true">·</span>
         <a href="#contact">Get in touch</a>
       </nav>
     </header>
@@ -75,6 +83,38 @@ const currentYear = new Date().getFullYear();
     <footer class="site-footer">
       <p>&copy; {currentYear} Aman Beniwal</p>
     </footer>
+
+    <!-- 24 Aug 2026 (mobile queue): a small, dismissible notice on phones that
+         the mobile layout is still being polished and reads best on a laptop.
+         Shown once per browser session (sessionStorage), phones only. -->
+    <div id="mobile-notice" class="mobile-notice" role="status" hidden>
+      <p class="mobile-notice-text">
+        Still polishing the mobile view. This site looks its best on a laptop.
+      </p>
+      <button type="button" class="mobile-notice-close" aria-label="Dismiss">Got it</button>
+    </div>
+
+    <script>
+      (() => {
+        const el = document.getElementById('mobile-notice');
+        if (!el) return;
+        const KEY = 'mobile-notice-dismissed';
+        const isPhone = window.matchMedia('(max-width: 767px)').matches;
+        let seen = false;
+        try { seen = sessionStorage.getItem(KEY) === '1'; } catch {}
+        if (isPhone && !seen) {
+          el.hidden = false;
+          // rAF so the entry transition runs from the hidden state.
+          requestAnimationFrame(() => el.classList.add('is-visible'));
+        }
+        const dismiss = () => {
+          el.classList.remove('is-visible');
+          try { sessionStorage.setItem(KEY, '1'); } catch {}
+          setTimeout(() => { el.hidden = true; }, 300);
+        };
+        el.querySelector('.mobile-notice-close')?.addEventListener('click', dismiss);
+      })();
+    </script>
 
     <!-- 20 Aug 2026 (queue r8): flowing custom cursor — a small sketchy
          triangle that eases toward the pointer (see script below). -->
@@ -192,8 +232,16 @@ const currentYear = new Date().getFullYear();
 
       /* 20 Aug 2026 (queue r8): native smooth-scroll OFF — Lenis drives eased
          scrolling now (the two fight each other if both are on). */
+      /* 24 Aug 2026 (mobile queue): hard guard against horizontal scroll. In
+         Chrome emulation the page never overflows (every stray decor/photo
+         sits inside an overflow:hidden section), but on real iOS Safari the
+         page was scrolling sideways — which shoved the right-hand PencilFrame
+         rule (position:absolute against <body>) off past the screen edge.
+         overflow-x:hidden on the root stops the page from ever scrolling
+         horizontally, so the frame always reads as a clean inset border. */
       html {
         scroll-behavior: auto;
+        overflow-x: hidden;
       }
 
       /* Flowing custom cursor: a small hand-drawn paper triangle that eases
@@ -331,10 +379,23 @@ const currentYear = new Date().getFullYear();
       }
 
       /* 20 Aug 2026 (queue r2): one centred row, evenly spaced. */
+      /* 24 Aug 2026 (mobile queue): gap tightened from 40px because the middot
+         separators (.nav-sep) now sit between links and carry their own
+         breathing room — the effective link-to-link space is gap + dot + gap. */
       .site-nav {
         display: flex;
         justify-content: center;
-        gap: 40px;
+        align-items: baseline;
+        gap: 16px;
+      }
+
+      /* 24 Aug 2026 (mobile queue): the middot divider between nav links. */
+      .nav-sep {
+        color: var(--ink-soft);
+        font-size: 15px;
+        line-height: 1;
+        user-select: none;
+        pointer-events: none;
       }
 
       /* 20 Aug 2026 (queue): Satoshi (the body sans), not the italic serif. */
@@ -350,6 +411,64 @@ const currentYear = new Date().getFullYear();
       .site-nav a:hover {
         text-decoration: underline;
         text-underline-offset: 4px;
+      }
+
+      /* 24 Aug 2026 (mobile queue): the "still polishing mobile" notice. A
+         low, paper-card toast pinned to the bottom, cream stock + hairline to
+         match the theme. Hidden by default; the script reveals it on phones
+         and slides it up. */
+      .mobile-notice {
+        position: fixed;
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        z-index: 9998;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 13px 15px;
+        border: 1px solid var(--rule);
+        border-radius: 6px;
+        background-color: var(--paper-tint);
+        background-image: var(--paper-stock);
+        background-size: cover;
+        box-shadow: 2px 6px 20px rgba(28, 20, 12, 0.22);
+        /* Start just off the bottom; .is-visible eases it in. */
+        transform: translateY(140%);
+        opacity: 0;
+        transition: transform 0.32s ease, opacity 0.32s ease;
+      }
+
+      .mobile-notice.is-visible {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      /* Keep the [hidden] attribute authoritative — the display:flex above
+         would otherwise win over it (dismissed / desktop = fully removed). */
+      .mobile-notice[hidden] {
+        display: none;
+      }
+
+      .mobile-notice-text {
+        margin: 0;
+        flex: 1 1 auto;
+        font-family: var(--font-body);
+        font-size: 13.5px;
+        line-height: 1.4;
+        color: var(--ink);
+      }
+
+      .mobile-notice-close {
+        flex: none;
+        padding: 8px 14px;
+        border: 1px solid var(--rule);
+        border-radius: 5px;
+        background: transparent;
+        font-family: var(--font-body);
+        font-size: 12.5px;
+        color: var(--ink);
+        cursor: pointer;
       }
 
       .site-footer {
@@ -378,9 +497,12 @@ const currentYear = new Date().getFullYear();
         .site-nav {
           flex-wrap: wrap;
           row-gap: 8px;
-          column-gap: 16px;
+          column-gap: 10px;
         }
         .site-nav a {
+          font-size: 13.5px;
+        }
+        .nav-sep {
           font-size: 13.5px;
         }
       }
@@ -397,7 +519,7 @@ const currentYear = new Date().getFullYear();
           padding-inline: 8px;
         }
         .site-nav {
-          column-gap: 12px;
+          column-gap: 8px;
         }
       }
     </style>

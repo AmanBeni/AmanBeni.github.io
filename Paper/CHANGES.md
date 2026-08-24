@@ -38,6 +38,49 @@ _(empty — add bullets here any time, then say "run the queue")_
 
 ## Done
 
+### 24 Aug 2026 — mobile round 2 (phone bugs)
+
+Ten phone issues from IMG_6317/6318/6319 (feedback folder). Split: a Sonnet
+sub-agent did the three isolated section tweaks (neuralnet / skills-dot / clouds
++ books); the main chat did the critical/taste/interconnected ones. Verified at
+320 / 375 / 393 (real device width) and 1280.
+
+- **Horizontal overflow / frame push-out (the "boundary line going out of the
+  boundary line").** Root cause: in Chrome emulation the page never overflows
+  (every stray decor/photo sits inside an `overflow:hidden` section), but on
+  real iOS Safari the page scrolled sideways, which shoved the right-hand
+  PencilFrame rule (`position:absolute` against `<body>`) off past the edge.
+  Fix: `html { overflow-x: hidden }` in lab.astro — a hard guard so the page
+  can never scroll horizontally on any device. Confirmed page overflow = 0 and
+  zero unclipped overflowers at 320/375/393.
+- **Hero image sizing.** Headshot shrunk on phones (206 → 132px img) and centred;
+  diorama grown (168 → 210px) so it reads as the larger object; golden-ratio
+  spiral brought back up (52 → 84% at ≤480, 60 → 92% at ≤767) — it had shrunk
+  to a faint sliver. Photo-width override needed `:global(.paper-photo)` (the
+  Astro child-scope gotcha) — the first attempt silently missed.
+- **Tape size normalised.** One constant tape size site-wide on phones, capped
+  in PaperPhoto (`.paper-tape` max 72px ≤767, 58px ≤480). Removed Hero's old
+  per-section tape caps so nothing fights it. Tapes now read consistent (~58-62)
+  across every photo instead of big-on-the-diorama / small-elsewhere.
+- **Neural-net decor removed on phone** (`display:none` ≤767, Work.astro).
+- **Skills dot-pattern decor** moved down + left and made visible/overlapping
+  (was jammed in the corner and cut off) — `top:90px; right:4%; width:42%;
+  opacity:0.5` at ≤767.
+- **Beyond: two clouds on phone** instead of one. They cascade down the right
+  edge (the heading is left-aligned and fills the width, so the clear sky is on
+  the right): wide cloud top-right by the heading, second cloud lower-right in
+  the band below the subtitle.
+- **Beyond books: ~3 covers visible** at once (was ~2) — cards 118 → 88px,
+  gap 28 → 16px, captions trimmed. (3×88 + 2×16 = 296, fits a 375px viewport.)
+- **Nav separators.** Middot (·) dividers between the five menu links; nav gap
+  tightened so the effective spacing reads right. Desktop + mobile.
+- **Mobile "still polishing" notice.** A small, dismissible cream toast pinned
+  to the bottom on phones only, shown once per browser session (sessionStorage):
+  "Still polishing the mobile view — this site looks its best on a laptop."
+- **Polaroid frame on the hero headshot** (white border + taller foot), added
+  as an opt-in `frame="polaroid"` prop on PaperPhoto so it's reusable. Applied
+  on both mobile and desktop.
+
 ### 20 Aug 2026 — round 10
 
 - Line → heading top spacing raised to 80px across all five content sections.

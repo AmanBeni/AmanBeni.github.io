@@ -644,3 +644,43 @@ concurrent lab.astro edit (ticker removal); the retry built clean. Final
 tape + bullets + images), Beyond clouds, and a re-skinned project page.
 
 Still open (own run): custom cursor + butter-smooth scroll.
+
+---
+
+## 24 Aug 2026 — mobile round 2 (phone bugs from IMG_6317/18/19)
+
+Ten phone-only fixes. Split main-chat (taste/critical/interconnected) vs one
+Sonnet sub-agent (three isolated section files: Work / Skills / Beyond). No file
+collisions — the agent owned those three sections; the main chat owned lab.astro,
+Hero.astro, PaperPhoto.astro.
+
+Notable decisions / gotchas:
+- **The "boundary line going out" was iOS-only horizontal scroll.** In Chrome
+  emulation the page overflow is 0 at every width (320/375/393) — every stray
+  decor/photo lives inside an `overflow:hidden` section. So the bug never
+  reproduced in the preview pane. Diagnosis: on real iOS Safari the page scrolls
+  sideways, and because the PencilFrame is `position:absolute; inset:0` on
+  `<body>`, the right rule gets pushed past the screen edge (exactly what the
+  screenshot shows). Fix chosen: `html { overflow-x: hidden }` — a hard,
+  device-agnostic guard rather than chasing which element iOS fails to clip.
+  Kept it on `html` (not `body`) so the sticky header keeps working.
+- **Astro child-scope gotcha bit again.** `.hero-photo-wrap .paper-photo { width }`
+  silently missed (`.paper-photo` belongs to PaperPhoto's scope, not Hero's).
+  Needed `:global(.paper-photo)`. Caught it because the live measurement still
+  read 224px after a clean dev-server restart — i.e. verify the number, don't
+  trust the edit.
+- **Tape normalisation lives in PaperPhoto**, not per section — one `.paper-tape`
+  cap (72px ≤767, 58px ≤480) so every photo matches. Removed Hero's old
+  per-section `:global(.paper-tape)` caps so they don't fight the global one.
+- **Polaroid is an opt-in `frame="polaroid"` prop on PaperPhoto** (white card +
+  taller foot; the paper-lift shadow moves from the photo to the card). Reusable
+  for any future photo; applied to the hero headshot on both mobile and desktop.
+- **Beyond clouds cascade down the RIGHT edge on phone.** The heading is
+  left-aligned and fills the narrow width, so the only clear sky is on the right;
+  a left cloud sat invisibly behind the heading. Two clouds right-side (top +
+  lower) read cleanly.
+- **Mobile notice** is phone-only + once-per-session (sessionStorage); `[hidden]`
+  made authoritative over the base `display:flex` so dismiss fully removes it.
+
+Verified at 320 / 375 / 393 (real device width) / 1280; page overflow = 0 at all
+narrow widths; `npm run build` passes 8/8.

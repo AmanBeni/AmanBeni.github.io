@@ -32,6 +32,8 @@ interface Props {
   tapeSize?: number;
   /** Stable string so the tape choice is deterministic per photo. */
   seed?: string;
+  /** "polaroid" wraps the photo in a white polaroid border (thicker foot). */
+  frame?: 'none' | 'polaroid';
   /** Passed through to the <img> so the editor can still target it. */
   labId?: string;
   labLabel?: string;
@@ -47,6 +49,7 @@ const {
   tapes,
   tapeSize: tapeSizeProp,
   seed = src,
+  frame = 'none',
   labId,
   labLabel,
   labGroup = 'Photos',
@@ -79,7 +82,7 @@ const url = (t: string) => `${baseSlash}paper/tape/${t}.png`;
 ---
 
 <figure
-  class:list={['paper-photo', `is-${size}`, className]}
+  class:list={['paper-photo', `is-${size}`, frame === 'polaroid' && 'is-polaroid', className]}
   style={`width:${width};--tape-size:${tapeSize}px;`}
   data-tape-count={count}
 >
@@ -128,6 +131,28 @@ const url = (t: string) => `${baseSlash}paper/tape/${t}.png`;
       10px 16px 32px rgba(28, 20, 12, 0.22);
   }
 
+  /* 24 Aug 2026 (mobile queue): polaroid frame. A white card border around
+     the photo with a taller foot, the classic instant-print look. The paper
+     lift shadow moves from the photo to the white card so the whole print
+     reads as one piece; the tape still pins it from the top. */
+  .paper-photo.is-polaroid {
+    background: #fbf7ef;
+    padding: 12px 12px 34px;
+    box-shadow:
+      3px 4px 6px rgba(28, 20, 12, 0.28),
+      10px 16px 32px rgba(28, 20, 12, 0.22);
+  }
+
+  .paper-photo.is-polaroid .paper-photo-img {
+    box-shadow: none;
+  }
+
+  @media (max-width: 480px) {
+    .paper-photo.is-polaroid {
+      padding: 9px 9px 26px;
+    }
+  }
+
   .paper-tape {
     position: absolute;
     max-width: var(--tape-size);
@@ -159,5 +184,24 @@ const url = (t: string) => `${baseSlash}paper/tape/${t}.png`;
     top: 0;
     right: 6%;
     transform: translateY(-50%) rotate(18deg);
+  }
+
+  /* 24 Aug 2026 (mobile queue): ONE constant tape size across every photo on
+     phones. The tape art ships at desktop scale (98px small / 132px large via
+     --tape-size) which read wildly inconsistent on mobile — big on the diorama,
+     small elsewhere. Capping .paper-tape here, in the component, makes every
+     tape the same size site-wide (Hero's old per-section caps are removed so
+     nothing fights this). */
+  @media (max-width: 767px) {
+    .paper-tape {
+      max-width: 72px;
+      max-height: 72px;
+    }
+  }
+  @media (max-width: 480px) {
+    .paper-tape {
+      max-width: 58px;
+      max-height: 58px;
+    }
   }
 </style>
