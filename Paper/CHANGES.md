@@ -49,6 +49,17 @@ _(empty — add bullets here any time, then say "run the queue")_
   vector (no per-event jitter) with a gentler turn ease (0.12).
 - Cursor shape changed to a folded paper airplane (nose leads the way it flies).
 
+### 23 Aug 2026 — LIVE 🚀
+
+- Paper theme deployed. Merged paper-theme → main (fast-forward, 16 commits) and
+  pushed; GitHub Actions built + published. Live at **amanbeni.github.io/lab**
+  (pixel site still at amanbeni.github.io/). Deploy run succeeded (build 24s).
+- Made /lab indexable: removed the noindex meta, set a real title
+  ("Aman Beniwal — Portfolio") + description, cleaned the footer.
+- Working branch is now `main`. Custom domain (e.g. amanbeniwal.com /
+  aman.beniwal.online) still open whenever Aman registers one — then add CNAME +
+  update astro.config `site`.
+
 ### 20 Aug 2026 — mobile pass
 
 - Full responsive/mobile optimization (target 375px, checked 320px) via two

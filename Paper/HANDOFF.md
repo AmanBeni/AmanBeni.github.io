@@ -12,10 +12,12 @@ https://drinkmeli.com/ . The new theme lives at the `/lab` route so the old
 live site is never touched.
 
 - Stack: Astro 7 + Tailwind v4 (`@tailwindcss/vite`), no UI framework.
-- Old pixel site preserved: git tag `v1-pixel`, branch `pixel-theme` (pushed).
-  `git checkout v1-pixel` restores it. The live site on `main` is still the
-  pixel version; the paper theme has NOT been promoted to the homepage yet.
-- All paper work is on branch **`paper-theme`** (not pushed). Working tree clean.
+- **LIVE (23 Aug 2026)** at **https://amanbeni.github.io/lab/**. The pixel site
+  is still at `amanbeni.github.io/` (paper NOT promoted to `/` yet — deliberate).
+- **Working branch is now `main`.** `paper-theme` was merged into main and
+  pushed. GitHub Actions (`.github/workflows/deploy.yml`) deploys **on push to
+  `main`** — so pushing main = deploying live. Old pixel site preserved: tag
+  `v1-pixel`, branch `pixel-theme`. `astro.config` `site` = amanbeni.github.io.
 
 ## Current state of the page (`/lab`)
 
@@ -110,6 +112,19 @@ Under `Paper/`:
   screenshot; or verify via `read_page` / computed styles.
 - `npm run build` must pass (8 pages). The Lab editor is confirmed absent from
   production output.
+- **Verify at real widths, and LOOK — don't trust rect numbers alone.** Desktop:
+  `resize_window` 1280×900. Mobile: `resize_window` preset mobile (375) and
+  assert `documentElement.scrollWidth - innerWidth === 0` (no h-scroll). The
+  800px default pane makes two-column layouts/big images lie.
+- **The custom cursor + Lenis scroll are rAF-driven and CANNOT be screenshotted**
+  in the preview pane (it pauses `requestAnimationFrame` when backgrounded).
+  Verify wiring only (element exists, computed fills, `lenis` class on <html>);
+  the motion is real in a browser. Both are desktop-only (off on touch /
+  reduced-motion). Code lives in `src/pages/lab.astro`.
+- **Astro `<style>` is component-scoped**: to style a child component's element
+  (e.g. PaperPhoto's `.paper-tape` from Hero.astro) use `:global(...)`, else the
+  rule silently misses. PaperPhoto sets `width`/tape size inline → override with
+  CSS `!important`.
 
 ## The Lab editor (frozen)
 
@@ -120,9 +135,17 @@ asked. Full detail: DECISIONS.md "Track B" entry + LAB-SPEC.md.
 
 ## Open / pending
 
-- Paper theme is NOT yet promoted to the homepage (`index.astro` / `main`).
-  When Aman is happy, that promotion + pushing `paper-theme` is a deliberate
-  step to confirm with him.
+- **Promote /lab to homepage `/`** when Aman is ready (currently both live).
+- **URL / account:** Aman wants his full surname in the free URL.
+  `amanbeniwal.github.io` is NOT obtainable on the AmanBeni account (Pages
+  user-site URL is locked to the username; `amanbeniwal` is a different,
+  already-taken account). `aman-beniwal.github.io` (hyphen) is available for a
+  NEW account. Moving later = create repo `<user>.github.io`, push the same code,
+  change one line (`site` in astro.config). No custom domain (won't pay).
+- **Em dashes** still in `src/content/projects/*.md` (titles + body) — deferred
+  cleanup per the site-wide dash rule (`|` or `:`, short `-` inside dates).
+- Deploy warns about Node 20 deprecation in the Actions (non-fatal); bump the
+  action versions someday.
 - `References/` originals live only on Aman's Mac (git-ignored). Remind him to
   back up to iCloud/Drive.
 - If an SF Pro font is ever chosen for the live site, subset it first (the
