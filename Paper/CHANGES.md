@@ -38,6 +38,19 @@ _(empty — add bullets here any time, then say "run the queue")_
 
 ## Done
 
+### 25 Aug 2026 — mobile round 3
+
+- **Mobile notice** made subtle + self-dismissing: a small soft-ink pill (was a
+  full-width card with a button), centred at the bottom, that fades itself out
+  after 3s (a tap dismisses sooner). Copy trimmed to two lines.
+- **Skills dot decor** anchored into the top-right corner so it touches the
+  section's top rule and the right frame border and reads from there
+  (top:0/right:0 at ≤767; section clips overflow so it stays inside).
+- **About desk photo** on phones: was full-column and hugging the right edge
+  (no desktop-style right column exists there); now shrunk to 80% and centred,
+  nudged ~12px left, so it reads as a centred object. Litho backing stays
+  full-width and peeks behind. Verified centred and clear of the right border.
+
 ### 24 Aug 2026 — mobile round 2 (phone bugs)
 
 Ten phone issues from IMG_6317/6318/6319 (feedback folder). Split: a Sonnet

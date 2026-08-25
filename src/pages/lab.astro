@@ -96,9 +96,8 @@ const currentYear = new Date().getFullYear();
          Shown once per browser session (sessionStorage), phones only. -->
     <div id="mobile-notice" class="mobile-notice" role="status" hidden>
       <p class="mobile-notice-text">
-        Still polishing the mobile view. This site looks its best on a laptop.
+        Still polishing the mobile view. Best seen on a laptop.
       </p>
-      <button type="button" class="mobile-notice-close" aria-label="Dismiss">Got it</button>
     </div>
 
     <script>
@@ -109,17 +108,19 @@ const currentYear = new Date().getFullYear();
         const isPhone = window.matchMedia('(max-width: 767px)').matches;
         let seen = false;
         try { seen = sessionStorage.getItem(KEY) === '1'; } catch {}
-        if (isPhone && !seen) {
-          el.hidden = false;
-          // rAF so the entry transition runs from the hidden state.
-          requestAnimationFrame(() => el.classList.add('is-visible'));
-        }
         const dismiss = () => {
           el.classList.remove('is-visible');
           try { sessionStorage.setItem(KEY, '1'); } catch {}
-          setTimeout(() => { el.hidden = true; }, 300);
+          setTimeout(() => { el.hidden = true; }, 400);
         };
-        el.querySelector('.mobile-notice-close')?.addEventListener('click', dismiss);
+        if (isPhone && !seen) {
+          el.hidden = false;
+          requestAnimationFrame(() => el.classList.add('is-visible'));
+          // 25 Aug 2026: fade itself out after 3s so it never becomes the
+          // highlight; a tap dismisses it sooner.
+          setTimeout(dismiss, 3000);
+          el.addEventListener('click', dismiss);
+        }
       })();
     </script>
 
@@ -436,58 +437,46 @@ const currentYear = new Date().getFullYear();
          low, paper-card toast pinned to the bottom, cream stock + hairline to
          match the theme. Hidden by default; the script reveals it on phones
          and slides it up. */
+      /* 25 Aug 2026: subtle, self-dismissing pill — small, soft-contrast, and
+         centred so it never becomes the highlight. Auto-fades after 3s (script)
+         and a tap dismisses it sooner. */
       .mobile-notice {
         position: fixed;
-        left: 12px;
-        right: 12px;
-        bottom: 12px;
+        left: 50%;
+        bottom: 16px;
         z-index: 9998;
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        padding: 13px 15px;
+        max-width: min(86%, 330px);
+        padding: 8px 16px;
         border: 1px solid var(--rule);
-        border-radius: 6px;
+        border-radius: 999px;
         background-color: var(--paper-tint);
         background-image: var(--paper-stock);
         background-size: cover;
-        box-shadow: 2px 6px 20px rgba(28, 20, 12, 0.22);
+        box-shadow: 0 4px 14px rgba(28, 20, 12, 0.13);
+        text-align: center;
         /* Start just off the bottom; .is-visible eases it in. */
-        transform: translateY(140%);
+        transform: translate(-50%, 170%);
         opacity: 0;
-        transition: transform 0.32s ease, opacity 0.32s ease;
+        transition: transform 0.4s ease, opacity 0.4s ease;
       }
 
       .mobile-notice.is-visible {
-        transform: translateY(0);
-        opacity: 1;
+        transform: translate(-50%, 0);
+        opacity: 0.9;
       }
 
-      /* Keep the [hidden] attribute authoritative — the display:flex above
-         would otherwise win over it (dismissed / desktop = fully removed). */
+      /* Keep the [hidden] attribute authoritative — the display above would
+         otherwise win over it (dismissed / desktop = fully removed). */
       .mobile-notice[hidden] {
         display: none;
       }
 
       .mobile-notice-text {
         margin: 0;
-        flex: 1 1 auto;
         font-family: var(--font-body);
-        font-size: 13.5px;
-        line-height: 1.4;
-        color: var(--ink);
-      }
-
-      .mobile-notice-close {
-        flex: none;
-        padding: 8px 14px;
-        border: 1px solid var(--rule);
-        border-radius: 5px;
-        background: transparent;
-        font-family: var(--font-body);
-        font-size: 12.5px;
-        color: var(--ink);
-        cursor: pointer;
+        font-size: 12px;
+        line-height: 1.35;
+        color: var(--ink-soft);
       }
 
       .site-footer {

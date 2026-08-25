@@ -288,11 +288,13 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
       grid-template-columns: 1fr;
       gap: 32px;
     }
-    /* 24 Aug 2026 (mobile queue): dots were cut off in the top-right corner;
-       moved down/left and boosted opacity so the pattern reads clearly. */
+    /* 25 Aug 2026 (mobile queue): anchor the dot pattern INTO the top-right
+       corner so it touches the section's top rule and the right frame border
+       and reads from there (Aman's request). top:0/right:0 puts its top-right
+       at the corner; the section clips overflow so it stays fully inside. */
     .skills-dot-decor {
-      top: 90px;
-      right: 4%;
+      top: 0;
+      right: 0;
       width: 42%;
       max-width: 150px;
       opacity: 0.5;

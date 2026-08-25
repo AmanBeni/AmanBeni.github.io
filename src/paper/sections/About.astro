@@ -232,6 +232,20 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
       top: -6%;
       opacity: 0.4;
     }
+    /* 25 Aug 2026 (mobile queue): on phones the desk photo stacked full-column
+       and hugged the right edge (there's no desktop-style right column here).
+       Shrink it and centre it, nudged slightly left, so it reads as a centred
+       object. The litho backing stays full-width so it still peeks behind. */
+    .about-photo-stage,
+    .about-desk {
+      text-align: center;
+    }
+    .about-desk :global(.paper-photo) {
+      width: 80% !important;
+      margin: 22px 0 0 !important;
+      position: relative;
+      left: -12px;
+    }
   }
 
   /* 20 Aug 2026 (mobile): tighter still at 375/320px. */
