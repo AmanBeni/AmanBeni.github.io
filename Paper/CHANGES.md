@@ -40,9 +40,11 @@ _(empty — add bullets here any time, then say "run the queue")_
 
 ### 25 Aug 2026 — mobile round 3
 
-- **Mobile notice** made subtle + self-dismissing: a small soft-ink pill (was a
-  full-width card with a button), centred at the bottom, that fades itself out
-  after 3s (a tap dismisses sooner). Copy trimmed to two lines.
+- **Mobile notice** made subtle + self-dismissing: a small soft-ink card,
+  centred at the bottom, that fades itself out after 3s (tap or the × dismisses
+  sooner). Final copy: "This site is optimised for desktop." (one line). Shape
+  is a soft rounded rectangle (not a pill — matches the paper cards), fully
+  opaque (no translucency), with a small × on the right.
 - **Skills dot decor** anchored into the top-right corner so it touches the
   section's top rule and the right frame border and reads from there
   (top:0/right:0 at ≤767; section clips overflow so it stays inside).

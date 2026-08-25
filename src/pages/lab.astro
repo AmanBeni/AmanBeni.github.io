@@ -96,8 +96,9 @@ const currentYear = new Date().getFullYear();
          Shown once per browser session (sessionStorage), phones only. -->
     <div id="mobile-notice" class="mobile-notice" role="status" hidden>
       <p class="mobile-notice-text">
-        Still polishing the mobile view. Best seen on a laptop.
+        This site is optimised for desktop.
       </p>
+      <button type="button" class="mobile-notice-close" aria-label="Dismiss">&times;</button>
     </div>
 
     <script>
@@ -445,10 +446,15 @@ const currentYear = new Date().getFullYear();
         left: 50%;
         bottom: 16px;
         z-index: 9998;
-        max-width: min(86%, 330px);
-        padding: 8px 16px;
+        max-width: min(90%, 360px);
+        padding: 9px 12px 9px 18px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
         border: 1px solid var(--rule);
-        border-radius: 999px;
+        /* 25 Aug 2026: back to a soft rounded rectangle (the pill read too
+           bubbly for the paper look) — matches the paper cards. */
+        border-radius: 7px;
         background-color: var(--paper-tint);
         background-image: var(--paper-stock);
         background-size: cover;
@@ -462,7 +468,7 @@ const currentYear = new Date().getFullYear();
 
       .mobile-notice.is-visible {
         transform: translate(-50%, 0);
-        opacity: 0.9;
+        opacity: 1;
       }
 
       /* Keep the [hidden] attribute authoritative — the display above would
@@ -477,6 +483,28 @@ const currentYear = new Date().getFullYear();
         font-size: 12px;
         line-height: 1.35;
         color: var(--ink-soft);
+        /* Short single-line message — keep it on one line (fits within the
+           cap even at 320px). */
+        white-space: nowrap;
+      }
+
+      /* 25 Aug 2026: small × to dismiss, on the right. Subtle to match. */
+      .mobile-notice-close {
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        height: 22px;
+        padding: 0;
+        border: 0;
+        border-radius: 5px;
+        background: transparent;
+        color: var(--ink-soft);
+        font-family: var(--font-body);
+        font-size: 18px;
+        line-height: 1;
+        cursor: pointer;
       }
 
       .site-footer {
