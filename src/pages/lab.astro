@@ -10,7 +10,11 @@
  */
 import '../paper/tokens.css';
 
-import PencilFrame from '../paper/components/PencilFrame.astro';
+// 24 Aug 2026 (mobile queue r2): PencilFrame (an absolutely-positioned overlay
+// frame) retired. On iOS Safari its right rule decoupled from the content and
+// drifted off past the screen edge — the frame is now a real border on the
+// .page-frame wrapper that actually contains the content, so the lines can
+// never leave the content edges (see the .page-frame CSS below).
 import Hero from '../paper/sections/Hero.astro';
 // 20 Aug 2026 (queue r3): ProofTicker import removed (item 37).
 import About from '../paper/sections/About.astro';
@@ -32,10 +36,12 @@ const currentYear = new Date().getFullYear();
     <title>Aman Beniwal — Portfolio</title>
   </head>
   <body>
-    <!-- Page frame: hairline rules inset by --page-inset on all four sides,
-         running the full height of the page (see PencilFrame.astro). -->
-    <PencilFrame />
-
+    <!-- 24 Aug 2026 (mobile queue r2): the page frame is now a real border on
+         this wrapper. Everything the frame should bound lives inside it, so the
+         four rules always sit exactly at the content edges — no absolute
+         overlay that can drift on iOS. Fixed overlays (cursor, mobile notice,
+         editor) stay OUTSIDE it. -->
+    <div class="page-frame">
     <!-- Slim strip across the very top. The reference site runs a promo line
          here; this is the same band, left empty on purpose. -->
     <div class="site-ticker" data-lab-id="global.ticker" data-lab-kind="flow"
@@ -83,6 +89,7 @@ const currentYear = new Date().getFullYear();
     <footer class="site-footer">
       <p>&copy; {currentYear} Aman Beniwal</p>
     </footer>
+    </div><!-- /.page-frame -->
 
     <!-- 24 Aug 2026 (mobile queue): a small, dismissible notice on phones that
          the mobile layout is still being polished and reads best on a laptop.
@@ -333,7 +340,6 @@ const currentYear = new Date().getFullYear();
       body {
         position: relative;
         margin: 0;
-        padding-inline: var(--page-inset);
         background-color: var(--paper-tint);
         background-image: var(--paper-stock);
         background-size: cover;
@@ -345,6 +351,19 @@ const currentYear = new Date().getFullYear();
         font-size: 18px;
         line-height: 1.6;
         -webkit-font-smoothing: antialiased;
+      }
+
+      /* 24 Aug 2026 (mobile queue r2): THE page frame. A real hairline border
+         inset from each screen edge by --page-inset, wrapping all the content.
+         Because the content lives inside this box, the four rules always sit
+         exactly at the content edges — unlike the old absolute overlay, which
+         drifted off the right edge on iOS. overflow-x:clip means nothing can
+         poke out past the side rules (clip, not hidden, so the sticky header
+         still sticks to the viewport). */
+      .page-frame {
+        margin-inline: var(--page-inset);
+        border: 1px solid var(--edge);
+        overflow-x: clip;
       }
 
       h1,
@@ -512,8 +531,8 @@ const currentYear = new Date().getFullYear();
          only (token stays untouched everywhere else) and give the nav a
          touch more breathing room. */
       @media (max-width: 480px) {
-        body {
-          padding-inline: 10px;
+        .page-frame {
+          margin-inline: 10px;
         }
         .site-header {
           padding-inline: 8px;

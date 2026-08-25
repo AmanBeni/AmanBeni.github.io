@@ -684,3 +684,26 @@ Notable decisions / gotchas:
 
 Verified at 320 / 375 / 393 (real device width) / 1280; page overflow = 0 at all
 narrow widths; `npm run build` passes 8/8.
+
+## 25 Aug 2026 — frame fix, take 2 (the real one)
+
+The 24 Aug `html { overflow-x: hidden }` guard did NOT fix the frame on Aman's
+actual iPhone — the right/left border rules still sat outside the content. Root
+cause was structural, not just overflow: PencilFrame was an absolutely-positioned
+overlay (`inset:0` against `<body>` with side rules at `var(--page-inset)`), so
+its horizontal position depended on the body box, which iOS measures differently
+under any residual overflow — the rule decoupled from the content and drifted.
+
+Fix: **retired the overlay frame; the border is now on a `.page-frame` wrapper
+that contains all the content** (ticker + header + main + footer). Because the
+sections are children of the bordered box, the four rules are always exactly at
+the content edges — they cannot render outside the content on any browser, even
+if some element still overflows. `overflow-x: clip` on the wrapper stops
+anything poking past the side rules (clip rather than hidden, so the sticky
+header keeps sticking to the viewport — verified). Inset moved from
+`body { padding-inline }` to `.page-frame { margin-inline }` (16px, 10px ≤480).
+
+`PencilFrame.astro` is now unused (import + usage removed from lab.astro); left
+in the tree in case the border-image upgrade path is ever wanted, but it no
+longer renders. Verified content strictly inside the frame + 0 page overflow at
+320 / 393 / 1280; sticky header works; desktop unchanged; build 8/8.

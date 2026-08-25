@@ -46,13 +46,17 @@ sub-agent did the three isolated section tweaks (neuralnet / skills-dot / clouds
 320 / 375 / 393 (real device width) and 1280.
 
 - **Horizontal overflow / frame push-out (the "boundary line going out of the
-  boundary line").** Root cause: in Chrome emulation the page never overflows
-  (every stray decor/photo sits inside an `overflow:hidden` section), but on
-  real iOS Safari the page scrolled sideways, which shoved the right-hand
-  PencilFrame rule (`position:absolute` against `<body>`) off past the edge.
-  Fix: `html { overflow-x: hidden }` in lab.astro — a hard guard so the page
-  can never scroll horizontally on any device. Confirmed page overflow = 0 and
-  zero unclipped overflowers at 320/375/393.
+  boundary line").** First attempt (`html { overflow-x: hidden }`) did NOT hold
+  on real iOS — the old PencilFrame was an absolute overlay (`position:absolute`
+  against `<body>`) whose right rule decoupled from the content and drifted off
+  the edge on iOS, independent of the page scroll. **Real fix (r2): retired the
+  overlay frame.** The four rules are now a real `border` on a `.page-frame`
+  wrapper that *contains* every section, so the lines sit at the content edges
+  by construction and cannot leave them on any device. `overflow-x: clip` on the
+  wrapper (clip, so the sticky header still works) means nothing pokes past the
+  side rules. Verified: content strictly inside the frame + page overflow 0 at
+  320/393/1280; sticky header confirmed working. (`html { overflow-x: hidden }`
+  kept as a belt.)
 - **Hero image sizing.** Headshot shrunk on phones (206 → 132px img) and centred;
   diorama grown (168 → 210px) so it reads as the larger object; golden-ratio
   spiral brought back up (52 → 84% at ≤480, 60 → 92% at ≤767) — it had shrunk
