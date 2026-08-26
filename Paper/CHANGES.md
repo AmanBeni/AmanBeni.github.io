@@ -46,6 +46,9 @@ _(empty — add bullets here any time, then say "run the queue")_
   little (deliberate, sits behind both at z-index 0), per Aman's red-circle
   screenshot. Desktop untouched (still the corner placement). Verified 0
   overflow at 320/393; build 8/8.
+- Follow-up: nudged it further down (`top` 33% → 44%, width 44% → 46%) so the
+  rays visibly reach into/behind the spreadsheet's top edge instead of
+  stopping short in the gap above it.
 
 ### 26 Aug 2026 — hero photo nudge + About copy
 
