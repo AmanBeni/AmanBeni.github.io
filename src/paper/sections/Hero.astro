@@ -319,6 +319,21 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     .hero-side :global(.paper-photo) {
       margin-inline: 0;
     }
+    /* 26 Aug 2026 (Aman's marked-up screenshot): on the stacked mobile layout
+       the starburst moves out of the bottom-left corner and into the gap
+       between the two taped images — right of Aman's photo, overlapping the
+       bottom of the photo and the top of the spreadsheet a little (deliberate
+       — it sits behind both, z-index 0). Position is tuned against the
+       measured stack at 393px: photo bottom ~42% down the panel, spreadsheet
+       top ~55%. */
+    .hero-starburst {
+      left: auto;
+      right: 6%;
+      bottom: auto;
+      top: 33%;
+      width: 44%;
+      opacity: 0.55;
+    }
   }
 
   /* 20 Aug 2026 (mobile): phone pass. Tightens the vertical rhythm (this

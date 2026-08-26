@@ -38,6 +38,15 @@ _(empty — add bullets here any time, then say "run the queue")_
 
 ## Done
 
+### 26 Aug 2026 — mobile: starburst repositioned (from marked-up screenshot)
+
+- On the stacked mobile layout the cream starburst moved from the bottom-left
+  corner into the gap between Aman's photo and the spreadsheet — right of the
+  photo, overlapping the bottom of the photo and the top of the spreadsheet a
+  little (deliberate, sits behind both at z-index 0), per Aman's red-circle
+  screenshot. Desktop untouched (still the corner placement). Verified 0
+  overflow at 320/393; build 8/8.
+
 ### 26 Aug 2026 — hero photo nudge + About copy
 
 - Hero (desktop only): Aman's photo + its tape nudged right (+48px) and up
