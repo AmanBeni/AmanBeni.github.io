@@ -34,6 +34,9 @@ interface Props {
   seed?: string;
   /** "polaroid" wraps the photo in a white polaroid border (thicker foot). */
   frame?: 'none' | 'polaroid';
+  /** Two-tape photos: use the SAME tape on both corners, mirrored, so the two
+   *  strips match in width and angle symmetrically. */
+  tapeMatch?: boolean;
   /** Passed through to the <img> so the editor can still target it. */
   labId?: string;
   labLabel?: string;
@@ -50,6 +53,7 @@ const {
   tapeSize: tapeSizeProp,
   seed = src,
   frame = 'none',
+  tapeMatch = false,
   labId,
   labLabel,
   labGroup = 'Photos',
@@ -82,7 +86,7 @@ const url = (t: string) => `${baseSlash}paper/tape/${t}.png`;
 ---
 
 <figure
-  class:list={['paper-photo', `is-${size}`, frame === 'polaroid' && 'is-polaroid', className]}
+  class:list={['paper-photo', `is-${size}`, frame === 'polaroid' && 'is-polaroid', tapeMatch && 'is-tapematch', className]}
   style={`width:${width};--tape-size:${tapeSize}px;`}
   data-tape-count={count}
 >
@@ -104,7 +108,7 @@ const url = (t: string) => `${baseSlash}paper/tape/${t}.png`;
   ) : (
     <>
       <img class="paper-tape tape-left" src={url(tapeA)} alt="" aria-hidden="true" />
-      <img class="paper-tape tape-right" src={url(tapeB)} alt="" aria-hidden="true" />
+      <img class="paper-tape tape-right" src={url(tapeMatch ? tapeA : tapeB)} alt="" aria-hidden="true" />
     </>
   )}
 </figure>
@@ -184,6 +188,13 @@ const url = (t: string) => `${baseSlash}paper/tape/${t}.png`;
     top: 0;
     right: 6%;
     transform: translateY(-50%) rotate(18deg);
+  }
+
+  /* 26 Aug 2026: matched tapes — the right strip is the SAME tape as the left,
+     mirrored (scaleX(-1)) so the two match in width and lean symmetrically
+     toward the centre instead of being two different cutouts at odd angles. */
+  .paper-photo.is-tapematch .tape-right {
+    transform: translateY(-50%) scaleX(-1) rotate(-18deg);
   }
 
   /* 24 Aug 2026 (mobile queue): ONE constant tape size across every photo on

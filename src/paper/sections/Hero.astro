@@ -85,24 +85,28 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
 
   </div>
 
-  <!-- Golden-ratio spiral drawn behind the diorama, large, over the right
-       side of the panel. Screen blend so the tan lines lift off the green. -->
+  <!-- 26 Aug 2026: golden-ratio spiral decor removed (Aman's request) along
+       with the diorama it sat behind — the taped spreadsheet stands alone. -->
+
+  <!-- 26 Aug 2026: circle-meet starburst, recoloured brown → cream (matches
+       --paper-hero-ink), tucked into the bottom-left corner of the panel. -->
   <img
-    class="hero-decor hero-spiral"
-    src={`${baseSlash}paper/decor/spiral-dotted.png`}
+    class="hero-starburst"
+    src={`${baseSlash}paper/decor/circle-meet-cream.webp`}
     alt=""
     aria-hidden="true"
   />
 
   <div class="hero-side">
     <PaperPhoto
-      src={`${baseSlash}paper/objects/hero-support-original.webp`}
-      alt="Papercraft diorama of a data centre powered by wind and solar"
+      src={`${baseSlash}paper/objects/xlscr.webp`}
+      alt="A spreadsheet about Aman — role, location, what he's looking for, and what drives him"
       width="100%"
       size="large"
-      seed="hero-renewables"
-      labId="hero.renewables"
-      labLabel="Renewables diorama"
+      seed="hero-spreadsheet"
+      tapeMatch
+      labId="hero.spreadsheet"
+      labLabel="About-me spreadsheet"
       labGroup="Hero"
     />
   </div>
@@ -218,6 +222,17 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     margin-top: 44px;
   }
 
+  /* 26 Aug 2026 (Aman's request): nudge the photo (+ its tape, since the tape
+     is part of the same figure) right and slightly up on desktop. Relative
+     offset, not a layout change, so the copy column keeps its footprint.
+     Desktop-only — mobile centres the photo and shouldn't inherit this. */
+  @media (min-width: 861px) {
+    .hero-photo-wrap {
+      left: 48px;
+      top: -22px;
+    }
+  }
+
   .hero-photo {
     /* 20 Aug 2026 (queue r3): +20% over the previous 172px (item 36). */
     width: 206px;
@@ -243,37 +258,45 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     border-bottom: 1px solid var(--rule);
   }
 
+  /* 26 Aug 2026: grown 34% → 44% → 48% (+10% again, Aman's request) — the
+     spreadsheet screenshot carries text, so it read too small at the old
+     diorama size. Shifted left (52% → 46%) so it clears the right frame
+     border with real breathing room instead of crowding it. Nudged up
+     (24% → 15%) per Aman's request. */
   .hero-side {
     position: absolute;
-    left: 58%;
-    /* Moved down a little (queue, 20 Aug). */
-    top: 27%;
-    width: 34%;
+    left: 46%;
+    top: 15%;
+    width: 48%;
     z-index: 1;
   }
 
-  /* Decorative line-art layers, both behind their subject. Screen blend lifts
-     the light lines off the dark green without a hard edge. */
-  .hero-decor {
+  /* 26 Aug 2026: cream starburst, bottom-left corner of the hero panel,
+     behind everything (z-index 0). Section clips overflow so it can't spill. */
+  .hero-starburst {
     position: absolute;
-    pointer-events: none;
-    mix-blend-mode: screen;
-  }
-
-  /* Golden-ratio spiral: large, over the right of the panel, behind the
-     diorama (which is z-index 1). */
-  .hero-spiral {
-    right: -3%;
-    top: 2%;
-    width: 54%;
+    left: -6%;
+    bottom: -10%;
+    width: 30%;
     opacity: 0.5;
     z-index: 0;
+    pointer-events: none;
   }
 
   /* Keep the photo above its litho backing. */
   .hero-photo-wrap .paper-photo {
     position: relative;
     z-index: 1;
+  }
+
+  /* 26 Aug 2026: stronger paper-lift shadow on the spreadsheet specifically —
+     the white sheet needs more separation from the terracotta ground than
+     PaperPhoto's default (tuned for photos, which already have tonal
+     contrast). Same light-from-top-left language, just deeper. */
+  .hero-side :global(.paper-photo-img) {
+    box-shadow:
+      4px 6px 10px rgba(20, 12, 6, 0.38),
+      14px 22px 40px rgba(20, 12, 6, 0.3);
   }
 
   @media (max-width: 860px) {
@@ -289,10 +312,12 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
       max-width: 62vw;
       margin-top: 28px;
     }
-    .hero-spiral {
-      width: 78%;
-      top: auto;
-      bottom: 6%;
+    /* 26 Aug 2026: a <figure> carries a UA default margin-inline:40px that
+       PaperPhoto never resets — harmless when the object floated on desktop,
+       but it shoves the centred spreadsheet 40px right (past the frame) once
+       it stacks. Zero it here so the taped sheet centres cleanly. */
+    .hero-side :global(.paper-photo) {
+      margin-inline: 0;
     }
   }
 
@@ -322,22 +347,17 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     .hero-photo-wrap :global(.paper-photo) {
       width: 150px !important;
     }
-    /* 24 Aug 2026 (mobile queue): the diorama was too small — grow it so it
-       reads as the larger hero object (it's a wide landscape scene). */
+    /* 24 Aug 2026 (mobile queue): grow the side object so it reads as the
+       larger hero object. 26 Aug: it's now the spreadsheet screenshot, so it's
+       sized a little larger again for the small text to stay legible. */
     .hero-side {
-      width: 240px;
-      max-width: 82vw;
+      width: 300px;
+      max-width: 88vw;
       margin-inline: auto;
       margin-top: 20px;
     }
     /* 24 Aug 2026 (mobile queue): tape caps removed — the constant site-wide
        tape size now lives in PaperPhoto.astro, so every photo matches. */
-    /* 24 Aug 2026 (mobile queue): the golden-ratio spiral had shrunk to a
-       faint sliver — bring it back up so it reads as a real backdrop. */
-    .hero-spiral {
-      width: 92%;
-      opacity: 0.42;
-    }
   }
 
   /* 20 Aug 2026 (mobile): 480px and below (incl. 375/320 targets) — the
@@ -358,13 +378,9 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
       width: 132px !important;
     }
     .hero-side {
-      width: 210px;
-      max-width: 86vw;
+      width: 300px;
+      max-width: 90vw;
       margin-top: 16px;
-    }
-    .hero-spiral {
-      width: 84%;
-      opacity: 0.36;
     }
   }
 </style>

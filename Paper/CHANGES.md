@@ -38,6 +38,69 @@ _(empty — add bullets here any time, then say "run the queue")_
 
 ## Done
 
+### 26 Aug 2026 — hero photo nudge + About copy
+
+- Hero (desktop only): Aman's photo + its tape nudged right (+48px) and up
+  (-22px) via a relative offset, scoped to `min-width: 861px` so mobile
+  (which centres the photo) is untouched.
+- Hero: the spreadsheet + its tapes nudged up (`top` 24% → 15% of the panel).
+  Verified the tape stays clear of the panel's top edge (48px margin, not
+  clipped).
+- About paragraph 1: "$3B global transformation program" → "$6B".
+- About paragraph 2: "Took a career break in January 2026 due to personal
+  reasons." → "Took a career break in January 2026 to focus on certain
+  important personal responsibilities and introspect on the career journey
+  ahead." Same markup renders on both web and phone, so one edit covers both.
+- Note: `src/pages/index.astro` (the old pixel-theme homepage, still live at
+  the bare domain) also says "$3B" — left as-is since only the paper theme
+  was in scope; flag if that should match too.
+
+### 26 Aug 2026 — hero: spreadsheet spacing + corner starburst
+
+- Spreadsheet shifted left (was almost touching the right frame border, ~9px
+  gap) and grown another 10% (44% → 48% of the panel). Now 34px clear of the
+  right edge at desktop width.
+- Added `circle meet.png` (Lab Files) to the hero's bottom-left corner,
+  recoloured brown → cream (`#f4efe0`, matches `--paper-hero-ink`, the hero's
+  own text colour) via a sharp alpha-preserving recolour, not a CSS filter —
+  keeps the fine dotted-line texture crisp. Sits behind everything (z-index 0),
+  clipped by the section so it can't spill; peeks from the corner behind
+  Aman's photo. New asset: `public/paper/decor/circle-meet-cream.webp`.
+- Verified desktop (1280): gap from right edge, starburst visible in the
+  corner. Mobile (393): 0 overflow, starburst still peeks at the bottom-left.
+  Build 8/8.
+
+### 26 Aug 2026 — hero spreadsheet: size, tapes, shadow
+
+- Desktop size grown (34% → 44% of the panel column) — it read too small for
+  a text-bearing object.
+- New `tapeMatch` prop on PaperPhoto: the right tape is now the SAME cutout as
+  the left, mirrored (`scaleX(-1)`), so both strips match in width and lean
+  symmetrically toward the centre instead of two different tapes at odd
+  angles. Opt-in — only the hero spreadsheet uses it; every other photo is
+  unaffected (checked).
+- Shadow deepened specifically on this image (white sheet needed more
+  separation from the terracotta ground than the default photo shadow).
+- Verified desktop (1280): larger, tapes matched (122×152 each, mirrored,
+  same source), image stays inside the hero panel. Mobile (393): still 0
+  overflow, tapes matched (54px each), inside frame. Build 8/8.
+
+### 26 Aug 2026 — hero: "about me" spreadsheet
+
+- Replaced the yellow renewables diorama with `xlscr.webp` — a screenshot of an
+  Excel workbook whose cells summarise Aman (Role, Based, Now, Looking for, North
+  star, The plan, Fuel). Generated in Vertex AI, converted to webp (782×529, 50KB),
+  dropped in `public/paper/objects/`.
+- Removed the golden-ratio spiral decor (element + all CSS) that sat behind it.
+- Kept `size="large"` on PaperPhoto so the sheet is taped at both top corners.
+- Grew the mobile size (210 → 300px) so the small cell text stays legible.
+- Fixed a real production bug found along the way: a `<figure>` carries a UA
+  default `margin-inline: 40px` that PaperPhoto never reset, shoving the centred
+  sheet 40px right (past the frame) when stacked. Reset it for `.hero-side` in the
+  stacked breakpoint (left the other photos alone — their approved desktop layouts
+  were tuned with the offset present). Verified centred + inside frame + 0 overflow
+  at 393; desktop unchanged; build 8/8.
+
 ### 25 Aug 2026 — mobile round 3
 
 - **Mobile notice** made subtle + self-dismissing: a small soft-ink card,

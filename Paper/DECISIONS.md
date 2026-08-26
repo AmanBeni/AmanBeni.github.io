@@ -707,3 +707,24 @@ header keeps sticking to the viewport — verified). Inset moved from
 in the tree in case the border-image upgrade path is ever wanted, but it no
 longer renders. Verified content strictly inside the frame + 0 page overflow at
 320 / 393 / 1280; sticky header works; desktop unchanged; build 8/8.
+
+## 26 Aug 2026 — hero side is now the "about me" spreadsheet
+
+Aman replaced the renewables diorama with an Excel-workbook screenshot (generated
+in Vertex AI, which renders text cleanly — a real image beats hand-coding a
+spreadsheet in HTML, and beats an image model that garbles cell text). Source
+`Paper/References/Lab Files/xlscr.png` → `public/paper/objects/xlscr.webp`
+(sharp, webp q92, 782×529, 50KB, kept native res for crisp cell text). The
+golden-ratio spiral decor was removed with it (element + CSS). Two top-corner
+tapes come free from PaperPhoto `size="large"`.
+
+Gotcha worth remembering: **a `<figure>` has a UA default `margin-inline: 40px`.**
+PaperPhoto's `.paper-photo` only overrode `margin-top`, so every photo silently
+carried a 40px left/right margin. On the floated desktop objects it was harmless
+(and got baked into approved layouts), but once the spreadsheet centred in the
+stacked mobile hero, that 40px pushed it off-centre and past the right frame rule.
+Fixed narrowly with `.hero-side :global(.paper-photo){ margin-inline: 0 }` in the
+≤860 block rather than touching PaperPhoto globally (that would shift About/Skills/
+Education on desktop, which were tuned with the offset present). If we ever want a
+clean sweep, reset `margin-inline` in PaperPhoto and re-check every photo's desktop
+position. Verified centred + inside frame + 0 overflow at 393; desktop unchanged.
