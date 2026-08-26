@@ -48,7 +48,8 @@ _(empty — add bullets here any time, then say "run the queue")_
   overflow at 320/393; build 8/8.
 - Follow-up: nudged it further down (`top` 33% → 44%, width 44% → 46%) so the
   rays visibly reach into/behind the spreadsheet's top edge instead of
-  stopping short in the gap above it.
+  stopping short in the gap above it — then dialled back (44% → 39%, Aman:
+  "too much below") once it touched but before it got buried under the sheet.
 
 ### 26 Aug 2026 — hero photo nudge + About copy
 
