@@ -16,9 +16,9 @@ import labDevServer from './plugins/lab-dev-server.mjs';
 // real GitHub username and repo name once the repo exists (or update site/base
 // to your custom domain — see comment above).
 export default defineConfig({
-  // User-site deploy: https://amanbeni.github.io (repo: AmanBeni.github.io).
+  // User-site deploy: https://aman-beniwal.github.io (repo: aman-beniwal.github.io).
   // base stays '/' so all absolute asset paths (/fonts, /decor, …) resolve.
-  site: 'https://amanbeni.github.io',
+  site: 'https://aman-beniwal.github.io',
   base: '/',
   vite: {
     plugins: [tailwindcss(), labDevServer()],
