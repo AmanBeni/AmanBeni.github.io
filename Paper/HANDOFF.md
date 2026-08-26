@@ -6,18 +6,18 @@ why), and `Paper/LAB-SPEC.md` (editor contract).
 
 ## What this project is
 
-Reskinning Aman's Astro portfolio (`AmanBeni.github.io`) from a pixel-art theme
+Reskinning Aman's Astro portfolio (`aman-beniwal.github.io`) from a pixel-art theme
 to a papercraft / letterpress theme, taking art direction from
 https://drinkmeli.com/ . The new theme lives at the `/lab` route so the old
 live site is never touched.
 
 - Stack: Astro 7 + Tailwind v4 (`@tailwindcss/vite`), no UI framework.
-- **LIVE (23 Aug 2026)** at **https://amanbeni.github.io/lab/**. The pixel site
-  is still at `amanbeni.github.io/` (paper NOT promoted to `/` yet — deliberate).
+- **LIVE (23 Aug 2026)** at **https://aman-beniwal.github.io/lab/**. The pixel site
+  is still at `aman-beniwal.github.io/` (paper NOT promoted to `/` yet — deliberate).
 - **Working branch is now `main`.** `paper-theme` was merged into main and
   pushed. GitHub Actions (`.github/workflows/deploy.yml`) deploys **on push to
   `main`** — so pushing main = deploying live. Old pixel site preserved: tag
-  `v1-pixel`, branch `pixel-theme`. `astro.config` `site` = amanbeni.github.io.
+  `v1-pixel`, branch `pixel-theme`. `astro.config` `site` = aman-beniwal.github.io.
 
 ## Current state of the page (`/lab`)
 
@@ -136,12 +136,14 @@ asked. Full detail: DECISIONS.md "Track B" entry + LAB-SPEC.md.
 ## Open / pending
 
 - **Promote /lab to homepage `/`** when Aman is ready (currently both live).
-- **URL / account:** Aman wants his full surname in the free URL.
-  `amanbeniwal.github.io` is NOT obtainable on the AmanBeni account (Pages
-  user-site URL is locked to the username; `amanbeniwal` is a different,
-  already-taken account). `aman-beniwal.github.io` (hyphen) is available for a
-  NEW account. Moving later = create repo `<user>.github.io`, push the same code,
-  change one line (`site` in astro.config). No custom domain (won't pay).
+- **URL / account — RESOLVED (26 Aug 2026):** Aman renamed his GitHub account
+  itself from `AmanBeni` to `aman-beniwal` (no new account needed). The repo
+  was renamed `AmanBeni.github.io` → `aman-beniwal.github.io` and
+  `astro.config` `site` updated to match. Live at
+  `https://aman-beniwal.github.io/`. `amanbeniwal.github.io` (no hyphen)
+  remains unavailable — that name belongs to a different, already-taken
+  account — but the hyphenated form now serves as the permanent URL under the
+  same account, so no further account/URL migration is planned.
 - **Em dashes** still in `src/content/projects/*.md` (titles + body) — deferred
   cleanup per the site-wide dash rule (`|` or `:`, short `-` inside dates).
 - Deploy warns about Node 20 deprecation in the Actions (non-fatal); bump the

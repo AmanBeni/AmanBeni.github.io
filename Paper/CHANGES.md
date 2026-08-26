@@ -177,13 +177,22 @@ sub-agent did the three isolated section tweaks (neuralnet / skills-dot / clouds
 ### 23 Aug 2026 — LIVE 🚀
 
 - Paper theme deployed. Merged paper-theme → main (fast-forward, 16 commits) and
-  pushed; GitHub Actions built + published. Live at **amanbeni.github.io/lab**
-  (pixel site still at amanbeni.github.io/). Deploy run succeeded (build 24s).
+  pushed; GitHub Actions built + published. Live at **aman-beniwal.github.io/lab**
+  (pixel site still at aman-beniwal.github.io/). Deploy run succeeded (build 24s).
 - Made /lab indexable: removed the noindex meta, set a real title
   ("Aman Beniwal — Portfolio") + description, cleaned the footer.
 - Working branch is now `main`. Custom domain (e.g. amanbeniwal.com /
   aman.beniwal.online) still open whenever Aman registers one — then add CNAME +
   update astro.config `site`.
+
+### 26 Aug 2026 — GitHub username change
+
+- Aman renamed his GitHub account `AmanBeni` → `aman-beniwal`. Repo renamed
+  `AmanBeni.github.io` → `aman-beniwal.github.io`, `astro.config` `site`
+  updated to `https://aman-beniwal.github.io`, deployed successfully.
+  References to `amanbeni.github.io` elsewhere in this changelog have been
+  updated to the new domain to keep links working; the old domain now
+  redirects to the new one regardless.
 
 ### 20 Aug 2026 — mobile pass
 
