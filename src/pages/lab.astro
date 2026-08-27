@@ -62,10 +62,11 @@ const currentYear = new Date().getFullYear();
            bare links read as "too close" (esp. on the phone one-row nav).
            Spans, not part of the <a> hit area; aria-hidden so they're skipped
            by screen readers. -->
+      <!-- 27 Aug 2026: "Work" link removed — it pointed at #education (Career
+           & Education), which no longer has its own visible section boundary
+           now that it merges into About. -->
       <nav class="site-nav" aria-label="Primary">
         <a href="#about">About</a>
-        <span class="nav-sep" aria-hidden="true">·</span>
-        <a href="#education">Work</a>
         <span class="nav-sep" aria-hidden="true">·</span>
         <a href="#work">Projects</a>
         <span class="nav-sep" aria-hidden="true">·</span>

@@ -69,22 +69,16 @@ const volunteering = [
   class="paper-education"
   data-lab-id="education"
   data-lab-kind="flow"
-  data-lab-label="Career & Education section"
+  data-lab-label="Career & Education (merged into About)"
   data-lab-group="Education"
   data-lab-props="paddingTop,paddingBottom,background,maxWidth"
 >
   <div class="education-inner">
-    <h2
-      class="education-heading"
-      data-lab-id="education.heading"
-      data-lab-kind="flow"
-      data-lab-label="Education heading"
-      data-lab-group="Education"
-      data-lab-props="fontSize,letterSpacing,lineHeight,color,align,marginBottom,font"
-    >
-      Career &amp; Education
-    </h2>
-
+    {/* 27 Aug 2026: "Career & Education" heading removed — this section now
+        merges visually into About (no heading, no dividing rule; see the
+        border-bottom removed from .paper-about and the padding-top trimmed
+        below). Kept as its own <section id="education"> in the DOM (anchors,
+        component boundary) — only the visible seam is gone. */}
     <div class="education-grid">
       <div class="education-col">
         <h3
@@ -202,8 +196,11 @@ const volunteering = [
 <style>
   .paper-education {
     border-bottom: 1px solid var(--rule);
-    /* 20 Aug 2026 (queue r10): standard 80px top space (line → heading). */
-    padding-block: 80px 96px;
+    /* 27 Aug 2026: top space trimmed way down (80px → 40px) — the section
+       merges visually into About now (no heading, no rule above), so this
+       reads as the gap between About's last paragraph and the Experience
+       column, not a "line → heading" gap. */
+    padding-block: 40px 96px;
     position: relative;
   }
 
@@ -214,18 +211,6 @@ const volunteering = [
     position: relative;
   }
 
-
-  .education-heading {
-    font-family: var(--font-display);
-    font-weight: 400;
-    font-size: clamp(44px, 6vw, 80px);
-    letter-spacing: -0.03em;
-    line-height: 1.05;
-    color: var(--ink);
-    text-shadow: var(--letterpress-onlight);
-    mix-blend-mode: multiply;
-    margin: 0 0 40px;
-  }
 
   /* 20 Aug 2026 (queue r6): back to full-width two columns (r5's narrowing
      cramped them). The photo just tucks into the bottom-right corner. */
@@ -322,7 +307,7 @@ const volunteering = [
      comfortable on a phone. */
   @media (max-width: 767px) {
     .paper-education {
-      padding-block: 64px 72px;
+      padding-block: 16px 72px;
     }
     .education-inner {
       padding-inline: 20px;
@@ -337,10 +322,7 @@ const volunteering = [
      less top/bottom air. */
   @media (max-width: 480px) {
     .paper-education {
-      padding-block: 48px 56px;
-    }
-    .education-heading {
-      margin-bottom: 28px;
+      padding-block: 8px 56px;
     }
     .cv-entry {
       gap: 12px;

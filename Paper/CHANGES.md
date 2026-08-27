@@ -38,6 +38,22 @@ _(empty — add bullets here any time, then say "run the queue")_
 
 ## Done
 
+### 27 Aug 2026 — merge About + Career & Education, drop "Work" nav link
+
+- Removed the "Career & Education" heading and the hairline that divided
+  About from Education — they now read as one continuous section, "About".
+  Education kept its own `<section id="education">` in the DOM (anchors,
+  component boundary unchanged); only the visible heading + seam are gone.
+  Trimmed the padding around the seam (About bottom 96→40/24/16px per
+  breakpoint; Education top 80→40/16/8px) so the gap reads as normal
+  paragraph spacing, not an orphaned gap where the heading used to be.
+- Removed the "Work" link from the top nav (it pointed at #education, which
+  no longer has its own visible boundary). Nav is now About · Projects ·
+  Beyond Work · Get in touch.
+- Verified desktop (1280) and mobile (393): no heading, no dividing line,
+  natural flow from About's last paragraph → desk photo → Experience; nav
+  confirmed on both. 0 horizontal overflow. Build 8/8.
+
 ### 26 Aug 2026 — mobile: starburst repositioned (from marked-up screenshot)
 
 - On the stacked mobile layout the cream starburst moved from the bottom-left
