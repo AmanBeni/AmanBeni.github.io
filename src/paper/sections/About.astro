@@ -110,10 +110,11 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
        Education) now merge into one visual section, "About". Education kept
        its own <section> in the DOM; only the visible seam is gone. */
     /* 20 Aug 2026 (queue r10): standard 80px top space (line → heading). */
-    /* 27 Aug 2026: bottom trimmed 96px → 40px — was the "end of section"
-       gap before the rule that's now gone; the Education content picks up
-       close behind instead of leaving a big orphaned gap. */
-    padding-block: 80px 40px;
+    /* 27 Aug 2026: bottom trimmed 96px → 40px when the heading/rule below
+       came out — read as an orphaned gap. Bumped back up to 64px (Aman: "too
+       close") — combined with Education's top padding this is the space
+       between About's last paragraph and the Experience heading. */
+    padding-block: 80px 64px;
     position: relative;
     /* 20 Aug 2026 (queue r2): hard clip so the enlarged/repositioned litho
        grid below can never spill past the section frame. */
@@ -207,7 +208,7 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
 
   @media (max-width: 860px) {
     .paper-about {
-      padding-block: 100px 40px;
+      padding-block: 100px 64px;
     }
     .about-row {
       grid-template-columns: 1fr;
@@ -227,7 +228,7 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
      stacked photo. Section still clips overflow so this is belt-and-braces. */
   @media (max-width: 767px) {
     .paper-about {
-      padding-block: 64px 24px;
+      padding-block: 64px 40px;
     }
     .about-inner {
       padding-inline: 20px;
@@ -257,7 +258,7 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
   /* 20 Aug 2026 (mobile): tighter still at 375/320px. */
   @media (max-width: 480px) {
     .paper-about {
-      padding-block: 48px 16px;
+      padding-block: 48px 28px;
     }
     .about-heading {
       margin-bottom: 28px;

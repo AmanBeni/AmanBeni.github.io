@@ -196,11 +196,11 @@ const volunteering = [
 <style>
   .paper-education {
     border-bottom: 1px solid var(--rule);
-    /* 27 Aug 2026: top space trimmed way down (80px → 40px) — the section
-       merges visually into About now (no heading, no rule above), so this
-       reads as the gap between About's last paragraph and the Experience
-       column, not a "line → heading" gap. */
-    padding-block: 40px 96px;
+    /* 27 Aug 2026: top space trimmed 80px → 40px when the heading/rule came
+       out — read as too close (Aman). Bumped back up to 56px; combined with
+       About's bottom padding this is the gap between About's last paragraph
+       and the Experience heading. */
+    padding-block: 56px 96px;
     position: relative;
   }
 
@@ -307,7 +307,7 @@ const volunteering = [
      comfortable on a phone. */
   @media (max-width: 767px) {
     .paper-education {
-      padding-block: 16px 72px;
+      padding-block: 32px 72px;
     }
     .education-inner {
       padding-inline: 20px;
@@ -322,7 +322,7 @@ const volunteering = [
      less top/bottom air. */
   @media (max-width: 480px) {
     .paper-education {
-      padding-block: 8px 56px;
+      padding-block: 20px 56px;
     }
     .cv-entry {
       gap: 12px;

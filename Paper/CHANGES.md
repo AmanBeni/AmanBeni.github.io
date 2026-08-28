@@ -38,6 +38,15 @@ _(empty — add bullets here any time, then say "run the queue")_
 
 ## Done
 
+### 27 Aug 2026 — more space between About text and the Experience/Education heading
+
+- The merge above trimmed this gap too far ("too close" — Aman). Bumped it
+  back up: desktop/tablet 80px → 120px, 767px 40px → 72px, 480px 24px → 48px
+  (split across About's bottom padding + Education's top padding). Verified
+  on desktop (hero hidden to work around the preview pane's blank-on-scroll
+  quirk) and mobile (393): clear breathing room both above and below the desk
+  photo before "Experience"/"Education". 0 overflow. Build 8/8.
+
 ### 27 Aug 2026 — merge About + Career & Education, drop "Work" nav link
 
 - Removed the "Career & Education" heading and the hairline that divided
