@@ -363,8 +363,15 @@ const currentYear = new Date().getFullYear();
          drifted off the right edge on iOS. overflow-x:clip means nothing can
          poke out past the side rules (clip, not hidden, so the sticky header
          still sticks to the viewport). */
+      /* 1 Sep 2026: cap the frame on wide monitors. Below 1800px nothing
+         changes — the width resolves to (viewport − 2×--page-inset), i.e. the
+         same 16px inset each side as before. Above 1800px the frame stops
+         growing and margin-inline:auto centres it, so the textured paper ground
+         shows as even margins on both sides instead of the sections stretching
+         edge to edge with the content marooned in the middle. */
       .page-frame {
-        margin-inline: var(--page-inset);
+        max-width: min(1800px, calc(100% - 2 * var(--page-inset)));
+        margin-inline: auto;
         border: 1px solid var(--edge);
         overflow-x: clip;
       }
@@ -550,7 +557,9 @@ const currentYear = new Date().getFullYear();
          touch more breathing room. */
       @media (max-width: 480px) {
         .page-frame {
-          margin-inline: 10px;
+          /* 10px inset each side (was margin-inline:10px before the wide-screen
+             cap moved this rule to max-width + auto centring). */
+          max-width: calc(100% - 20px);
         }
         .site-header {
           padding-inline: 8px;

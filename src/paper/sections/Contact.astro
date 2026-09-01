@@ -35,19 +35,31 @@
         <span class="contact-label">Email</span>
         <a href="mailto:beniwalaman2@gmail.com">beniwalaman2@gmail.com</a>
       </p>
-      <p
-        class="contact-line"
-        data-lab-id="contact.linkedin"
-        data-lab-kind="flow"
-        data-lab-label="LinkedIn line"
-        data-lab-group="Contact"
-        data-lab-props="fontSize,color,marginTop,font"
-      >
-        <span class="contact-label">LinkedIn</span>
-        <a href="https://www.linkedin.com/in/aman-beniwal/" target="_blank" rel="noopener noreferrer">
-          linkedin.com/in/aman-beniwal
-        </a>
-      </p>
+    </div>
+
+    {/* 1 Sep 2026: social profiles grouped under their own subheading (Aman's
+        request), sitting below the primary email contact. LinkedIn moved here
+        from its own contact line; X and GitHub added. */}
+    <div
+      class="contact-social"
+      data-lab-id="contact.social"
+      data-lab-kind="flow"
+      data-lab-label="Elsewhere links"
+      data-lab-group="Contact"
+      data-lab-props="marginTop,color,font"
+    >
+      <h3 class="contact-subheading">Elsewhere</h3>
+      <ul class="contact-social-list">
+        <li>
+          <a href="https://www.linkedin.com/in/aman-beniwal/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </li>
+        <li>
+          <a href="https://x.com/whyyyaman" target="_blank" rel="noopener noreferrer">X</a>
+        </li>
+        <li>
+          <a href="https://github.com/aman-beniwal" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </li>
+      </ul>
     </div>
   </div>
 </section>
@@ -129,6 +141,44 @@
     border-bottom-color: var(--paper-hero-ink);
   }
 
+  /* 1 Sep 2026: "Elsewhere" social group — a mono subheading matching the
+     contact labels, then the profiles as a row of underlined links in the same
+     visual language as the email link above. */
+  .contact-social {
+    margin-top: 36px;
+  }
+
+  .contact-subheading {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(244, 239, 224, 0.6);
+    margin: 0 0 14px;
+  }
+
+  .contact-social-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 28px;
+  }
+
+  .contact-social-list a {
+    font-family: var(--font-body);
+    font-size: 18px;
+    color: var(--paper-hero-ink);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(244, 239, 224, 0.5);
+  }
+
+  .contact-social-list a:hover {
+    border-bottom-color: var(--paper-hero-ink);
+  }
+
   /* 20 Aug 2026 (mobile): this section had no responsive rules at all — the
      fixed 110px padding-block was desktop-sized, and the label+link flex row
      had no wrap, so a long LinkedIn URL next to its mono label could overflow
@@ -154,7 +204,8 @@
     .paper-contact {
       padding-block: 56px;
     }
-    .contact-line {
+    .contact-line,
+    .contact-social-list a {
       font-size: 16px;
     }
   }

@@ -239,9 +239,12 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
   }
 
   .work-tile-bullets li::before {
-    content: '—';
+    /* 1 Sep 2026: dash → round bullet (Aman's request). Nudged up a hair so
+       the glyph sits on the text's optical centre. */
+    content: '•';
     position: absolute;
     left: 0;
+    top: -0.05em;
     color: rgba(244, 239, 224, 0.6);
   }
 
