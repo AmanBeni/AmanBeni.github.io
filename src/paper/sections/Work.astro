@@ -6,7 +6,10 @@
  */
 import { getCollection } from 'astro:content';
 
-const AI_PROJECTS = ['daily-cactus', 'youtube-year', 'second-brain'];
+// 1 Sep 2026: two more AI projects added (LinkedIn Agent, Job Application
+// System). Their tile art comes later — the cards render a paper placeholder
+// slot until a paper/objects/<id>.webp exists (see hasTileArt in the frontmatter).
+const AI_PROJECTS = ['daily-cactus', 'youtube-year', 'second-brain', 'linkedin-agent', 'job-application-system'];
 const projects = (await getCollection('projects'))
   .filter((p) => AI_PROJECTS.includes(p.id))
   .sort((a, b) => a.data.order - b.data.order);
@@ -68,13 +71,21 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
               <p class="work-tile-summary">{project.data.summary}</p>
             )}
 
-            {/* 20 Aug 2026 (queue r3): project art fills the reserved slot. */}
+            {/* 20 Aug 2026 (queue r3): project art fills the reserved slot.
+                1 Sep 2026: projects without art yet (hasTileArt:false) show a
+                paper placeholder in the same slot instead of a broken image. */}
             <div class="work-tile-image">
-              <img
-                src={`${baseSlash}paper/objects/${project.id}.webp`}
-                alt=""
-                aria-hidden="true"
-              />
+              {project.data.hasTileArt === false ? (
+                <div class="work-tile-image-placeholder" aria-hidden="true">
+                  <span>Image coming soon</span>
+                </div>
+              ) : (
+                <img
+                  src={`${baseSlash}paper/objects/${project.id}.webp`}
+                  alt=""
+                  aria-hidden="true"
+                />
+              )}
             </div>
 
             <ul class="work-tile-tags">
@@ -265,6 +276,27 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     object-fit: cover;
     object-position: center;
     display: block;
+  }
+
+  /* 1 Sep 2026: placeholder slot for projects whose art hasn't been added yet.
+     A soft cream panel with a dashed rule and a small mono caption, so an
+     empty tile still reads as intentional on the terracotta card. */
+  .work-tile-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(244, 239, 224, 0.1);
+    border: 1px dashed rgba(244, 239, 224, 0.4);
+  }
+
+  .work-tile-image-placeholder span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(244, 239, 224, 0.6);
   }
 
   /* Pinned to the bottom so the tags line up across tiles of differing height. */

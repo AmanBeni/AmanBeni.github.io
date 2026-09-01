@@ -15,6 +15,23 @@ images: ['work/youtube-year.webp']
 
 > I consume a lot of YouTube, and wanted to analyse my usage patterns. So I extracted a year of watch history and turned it into a dashboard to see where my attention actually goes — all analysed locally on my laptop.
 
+<p class="proj-flow-label">Workflow</p>
+
+```mermaid
+flowchart TB
+  A[Google Takeout<br/>raw watch history] --> B[Clean and enrich<br/>durations + India time]
+  B --> C{Clear category?}
+  C -->|Yes| D[Local embeddings]
+  C -->|No| E[Local model<br/>for ambiguous titles]
+  E --> F{Still unclear?}
+  F -->|Yes| G[Leave uncategorised]
+  F -->|No| H[Category assignment]
+  D --> I[Private analytical dataset]
+  G --> I
+  H --> I
+  I --> J[Portable interactive dashboard]
+```
+
 ## ⚡ The gist
 
 - What it is: a personal analytics dashboard built from a year of my own Google Takeout export.

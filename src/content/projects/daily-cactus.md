@@ -15,6 +15,17 @@ images: ['work/daily-cactus.webp']
 
 > A daily newspaper based on my interests and preferred sources. An AI agent handles the data sourcing, editing, and publishing via automated cron tasks.
 
+<p class="proj-flow-label">Workflow</p>
+
+```mermaid
+flowchart TB
+  A[Curated sources across 12 editorial beats] --> B[GitHub Actions<br/>fetches and normalises feeds]
+  B --> C[Source-bound digest]
+  C --> D[AI editorial pass<br/>selects and writes]
+  D --> E[Deterministic assembler<br/>maps copy to real links]
+  E --> F[GitHub Pages edition<br/>and dated archive]
+```
+
 ## ⚡ The gist
 
 - What it is: a personal newspaper, built around the things I genuinely want to keep up with, from the sources I trust and prefer.

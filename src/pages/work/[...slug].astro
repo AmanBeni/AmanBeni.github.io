@@ -79,6 +79,57 @@ const statusLabel: Record<string, string> = {
       <p>&copy; {new Date().getFullYear()} Aman Beniwal</p>
     </footer>
 
+    <!-- 1 Sep 2026: render the workflow diagrams. The default markdown
+         processor emits a ```mermaid fence as <pre data-language="mermaid">
+         (Shiki-highlighted, but textContent is the clean source). We read that
+         source and swap in a mermaid SVG themed to the paper palette, so it
+         reads as part of the page rather than a stock purple flowchart. -->
+    <script>
+      import mermaid from 'mermaid';
+
+      const blocks = document.querySelectorAll('pre[data-language="mermaid"]');
+      if (blocks.length) {
+        mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: 'strict',
+          theme: 'base',
+          themeVariables: {
+            fontFamily: "'Satoshi', 'Inter', system-ui, sans-serif",
+            fontSize: '15px',
+            // Paper palette (see src/paper/tokens.css).
+            background: 'transparent',
+            primaryColor: '#fffdf8', // node fill — paper-card
+            primaryTextColor: '#4a3527', // ink
+            primaryBorderColor: 'rgba(74,53,39,0.5)', // rule
+            secondaryColor: '#f3f2e9', // paper-tint
+            tertiaryColor: '#ece7d6', // paper-alt-tint
+            lineColor: '#8a4a30', // terracotta — edges
+            edgeLabelBackground: '#f3f2e9',
+            nodeBorder: 'rgba(74,53,39,0.5)',
+            clusterBkg: '#ece7d6',
+            titleColor: '#4a3527',
+          },
+          flowchart: { curve: 'basis', htmlLabels: true, padding: 14, useMaxWidth: true },
+        });
+
+        for (const [i, el] of blocks.entries()) {
+          const src = el.textContent || '';
+          // Drop Shiki's inline dark background/colour so our paper panel shows.
+          el.removeAttribute('style');
+          try {
+            const { svg, bindFunctions } = await mermaid.render(`mmd-${i}`, src);
+            el.innerHTML = svg;
+            bindFunctions?.(el);
+            el.classList.add('mermaid-rendered');
+          } catch (err) {
+            console.error('[mermaid] render failed:', err);
+            // Leave the (styled) source visible as a graceful fallback.
+            el.classList.add('mermaid-failed');
+          }
+        }
+      }
+    </script>
+
     <style>
       * {
         box-sizing: border-box;
@@ -228,6 +279,54 @@ const statusLabel: Record<string, string> = {
 
       .proj-body :global(a) {
         color: var(--accent);
+      }
+
+      /* 1 Sep 2026: workflow diagram (mermaid). The markdown fence renders as
+         <pre data-language="mermaid"> (Shiki-highlighted source). Before the
+         script swaps in the SVG we keep the raw source invisible so no flash of
+         diagram code shows; a framed, tinted panel sets it apart from the prose.
+         !important beats Shiki's inline background/colour on the <pre>. */
+      .proj-body :global(pre[data-language='mermaid']) {
+        margin: 8px 0 28px;
+        padding: 20px 18px;
+        border: 1px solid var(--rule);
+        border-radius: 10px;
+        background: var(--paper-tint) !important;
+        text-align: center;
+        overflow-x: auto;
+        /* Hide the raw source until the SVG replaces it. */
+        color: transparent;
+        font-size: 0;
+        line-height: 0;
+      }
+
+      /* Once the script has swapped in the SVG, reveal it. */
+      .proj-body :global(pre[data-language='mermaid'].mermaid-rendered) {
+        font-size: initial;
+        line-height: initial;
+      }
+
+      /* If rendering failed, fall back to showing the source legibly. */
+      .proj-body :global(pre[data-language='mermaid'].mermaid-failed) {
+        color: var(--ink);
+        font-size: 13px;
+        line-height: 1.5;
+        text-align: left;
+      }
+
+      .proj-body :global(pre[data-language='mermaid'] svg) {
+        max-width: 100%;
+        height: auto;
+      }
+
+      /* Small label above the diagram (added at the top of each project body). */
+      .proj-body :global(.proj-flow-label) {
+        margin: 4px 0 10px;
+        font-family: var(--font-mono);
+        font-size: 12.5px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--ink-soft);
       }
 
       .proj-shots {

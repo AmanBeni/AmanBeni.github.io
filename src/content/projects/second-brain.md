@@ -15,6 +15,18 @@ images: ['work/second-brain-1.webp', 'work/second-brain-2.webp']
 
 > An AI chief of staff I built on top of two years of journals, notes, learnings and todos. Sensitive data runs offline on my laptop and the execution is done by frontier models. It helps me get work done quickly and keeps me on track.
 
+<p class="proj-flow-label">Workflow</p>
+
+```mermaid
+flowchart TB
+  A[Obsidian vault<br/>journals, decisions, projects, people] --> B[Local index and embeddings]
+  B --> C[Targeted retrieval<br/>only what the task needs]
+  C --> D[Command layer<br/>reflection, morning, wrap-up, review]
+  D --> E[Briefings and next actions]
+  E --> F[Weekly maintenance<br/>re-index + link-graph health]
+  F --> A
+```
+
 ## ⚡ The gist
 
 - What it is: a second brain that coaches and advises me from my own notes, rather than acting like a generic chatbot.

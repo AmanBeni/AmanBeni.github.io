@@ -18,6 +18,9 @@ const projects = defineCollection({
     date: z.coerce.date(),
     cover: z.string().optional(), // optional image path
     images: z.array(z.string()).optional(), // in-page screenshots (public/work/…)
+    // 1 Sep 2026: false = no tile art yet (renders a paper placeholder slot in
+    // the AI Projects grid). Omit / true once a paper/objects/<id>.webp exists.
+    hasTileArt: z.boolean().optional(),
   }),
 });
 
