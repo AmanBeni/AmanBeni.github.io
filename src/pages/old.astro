@@ -1,0 +1,1017 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import PixelSeam from '../components/PixelSeam.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import CVItem from '../components/CVItem.astro';
+import Coverflow from '../components/Coverflow.astro';
+import onRepeat from '../data/on-repeat.json';
+
+// Only the AI builds show in the "AI Projects" section (Infosys / Plutomen /
+// D2C tiles removed per Aman — their .md files still exist for later).
+const AI_PROJECTS = ['daily-cactus', 'youtube-year', 'second-brain'];
+const projects = (await getCollection('projects'))
+  .filter((p) => AI_PROJECTS.includes(p.id))
+  .sort((a, b) => a.data.order - b.data.order);
+
+const base = import.meta.env.BASE_URL;
+const baseSlash = base.endsWith('/') ? base : base + '/';
+const logoBase = baseSlash + 'logos/';
+const coverBase = baseSlash + 'book-covers/';
+
+// Career & Education — headings only for now (role + org + dates); fuller
+// detail comes later. Each org: logo file (public/logos/) if we have one, else
+// an initials monogram on a tone-coloured tile. Drop a real logo file in with
+// the given name and it takes over automatically. Multi-role orgs group their
+// roles under one logo. Roles can carry `notes` (sub-bullets).
+const experience = [
+  {
+    org: 'Infosys',
+    logo: 'infosys.svg',
+    mono: 'In',
+    tone: 'blue',
+    scale: 1.0,
+    roles: [
+      { title: 'Analyst — Corporate Strategy', period: 'Dec 2023 — Dec 2025' },
+      { title: 'Associate Functional Consultant', period: 'Jun 2022 — Nov 2023' },
+    ],
+  },
+  {
+    org: 'appengine.ai',
+    logo: 'appengine.png',
+    mono: 'ae',
+    tone: 'purple',
+    scale: 1.05,
+    roles: [{ title: 'Associate Intern', period: 'Jun — Aug 2021' }],
+  },
+  {
+    org: 'Plutomen Technologies',
+    logo: 'plutomen.png',
+    mono: 'P',
+    tone: 'green',
+    scale: 1.25,
+    roles: [{ title: 'Summer Intern', period: 'Apr — Jul 2021' }],
+  },
+  {
+    org: 'Lemon Tree Hotels',
+    logo: 'lemontree.png',
+    mono: 'LT',
+    tone: 'yellow',
+    scale: 1.1,
+    roles: [{ title: 'Sales & Marketing Intern', period: 'May 2019' }],
+  },
+];
+
+const education = [
+  {
+    org: 'Institute of Management, Nirma University',
+    logo: 'nirma.png',
+    mono: 'NU',
+    tone: 'blue',
+    roles: [
+      {
+        title: 'MBA — Business Administration',
+        period: '2020 — 2022',
+        notes: ['Treasurer & Member Secretary, Placement Cell'],
+      },
+      {
+        title: 'BBA — Business Administration',
+        period: '2017 — 2020',
+        notes: ['Member, Cultural Committee', 'Lead, Photography Committee'],
+      },
+    ],
+  },
+];
+
+// Most recent first.
+const volunteering = [
+  {
+    org: 'Asaadharan NGO',
+    mono: 'AS',
+    tone: 'green',
+    roles: [{ title: 'Volunteer', period: 'Apr — Jun 2026' }],
+  },
+  {
+    org: 'Naya Sawera NGO',
+    mono: 'NS',
+    tone: 'yellow',
+    roles: [{ title: 'Volunteer', period: 'May 2018' }],
+  },
+];
+
+// Skills vs. tools — two side-by-side tag columns (data from CONTENT-INVENTORY).
+const skills = [
+  'Data Analytics & Synthesis',
+  'Metrics & KPI Tracking',
+  'Stakeholder Management',
+  'Strategic Communications',
+  'Change Management',
+  'Cross-Functional Project Execution',
+  'Financial & Analytical Modeling',
+  'Data Pipelines',
+  'AI Workflow Automation',
+  'Prompt & Skill Engineering',
+  'Multi-Agent Workflows',
+];
+
+const tools = [
+  'Excel',
+  'PowerPoint',
+  'Excel VBA Macros',
+  'Power BI',
+  'Notion',
+  'Claude Code',
+  'ChatGPT & Codex',
+  'Python',
+  'GitHub Actions',
+  'VS Code',
+  'MCP',
+  'RAG / Ollama Embeddings',
+];
+
+// Books — all have covers in public/book-covers/. Rendered as a continuously
+// scrolling single-row marquee (see .books-marquee).
+const books = [
+  { title: 'Essentialism', author: 'Greg McKeown', cover: 'essentialism.jpg' },
+  { title: 'Stillness is the Key', author: 'Ryan Holiday', cover: 'stillness.jpg' },
+  { title: 'The Almanack of Naval Ravikant', author: 'Eric Jorgenson', cover: 'almanack-naval.jpg' },
+  { title: 'Siddhartha', author: 'Hermann Hesse', cover: 'siddhartha.jpg' },
+  { title: 'Zero to Scale', author: 'Arindam Paul', cover: 'zero-to-scale.jpg' },
+  { title: 'Zero to One', author: 'Peter Thiel', cover: 'zero-to-one.jpg' },
+  { title: 'Man’s Search for Meaning', author: 'Viktor Frankl', cover: 'mans-search.jpg' },
+  { title: 'The Money Trap', author: 'Alok Sama', cover: 'money-trap.jpg' },
+  { title: 'Clearing the Air', author: 'Hannah Ritchie', cover: 'clearing-the-air.jpg' },
+];
+
+// Finale birds — a small flock flying IN FROM THE RIGHT along the sunset
+// horizon, shrinking into the distance until they vanish near the sun (mirrors
+// the hero birds; reuses public/hero/birds_sheet.png). Deterministic seed.
+function makeBirdRng(seed: number) {
+  return () => {
+    seed |= 0;
+    seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+const fbRand = makeBirdRng(424242);
+const FB_STOPS = 8;
+const finaleBirds = Array.from({ length: 5 }, (_, i) => {
+  const startX = 108 + fbRand() * 6; // off the right edge
+  const startY = 46 + fbRand() * 16; // horizon band (% of finale)
+  const targetX = 40 + fbRand() * 8; // vanish toward the sun / centre
+  const targetY = 48 + fbRand() * 6;
+  const amp = 1.5 + fbRand() * 2.5;
+  const waves = 1.2 + fbRand() * 1.2;
+  const phase = fbRand() * Math.PI * 2;
+  const baseScale = 0.7 + fbRand() * 0.5;
+  const dur = (15 + fbRand() * 8).toFixed(2);
+  const delay = (-fbRand() * 23).toFixed(2);
+  const flap = (0.34 + fbRand() * 0.16).toFixed(2);
+  const width = (1.4 + fbRand() * 0.7).toFixed(2); // % of finale width
+  let frames = '';
+  for (let s = 0; s <= FB_STOPS; s++) {
+    const t = s / FB_STOPS;
+    const x = startX + (targetX - startX) * t;
+    const baseY = startY + (targetY - startY) * t;
+    const y = baseY + amp * (1 - t) * Math.sin(waves * Math.PI * 2 * t + phase);
+    const scale = baseScale * Math.pow(1 - t, 1.15);
+    const op = t < 0.05 ? t / 0.05 : t > 0.9 ? 1 - (t - 0.9) / 0.1 : 1;
+    frames +=
+      `${(t * 100).toFixed(2)}%{left:${x.toFixed(2)}%;top:${y.toFixed(2)}%;` +
+      `transform:translate(-50%,-50%) scale(${scale.toFixed(3)});opacity:${op.toFixed(2)};}`;
+  }
+  const name = `fbird-${i}`;
+  return { name, keyframes: `@keyframes ${name}{${frames}}`, dur, delay, flap, width };
+});
+const finaleBirdKeyframes = finaleBirds.map((b) => b.keyframes).join('');
+---
+
+<BaseLayout title="Aman Beniwal — Portfolio" hasHero>
+  <!-- ============ 1. HERO ============ -->
+  <Hero />
+
+  <!-- Pixelated dissolve seam between the hero art and the plain surface
+       below it — see component doc comment for the full mechanism. -->
+  <PixelSeam />
+
+  <!-- ============ 2. A BIT ABOUT ME ============ -->
+  <section id="about" class="section has-decor">
+    <img class="section-decor decor-tree" src={`${baseSlash}decor/tree.png`} alt="" data-pixel-art />
+    <div class="site-container">
+      <header class="section-header">
+        <h2 class="chapter-title">A bit about me</h2>
+      </header>
+
+      <!-- Boxed on a solid surface so the copy stays legible over the
+           dot-grid background. -->
+      <div class="about-box">
+        <p>
+          I am Aman. Business strategy professional with 3+ years of experience across a $3B
+          global transformation program spanning India, APAC, EMEA, and NAM. Worked closely with
+          senior leadership on strategic decisions, pricing optimisation, and AI-led operations
+          improvements across global business units.
+        </p>
+        <p>
+          Took a career break in January 2026 due to personal reasons. Worked with an NGO to
+          structure their database and automate M&amp;E, alongside learning AI system design from
+          first principles and building a few projects and agents.
+        </p>
+        <p>
+          Now looking for AI-focused strategic roles where innovation is used to do good for our
+          society and the planet.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. CAREER & EDUCATION ============ -->
+  <section id="career" class="section section-alt">
+    <div class="site-container">
+      <header class="section-header">
+        <h2 class="chapter-title">Career &amp; Education</h2>
+      </header>
+
+      <div class="cv-grid">
+        <div class="cv-col">
+          <h3 class="cv-colhead mono-label">Experience</h3>
+          {experience.map((item) => <CVItem {...item} logoBase={logoBase} />)}
+        </div>
+
+        <div class="cv-col">
+          <h3 class="cv-colhead mono-label">Education</h3>
+          {education.map((item) => <CVItem {...item} logoBase={logoBase} />)}
+
+          <h3 class="cv-colhead mono-label">Volunteering</h3>
+          {volunteering.map((item) => <CVItem {...item} logoBase={logoBase} />)}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. SELECTED WORK / PROJECTS ============ -->
+  <section id="work" class="section">
+    <div class="site-container">
+      <header class="section-header">
+        <h2 class="chapter-title">AI Projects</h2>
+      </header>
+
+      <div class="project-grid">
+        {
+          projects.map((project) => (
+            <ProjectCard
+              slug={project.id}
+              title={project.data.title}
+              emoji={project.data.emoji}
+              summary={project.data.summary}
+              tags={project.data.tags}
+              status={project.data.status}
+            />
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5. SKILLS & TOOLS ============ -->
+  <section id="skills" class="section section-alt has-decor">
+    <img class="section-decor decor-computer" src={`${baseSlash}decor/computer.png`} alt="" data-pixel-art />
+    <div class="site-container">
+      <header class="section-header">
+        <h2 class="chapter-title">Skills &amp; tools</h2>
+      </header>
+
+      <div class="st-grid">
+        <div class="st-col">
+          <h3 class="st-head mono-label">Skills</h3>
+          <ul class="st-tags">
+            {skills.map((s) => <li class="st-tag">{s}</li>)}
+          </ul>
+        </div>
+
+        <div class="st-col st-col-tools">
+          <h3 class="st-head mono-label">Tools</h3>
+          <ul class="st-tags">
+            {tools.map((t) => <li class="st-tag">{t}</li>)}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 6. BEYOND WORK — books + music under one heading ============ -->
+  <section id="beyond" class="section beyond-section">
+    <!-- Decorative pixel clouds — fixed (no motion), sitting up near the heading. -->
+    <div class="beyond-clouds" aria-hidden="true">
+      <img class="beyond-cloud cloud-a" src={`${baseSlash}beyond/cloud1.png`} alt="" data-pixel-art />
+      <img class="beyond-cloud cloud-b" src={`${baseSlash}beyond/cloud2.png`} alt="" data-pixel-art />
+      <img class="beyond-cloud cloud-c" src={`${baseSlash}beyond/cloud1.png`} alt="" data-pixel-art />
+    </div>
+
+    <div class="site-container">
+      <header class="section-header beyond-header">
+        <h2 class="chapter-title">Beyond Work</h2>
+      </header>
+
+      <p class="beyond-sub">Books I enjoyed reading and would like to recommend.</p>
+    </div>
+
+    <!-- Books "assembly belt": covers scroll continuously right→left, looping
+         seamlessly (list duplicated; track translates by exactly one copy). -->
+    <div class="books-marquee">
+      <ul class="books-track">
+        {
+          [...books, ...books].map((book, i) => (
+            <li class="book-item" aria-hidden={i >= books.length ? 'true' : undefined}>
+              <div class="book-cover">
+                <img src={`${coverBase}${book.cover}`} alt={`${book.title} cover`} loading="lazy" />
+              </div>
+              <p class="book-title">{book.title}</p>
+              <p class="book-author mono-data">{book.author}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="site-container">
+      <p class="beyond-sub beyond-sub-music">
+        A small snapshot of what I have been listening to lately.<br />
+        These are the top 10 songs live from my Spotify repeat playlist.
+      </p>
+    </div>
+
+    <Coverflow slides={onRepeat.slides} label="Aman's Spotify — On Repeat" />
+  </section>
+
+  <!-- ============ 7. CONTACT + SUNSET FINALE ============ -->
+  <section id="contact" class="finale">
+    <!-- Last image of the site — sunset with a pixel-dissolve top edge baked in
+         so it melts into the page above. Contact sits on the left, overlapping. -->
+    <img class="finale-sunset" src={`${baseSlash}decor/sunset.png`} alt="Sunset over Marunji Hills, Pune" />
+
+    <!-- Birds flying in from the right along the horizon, shrinking to nothing. -->
+    <div class="finale-birds" aria-hidden="true">
+      {
+        finaleBirds.map((b) => (
+          <span
+            class="fbird"
+            style={`background-image:url(${baseSlash}hero/birds_sheet.png); width:${b.width}%; animation-name:${b.name}, bird-flap-f; animation-duration:${b.dur}s, ${b.flap}s; animation-delay:${b.delay}s, 0s;`}
+          />
+        ))
+      }
+    </div>
+
+    <!-- Location tag + caption (old photo → no live blinker). On mobile the tag
+         is hidden and the caption collapses to a single wrapping line (see the
+         max-width:700px block). -->
+    <div class="finale-loc-wrap" aria-hidden="true">
+      <p class="finale-loc"><span class="finale-pin">📍</span>MARUNJI HILLS, PUNE</p>
+      <p class="finale-loc-note">
+        A photo from 2024, when I had<br />
+        gone to trek at Marunji Hills, Pune.<br />
+        (now edited)
+      </p>
+    </div>
+
+    <div class="finale-contact">
+      <h2 class="chapter-title finale-heading">Contact</h2>
+      <p class="contact-line">
+        <span class="mono-label">EMAIL</span>
+        <span class="contact-sep">-</span>
+        <a href="mailto:beniwalaman2@gmail.com">beniwalaman2@gmail.com</a>
+      </p>
+      <p class="contact-line">
+        <span class="mono-label">LINKEDIN</span>
+        <span class="contact-sep">-</span>
+        <a href="https://www.linkedin.com/in/aman-beniwal/" target="_blank" rel="noopener noreferrer">linkedin.com/in/aman-beniwal</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Per-bird flight paths for the finale (generated in frontmatter). -->
+  <style is:inline set:html={finaleBirdKeyframes}></style>
+
+  <style>
+    .section-alt {
+      background: var(--surface-alt);
+    }
+
+    /* Decorative pixel objects peeking from a section's bottom-right corner. */
+    .has-decor {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .has-decor > .site-container {
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-decor {
+      position: absolute;
+      z-index: 0;
+      bottom: 0;
+      right: 2%;
+      height: auto;
+      pointer-events: none;
+    }
+
+    .decor-computer {
+      width: 205px;
+      bottom: 22px;
+    }
+
+    /* Small tree in the bottom-right corner (smaller than the original 352px). */
+    .decor-tree {
+      width: 230px;
+      right: 1%;
+    }
+
+    /* extra breathing room at the bottom of Skills & tools (and room for the
+       computer to sit without crowding the tags) */
+    #skills {
+      padding-bottom: 108px;
+    }
+
+    @media (max-width: 820px) {
+      /* The tree is too wide for phones — hide it. The computer is small enough
+         to keep as a corner accent (Aman's call), just scaled down and tucked
+         into the bottom-right. */
+      .decor-tree {
+        display: none;
+      }
+      .decor-computer {
+        width: 118px;
+        right: 12px;
+        bottom: 14px;
+        opacity: 0.92;
+      }
+    }
+
+    /* About — boxed on a solid surface for legibility over the dot-grid.
+       Soft shadow so the card reads as clearly raised off the section bg
+       (plain #fff-on-#fbfbf8 alone was too subtle to register as a box). */
+    .about-box {
+      max-width: 68ch;
+      background: var(--container);
+      border: 1px solid var(--border-low);
+      border-left: 3px solid var(--climate);
+      border-radius: var(--radius-card);
+      padding: 26px 30px;
+      font-size: 16px;
+      line-height: 1.7;
+      box-shadow: 0 6px 26px rgba(18, 34, 58, 0.08);
+    }
+
+    .about-box p {
+      margin: 0;
+    }
+
+    .about-box p + p {
+      margin-top: 14px;
+    }
+
+    /* Career & Education — two compact columns (item internals live in CVItem) */
+    .cv-grid {
+      display: grid;
+      gap: 40px;
+    }
+
+    @media (min-width: 768px) {
+      .cv-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 56px;
+      }
+    }
+
+    .cv-col {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cv-colhead {
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    /* NOTE: .cv-item is rendered by the CVItem child component, so these
+       sibling rules MUST use :global() — Astro's scoped selectors otherwise
+       won't match across the component boundary (that was the spacing bug). */
+
+    /* clear gap between different companies */
+    .cv-col > :global(.cv-item) {
+      margin-top: 28px;
+    }
+
+    /* a sub-heading's first item hugs it (heading labels the group below) */
+    .cv-col > .cv-colhead + :global(.cv-item) {
+      margin-top: 16px;
+    }
+
+    /* big separation before a second sub-heading, e.g. Volunteering */
+    .cv-col > :global(.cv-item) + .cv-colhead {
+      margin-top: 46px;
+    }
+
+    /* Project grid */
+    .project-grid {
+      display: grid;
+      gap: 24px;
+      grid-template-columns: repeat(1, 1fr);
+    }
+
+    @media (min-width: 640px) {
+      .project-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .project-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    /* Skills & tools — two side-by-side tag columns */
+    .st-grid {
+      display: grid;
+      gap: 40px;
+    }
+
+    @media (min-width: 768px) {
+      .st-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 56px;
+      }
+    }
+
+    .st-head {
+      color: var(--text-muted);
+      margin: 0 0 16px;
+    }
+
+    .st-tags {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .st-tag {
+      font-size: 13px;
+      line-height: 1.2;
+      padding: 7px 13px;
+      border-radius: 8px;
+      background: var(--container);
+      border: 1px solid var(--border-low);
+      color: var(--ink);
+    }
+
+    /* Tools read as the "technical" column — mono type, faint blue tint. */
+    .st-col-tools .st-tag {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--primary);
+      background: color-mix(in srgb, var(--primary) 6%, white);
+      border-color: color-mix(in srgb, var(--primary) 18%, white);
+    }
+
+    /* Books — continuous single-row marquee ("assembly belt") */
+    .books-marquee {
+      overflow: hidden;
+      width: 100%;
+      /* fade the covers in/out at both edges */
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+      mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    }
+
+    .books-track {
+      display: flex;
+      gap: 28px;
+      width: max-content;
+      margin: 0;
+      padding: 6px 24px;
+      list-style: none;
+      animation: books-scroll 60s linear infinite;
+    }
+
+    /* pause the belt when someone wants to look */
+    .books-marquee:hover .books-track {
+      animation-play-state: paused;
+    }
+
+    .book-item {
+      flex: none;
+      width: 132px;
+    }
+
+    .book-cover {
+      aspect-ratio: 2 / 3;
+      border-radius: 5px;
+      overflow: hidden;
+      background: var(--surface-alt);
+      margin-bottom: 10px;
+      box-shadow: 0 6px 18px rgba(18, 34, 58, 0.14);
+    }
+
+    .book-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .book-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin: 0 0 2px;
+      line-height: 1.25;
+    }
+
+    .book-author {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    /* Track is duplicated (books ×2); translating by half its width lands on
+       the identical second copy → seamless loop. */
+    @keyframes books-scroll {
+      from {
+        transform: translateX(0);
+      }
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .books-track {
+        animation: none;
+      }
+      .books-marquee {
+        overflow-x: auto;
+        -webkit-mask-image: none;
+        mask-image: none;
+      }
+    }
+
+    /* Beyond Work — one LEFT-aligned heading over books + music, with plenty
+       of room to breathe, and pixel clouds drifting behind it. */
+    .beyond-section {
+      position: relative;
+      overflow: hidden;
+      padding-block: 104px;
+    }
+
+    /* all real content sits above the drifting clouds */
+    .beyond-section > .site-container,
+    .beyond-section > .books-marquee,
+    .beyond-section > :global(.coverflow) {
+      position: relative;
+      z-index: 1;
+    }
+
+    .beyond-header {
+      justify-content: flex-start;
+      text-align: left;
+      margin-bottom: 16px;
+    }
+
+    .beyond-sub {
+      max-width: 60ch;
+      margin: 0;
+      text-align: left;
+      font-size: 16px;
+      color: var(--text-muted);
+    }
+
+    /* generous spacing between the four beats so nothing feels cramped */
+    .books-marquee {
+      margin-top: 48px;
+    }
+
+    .beyond-sub-music {
+      margin-top: 112px;
+    }
+
+    .beyond-section > :global(.coverflow) {
+      margin-top: 52px;
+    }
+
+    /* ---- drifting pixel clouds (left → right, opposite the books belt) ---- */
+    .beyond-clouds {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .beyond-cloud {
+      position: absolute;
+      height: auto;
+    }
+
+    /* Fixed, sitting up in the top band around the heading (not behind the
+       books belt), fairly solid so they don't look washed out. */
+    /* Desktop cloud arrangement (original). */
+    .cloud-a {
+      top: 8px;
+      left: 1%;
+      width: 280px;
+      opacity: 0.95;
+    }
+
+    .cloud-b {
+      top: 44px;
+      right: 3%;
+      width: 360px;
+      opacity: 0.9;
+    }
+
+    .cloud-c {
+      top: 104px;
+      left: 46%;
+      width: 240px;
+      opacity: 0.82;
+    }
+
+    @media (max-width: 820px) {
+      /* Narrow screens ONLY: lift the clouds into a small top-right band above
+         the heading and shrink them so they never land on the text. Desktop
+         keeps the original arrangement above. */
+      .cloud-a {
+        top: -12px;
+        left: auto;
+        right: 28%;
+        width: 145px;
+        opacity: 0.78;
+      }
+      .cloud-b {
+        top: 6px;
+        right: -8%;
+        width: 180px;
+        opacity: 0.72;
+      }
+      .cloud-c {
+        display: none;
+      }
+    }
+
+    /* Contact + sunset finale — the sunset is the last image; its top edge
+       dissolves (baked-in pixel alpha) into the page, contact overlaps on the
+       left. */
+    .finale {
+      position: relative;
+      overflow: hidden;
+      background: var(--surface);
+      min-height: clamp(440px, 56vw, 940px);
+    }
+
+    .finale-sunset {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: auto;
+      display: block;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Birds over the sunset (dark silhouettes against the sky) */
+    .finale-birds {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .fbird {
+      position: absolute;
+      aspect-ratio: 19 / 10;
+      background-size: 200% 100%; /* two flap frames in birds_sheet.png */
+      background-repeat: no-repeat;
+      background-position: 0% 50%;
+      image-rendering: pixelated;
+      transform: translate(-50%, -50%);
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+      animation-fill-mode: both;
+      will-change: left, top, transform;
+    }
+
+    @keyframes bird-flap-f {
+      0%,
+      49% {
+        background-position: 0% 50%;
+      }
+      50%,
+      100% {
+        background-position: 100% 50%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .finale-birds {
+        display: none;
+      }
+    }
+
+    /* soft scrim over the sunset's lower band so overlaid text stays legible */
+    .finale::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 46%;
+      z-index: 1;
+      background: linear-gradient(to top, rgba(8, 14, 26, 0.46), transparent);
+      pointer-events: none;
+    }
+
+    .finale-contact {
+      position: absolute;
+      left: max(16px, 3vw);
+      bottom: clamp(130px, 18vw, 260px);
+      z-index: 3;
+      color: #fff;
+      /* opaque-ish box so contact is clearly legible over the sunset */
+      background: rgba(8, 14, 26, 0.55);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 12px;
+      padding: 20px 24px;
+    }
+
+    .finale-heading {
+      color: #fff;
+      margin: 0 0 14px;
+    }
+
+    .finale .contact-line {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 0 0 8px;
+      font-size: 15px;
+    }
+
+    .finale .contact-line .mono-label {
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .finale .contact-sep {
+      color: rgba(255, 255, 255, 0.55);
+    }
+
+    .finale .contact-line a {
+      color: #fff;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .finale .contact-line a:hover {
+      border-bottom-color: #fff;
+    }
+
+    /* static location tag + caption — top-left, no blinking dot (old photo) */
+    .finale-loc-wrap {
+      position: absolute;
+      left: max(16px, 3vw);
+      top: clamp(112px, 14vw, 196px);
+      z-index: 3;
+    }
+
+    .finale-loc {
+      margin: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: var(--header-ink);
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(0, 0, 0, 0.14);
+      padding: 6px 12px;
+      border-radius: 3px;
+    }
+
+    .finale-pin {
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    .finale-loc-note {
+      margin: 9px 0 0;
+      max-width: 320px;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #fff;
+      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+    }
+
+    /* ---- Finale on phones ----
+       The desktop version overlaps the contact box ON the sunset photo. On a
+       narrow screen the photo is short, so that left a big empty band above and
+       crammed the text onto the image. Instead, stack vertically: contact card
+       in the open space, the location note right above the photo it describes,
+       and the sunset as a full-width band pinned to the bottom. */
+    @media (max-width: 700px) {
+      .finale {
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        padding-top: 36px;
+      }
+
+      /* No dimming scrim (nothing sits on the photo now) and no birds flying
+         over the cream area above it. */
+      .finale::after {
+        display: none;
+      }
+      .finale-birds {
+        display: none;
+      }
+
+      /* Contact card first, in the previously-empty space. */
+      .finale-contact {
+        position: static;
+        order: 1;
+        left: auto;
+        bottom: auto;
+        margin: 0 max(16px, 5vw) 26px;
+        background: rgba(8, 14, 26, 0.94);
+        padding: 18px 20px;
+      }
+
+      /* Location tag + caption sit just above the photo. On cream now, so the
+         caption flips to dark ink with no white glow. */
+      .finale-loc-wrap {
+        position: static;
+        order: 2;
+        left: auto;
+        top: auto;
+        margin: 0 max(16px, 5vw) 14px;
+      }
+      /* Mobile only: drop the location tag, and collapse the caption's forced
+         line breaks so it flows as one wrapping line. */
+      .finale-loc {
+        display: none;
+      }
+      .finale-loc-note br {
+        display: none;
+      }
+      .finale-loc-note {
+        color: var(--ink);
+        text-shadow: none;
+        max-width: none;
+      }
+
+      /* Sunset as a full-width band at the very bottom, zoomed ~20% (wider than
+         the viewport, centred, sides clipped by the section's overflow:hidden)
+         so it reads bigger and covers more of the page. Scaling by width keeps
+         the baked pixel-dissolve at the top intact instead of cropping it off. */
+      .finale-sunset {
+        position: static;
+        order: 3;
+        width: 120%;
+        max-width: none;
+        margin-left: -10%;
+      }
+    }
+
+    /* Glass fallbacks for the contact/location cards (Apple skill §14): make the
+       translucent material solid when the user asks for reduced transparency or
+       more contrast, so text never rides on a see-through surface. */
+    @media (prefers-reduced-transparency: reduce) {
+      .finale-contact {
+        background: rgba(8, 14, 26, 0.94);
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+      }
+      .finale-loc {
+        background: #ffffff;
+      }
+    }
+
+    @media (prefers-contrast: more) {
+      .finale-contact {
+        background: #0b1220;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        border-color: rgba(255, 255, 255, 0.6);
+      }
+    }
+  </style>
+</BaseLayout>

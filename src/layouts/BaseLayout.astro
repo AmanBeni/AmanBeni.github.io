@@ -28,10 +28,13 @@ const home = base.endsWith('/') ? base : `${base}/`;
 // Grouped in one glass pill in the header — see .nav-pill below.
 // "Contact" isn't repeated here: the "Get in touch" CTA button already
 // points at #contact.
+// 2 Sep 2026: relative hash anchors (not `${home}#…`). This layout is now used
+// only by the archived pixel page at /old; relative anchors keep its nav
+// scrolling within /old instead of jumping to the new paper homepage at /.
 const navLinks = [
-  { href: `${home}#about`, label: 'About' },
-  { href: `${home}#work`, label: 'Projects' },
-  { href: `${home}#beyond`, label: 'Beyond Work' },
+  { href: '#about', label: 'About' },
+  { href: '#work', label: 'Projects' },
+  { href: '#beyond', label: 'Beyond Work' },
 ];
 
 const currentYear = new Date().getFullYear();
@@ -72,7 +75,7 @@ const currentYear = new Date().getFullYear();
             </ul>
           </nav>
 
-          <a href={`${home}#contact`} class="nav-cta pixel-corners">Get in touch</a>
+          <a href="#contact" class="nav-cta pixel-corners">Get in touch</a>
         </div>
       </div>
     </header>

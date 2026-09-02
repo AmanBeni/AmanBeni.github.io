@@ -20,6 +20,12 @@ export default defineConfig({
   // base stays '/' so all absolute asset paths (/fonts, /decor, …) resolve.
   site: 'https://aman-beniwal.github.io',
   base: '/',
+  // 2 Sep 2026: the paper site moved from /lab to / (and the old pixel site to
+  // /old). Keep /lab working so links shared while it lived there still land on
+  // the homepage — Astro emits a static redirect page, fine for GitHub Pages.
+  redirects: {
+    '/lab': '/',
+  },
   vite: {
     plugins: [tailwindcss(), labDevServer()],
   },
