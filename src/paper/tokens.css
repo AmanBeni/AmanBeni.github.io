@@ -192,18 +192,20 @@
   --page-inset: 16px;
 
   /* 2 Sep 2026: shared width for every section's inner content wrapper.
-     Instead of a fixed column, the content FILLS the page frame minus a
-     responsive side gutter, so it scales with the screen: on a wide monitor
-     the frame is far out and the content box grows with it; on a laptop the
-     frame is near the viewport edge and the content box shrinks to keep the
-     same breathing room. `100%` here is the frame width (the wrapper's
-     container), so text always sits ~the gutter distance from the frame line
-     — never marooned in the middle (the old fixed 1180px) nor kissing the
-     border (the fixed 1400px). The gutter itself eases from 60px on small
-     laptops up to 128px on wide screens (6.5vw between). Per-block prose caps
-     (52ch etc.) still bound line length. Single knob — retune here. */
-  --content-gutter: clamp(60px, 6.5vw, 128px);
-  --content-max: calc(100% - 2 * var(--content-gutter));
+     Content FILLS the page frame minus a fixed 75px side gutter, but never
+     grows past 1400px. `100%` is the frame width, and text-from-frame works
+     out to exactly (frameWidth - content)/2, so:
+       - On laptops (frame < ~1580px) the calc wins: content = frame - 150px,
+         and text sits at exactly 75px from the frame line — it scales with the
+         screen, keeping the same breathing room instead of the old fixed
+         column that either marooned the text (1180px) or crowded the border
+         (fixed 1400px).
+       - On wide monitors (frame capped at 1650px) the 1400px cap wins: content
+         holds at 1400px and the gutter opens up to ~125px — the balance dialled
+         in earlier.
+     150px = 2 × the 75px laptop gutter. Per-block prose caps (52ch etc.) still
+     bound line length. Single knob — retune the 75px gutter / 1400px cap here. */
+  --content-max: min(1400px, calc(100% - 150px));
 
   /* The dark green hero keeps its paper texture even though the cream page
      ground is flat. Page --grain sits near zero; this is independent. */
