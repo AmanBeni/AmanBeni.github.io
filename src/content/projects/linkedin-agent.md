@@ -9,7 +9,6 @@ tags: ['AI', 'Automation', 'Research']
 status: 'ongoing'
 order: 4
 date: 2025-08-01
-hasTileArt: false
 ---
 
 > A read-only research assistant for a high-noise professional feed. It collects what is visible in my own browser, ranks it against my interests and job search, and gives me a short digest of what is actually worth opening.

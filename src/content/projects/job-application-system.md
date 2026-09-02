@@ -9,7 +9,6 @@ tags: ['AI', 'Automation', 'Systems']
 status: 'ongoing'
 order: 5
 date: 2025-08-20
-hasTileArt: false
 ---
 
 > A controlled decision and document-production system for serious applications. Given a verified evidence base and a job description, it decides what should lead, what should be cut, and where human judgement has to stay in the loop.
