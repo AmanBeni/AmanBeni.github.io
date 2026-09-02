@@ -191,13 +191,19 @@
      the screen, which frames the page without a four-sided box. */
   --page-inset: 16px;
 
-  /* 2 Sep 2026: shared max-width for every section's inner content wrapper.
-     The page frame caps at 1650px; this keeps content close to that frame on
-     wide monitors (text starts ~100px from the frame line) instead of the old
-     1180px column marooned in the middle. Per-block prose caps (52ch etc.)
-     still protect line length, so widening this only spreads layout, not text.
-     Single knob — change here to retune every section at once. */
-  --content-max: 1400px;
+  /* 2 Sep 2026: shared width for every section's inner content wrapper.
+     Instead of a fixed column, the content FILLS the page frame minus a
+     responsive side gutter, so it scales with the screen: on a wide monitor
+     the frame is far out and the content box grows with it; on a laptop the
+     frame is near the viewport edge and the content box shrinks to keep the
+     same breathing room. `100%` here is the frame width (the wrapper's
+     container), so text always sits ~the gutter distance from the frame line
+     — never marooned in the middle (the old fixed 1180px) nor kissing the
+     border (the fixed 1400px). The gutter itself eases from 60px on small
+     laptops up to 128px on wide screens (6.5vw between). Per-block prose caps
+     (52ch etc.) still bound line length. Single knob — retune here. */
+  --content-gutter: clamp(60px, 6.5vw, 128px);
+  --content-max: calc(100% - 2 * var(--content-gutter));
 
   /* The dark green hero keeps its paper texture even though the cream page
      ground is flat. Page --grain sits near zero; this is independent. */
