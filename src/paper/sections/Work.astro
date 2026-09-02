@@ -129,7 +129,7 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
   .work-inner {
     position: relative;
     z-index: 1;
-    max-width: 1180px;
+    max-width: var(--content-max);
     margin-inline: auto;
     padding-inline: 24px;
   }
@@ -158,7 +158,9 @@ const baseSlash = base.endsWith('/') ? base : base + '/';
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 64px;
-    max-width: 1120px;
+    /* 2 Sep 2026: was capped at 1120px (its own narrower cap); now fills the
+       widened content box so the tiles align with the heading and the other
+       sections' left/right edges instead of sitting narrower and centred. */
     margin-inline: auto;
   }
 

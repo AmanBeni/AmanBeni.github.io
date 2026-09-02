@@ -191,6 +191,14 @@
      the screen, which frames the page without a four-sided box. */
   --page-inset: 16px;
 
+  /* 2 Sep 2026: shared max-width for every section's inner content wrapper.
+     The page frame caps at 1650px; this keeps content close to that frame on
+     wide monitors (text starts ~100px from the frame line) instead of the old
+     1180px column marooned in the middle. Per-block prose caps (52ch etc.)
+     still protect line length, so widening this only spreads layout, not text.
+     Single knob — change here to retune every section at once. */
+  --content-max: 1400px;
+
   /* The dark green hero keeps its paper texture even though the cream page
      ground is flat. Page --grain sits near zero; this is independent. */
   --grain-hero: 0.55;
