@@ -24,14 +24,17 @@ pnpm-debug.log*
 .idea/
 
 # ---- Private working material — NEVER publish (raw photos, notes, drafts) ----
-design by aman/
-website data/
-google stitch data*
-My Design Guidelines/
-design-tests/
+# 3 Sep 2026: the loose reference folders (design by aman/, website data/,
+# My Design Guidelines/) were consolidated into reference/{pixel,shared-projects,
+# design-language}. google stitch data/ and design-tests/ were deleted.
+reference/
 .claude/
 /HANDOFF.md
 Codex Image v8
+# Local content-editing working docs (mirror src/content/projects — edited
+# locally and shared via chat, not a second source of truth in git).
+/AI-PROJECTS-CONTENT.md
+/AI-portfolio-case-study-pack.md
 public/hero/_backup_avatar/
 public/header-variants.html
 BUILD-SPEC.md

@@ -1,7 +1,6 @@
 /*
   Global stylesheet — design tokens + base component classes.
-  Source of truth for tokens: BUILD-SPEC.md §2 /
-  "google stitch data/modern_pixel_portfolio/DESIGN.md".
+  Source of truth for tokens: BUILD-SPEC.md §2.
 
   Two places carry the token *values* on purpose (spec §2 asks for both):
   1. This :root block — plain CSS custom properties, usable anywhere in
