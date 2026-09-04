@@ -42,8 +42,14 @@ CONTENT-INVENTORY.md
 README.md
 
 # Paper theme: source art originals are huge (127MB). Keep them local only.
-# Web-ready copies live in Paper/assets/ and public/paper/ and ARE committed.
+# Web-ready copies are served from public/paper/ (committed).
 Paper/References/
+
+# 4 Sep 2026: Paper/assets/ is a local pipeline output (process-assets.mjs
+# writes web-ready copies to BOTH Paper/assets/ and public/paper/). The build
+# only serves public/paper/, so the committed Paper/assets/ copy was 13M of
+# pure duplication on GitHub. Untracked + ignored; local copy stays.
+Paper/assets/
 
 # Paper theme: raw font files Aman dropped in (19 Aug 2026). Several of
 # these (Apple's SF Pro/SF Mono/New York, the commercial Euclid Circular B)
